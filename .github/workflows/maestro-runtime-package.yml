@@ -1,0 +1,61 @@
+name: Maestro isolated runtime package
+on:
+  push:
+    branches: [feature/maestro-conductor-20261026]
+    paths: ['infra/runtime/**','tools/package_maestro.py','tests/test_maestro_package.py','tests/maestro-stack.mjs','.github/workflows/maestro-runtime-package.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: maestro-runtime-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      MAESTRO_ORIGIN: https://maestro.example
+      MAESTRO_SECRET_DIR: /tmp/maestro-ci-secrets
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Unit checks and package static site
+        run: |
+          python -m unittest discover -s tests -p 'test_maestro_package.py' -v
+          python tools/package_maestro.py --origin "$MAESTRO_ORIGIN"
+      - name: Create ephemeral test secrets outside the repository
+        run: |
+          python - <<'PY'
+          import os,secrets
+          from pathlib import Path
+          root=Path(os.environ['MAESTRO_SECRET_DIR']);root.mkdir(mode=0o700)
+          for name in ['db_password','db_root_password','admin_token','ip_pepper']:
+              path=root/name;path.write_text(secrets.token_hex(32));path.chmod(0o644)
+          PY
+      - name: Build and exercise whole isolated stack
+        run: |
+          docker compose -f infra/runtime/compose.yaml up -d --build --wait --wait-timeout 180
+          node tests/maestro-stack.mjs
+      - name: Package sources for configured deployment, without secrets
+        run: |
+          mkdir -p release/infra release/maestro/server release/tools
+          cp -R infra/runtime release/infra/runtime
+          cp maestro/server/lead-api.php maestro/server/lead_schema.sql release/maestro/server/
+          cp -R maestro/server/migrations release/maestro/server/migrations
+          cp tools/package_maestro.py release/tools/
+          cp -R dist release/dist
+          git rev-parse HEAD > release/SOURCE_COMMIT.txt
+          printf 'TESTED CANDIDATE; placeholder origin maestro.example. Rebuild public assets with approved origin before deployment. No live secrets included.\n' > release/STATUS.txt
+          (cd release && find . -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maestro-runtime-candidate
+          path: release/
+          retention-days: 14
+      - name: Delete synthetic CI stack only
+        if: always()
+        run: |
+          docker compose -f infra/runtime/compose.yaml down -v --remove-orphans
+          rm -rf "$MAESTRO_SECRET_DIR"
