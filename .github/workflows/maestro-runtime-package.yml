@@ -38,16 +38,18 @@ jobs:
         run: |
           docker compose -f infra/runtime/compose.yaml up -d --build --wait --wait-timeout 180
           node tests/maestro-stack.mjs
-      - name: Package sources for configured deployment, without secrets
+      - name: Package reproducible sources without generated target or secrets
         run: |
           mkdir -p release/infra release/maestro/server release/tools
           cp -R infra/runtime release/infra/runtime
+          cp -R dist/maestro/. release/maestro/
           cp maestro/server/lead-api.php maestro/server/lead_schema.sql release/maestro/server/
           cp -R maestro/server/migrations release/maestro/server/migrations
           cp tools/package_maestro.py release/tools/
-          cp -R dist release/dist
+          cp dist/package-manifest.json release/TESTED_STATIC_MANIFEST.json
           git rev-parse HEAD > release/SOURCE_COMMIT.txt
-          printf 'TESTED CANDIDATE; placeholder origin maestro.example. Rebuild public assets with approved origin before deployment. No live secrets included.\n' > release/STATUS.txt
+          printf 'TESTED SOURCE CANDIDATE. Run package_maestro.py with approved HTTPS origin before building. No deployment or live secrets.\n' > release/STATUS.txt
+          python release/tools/package_maestro.py --origin https://other.example --output /tmp/maestro-artifact-rebuild/maestro
           (cd release && find . -type f ! -name SHA256SUMS.txt -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS.txt)
       - uses: actions/upload-artifact@v4
         with:
