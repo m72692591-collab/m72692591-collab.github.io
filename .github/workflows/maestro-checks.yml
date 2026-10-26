@@ -4,6 +4,7 @@ on:
     paths:
       - 'maestro/**'
       - 'tests/maestro-smoke.mjs'
+      - 'tests/maestro-browser.mjs'
       - '.github/workflows/maestro-checks.yml'
   push:
     branches:
@@ -31,3 +32,25 @@ jobs:
           coverage: none
       - name: Lint optional Russian-hosted lead receiver
         run: php -l maestro/server/lead-api.php
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium test engine
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Run desktop and mobile browser journeys
+        run: node tests/maestro-browser.mjs
+      - name: Save visual QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-browser-screenshots
+          path: test-artifacts/maestro/
+          if-no-files-found: ignore
+          retention-days: 7
