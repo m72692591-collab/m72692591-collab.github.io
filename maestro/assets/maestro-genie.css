@@ -1,0 +1,54 @@
+/* MAESTRO GENIE ENGINE — isolated stylesheet, no external fonts or assets. */
+.maestro-genie-launcher{position:fixed;right:24px;bottom:24px;z-index:101;border:1px solid #c99a52;border-radius:999px;color:#ffe7ab;background:linear-gradient(145deg,#091b2b,#182b42);box-shadow:0 12px 38px #0715246b,0 0 28px #28cad833;display:flex;align-items:center;gap:9px;padding:11px 17px;cursor:pointer;font:700 14px/1.2 system-ui,sans-serif;transition:transform .2s,box-shadow .2s}
+.maestro-genie-launcher:hover,.maestro-genie-launcher:focus-visible{transform:translateY(-3px);box-shadow:0 15px 42px #07152499,0 0 34px #22cada55}
+.maestro-genie-launcher svg{width:26px;height:26px;flex:none}
+.maestro-genie-nav{border:1px solid #f4c57488;background:#f4c57420;color:#ffdfaa;border-radius:10px;padding:9px 11px;font:700 13px system-ui,sans-serif;cursor:pointer}
+.maestro-genie-panel{position:fixed;bottom:94px;right:20px;z-index:102;width:min(425px,calc(100vw - 24px));max-height:min(770px,calc(100dvh - 115px));display:flex;flex-direction:column;overflow:hidden;background:#0e1829;color:#f9f4e9;border:1px solid #d8b46b88;border-radius:24px;box-shadow:0 30px 95px #050a14c9,0 0 40px #35bbbf22;font:14px/1.5 system-ui,sans-serif;animation:maestro-genie-rise .46s cubic-bezier(.2,.8,.2,1) both}
+.maestro-genie-panel[hidden],.maestro-genie-launcher[hidden]{display:none!important}
+.maestro-genie-panel *{box-sizing:border-box}
+.maestro-genie-head{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:linear-gradient(90deg,#182e41,#0e1829);border-bottom:1px solid #ffffff22;flex-shrink:0}
+.maestro-genie-title{display:grid;gap:1px}.maestro-genie-title strong{letter-spacing:.085em;font-size:14px}.maestro-genie-title small{font-size:11px;color:#a8c9cd}
+.maestro-genie-controls{display:flex;gap:5px}
+.maestro-genie-controls button{background:#ffffff10;color:#e8f5f5;border:1px solid #ffffff32;border-radius:10px;width:35px;height:35px;font-size:18px;cursor:pointer}
+.maestro-genie-controls button[aria-pressed="true"]{color:#ffce7d;border-color:#d7a257}
+.maestro-genie-stage{position:relative;min-height:154px;background:radial-gradient(ellipse at center 45%,#296173aa,#152b3b 52%,#0d1727 90%);overflow:hidden;flex-shrink:0}
+.maestro-genie-stage:before,.maestro-genie-stage:after{content:"";position:absolute;left:50%;top:55%;width:170px;height:170px;transform:translate(-50%,-50%);border:1px solid #8de3e866;border-radius:50%;box-shadow:0 0 28px #25c2cb44;pointer-events:none}
+.maestro-genie-stage:after{width:118px;height:118px;border-style:dashed;opacity:.65;animation:maestro-genie-spin 17s linear infinite}
+.maestro-genie-avatar{display:block;margin:-36px auto -41px;width:215px;max-width:100%;height:230px;position:relative;z-index:2;filter:drop-shadow(0 0 14px #1dcedc55);animation:maestro-genie-float 4s ease-in-out infinite}
+.maestro-genie-panel.is-talking .maestro-genie-avatar{filter:drop-shadow(0 0 26px #e7c376a0)}
+.maestro-genie-mouth{transform-origin:50% 50%}.maestro-genie-panel.is-talking .maestro-genie-mouth{animation:maestro-genie-talk .26s ease-in-out infinite alternate}
+.maestro-genie-star{position:absolute;z-index:1;width:5px;height:5px;border-radius:50%;background:#fff1be;box-shadow:0 0 12px #d9bd76;animation:maestro-genie-spark 3s ease-in-out infinite alternate}
+.maestro-genie-star:nth-of-type(1){left:18%;top:25%}.maestro-genie-star:nth-of-type(2){left:77%;top:15%;animation-delay:1s}.maestro-genie-star:nth-of-type(3){left:85%;top:70%;animation-delay:1.7s}.maestro-genie-star:nth-of-type(4){left:25%;top:77%;animation-delay:.5s}
+.maestro-genie-status{position:absolute;bottom:8px;left:12px;right:12px;text-align:center;color:#d7f5ec;font-size:11px;z-index:4;text-shadow:0 1px 6px #000}
+.maestro-genie-chat{min-height:105px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:15px;background:#111c2d;scrollbar-color:#537581 transparent}
+.maestro-genie-msg{max-width:92%;padding:10px 12px;border-radius:14px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5;font-size:13px}
+.maestro-genie-msg.assistant{align-self:flex-start;background:#213247;border:1px solid #456275;color:#ecf4f5;border-bottom-left-radius:4px}
+.maestro-genie-msg.user{align-self:flex-end;background:#614622;border:1px solid #b38b49;color:#fff4df;border-bottom-right-radius:4px}
+.maestro-genie-quick{padding:9px 12px 6px;display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid #ffffff16;background:#111c2d}
+.maestro-genie-quick button{border:1px solid #638fa285;background:#1b3a49;color:#d3eff3;border-radius:999px;padding:7px 9px;font:600 11px system-ui,sans-serif;cursor:pointer}
+.maestro-genie-form{display:flex;gap:7px;padding:12px;background:#142133;border-top:1px solid #ffffff24}
+.maestro-genie-form input{min-width:0;flex:1;border:1px solid #6e8797;border-radius:10px;padding:11px 10px;background:#081320;color:#fff;font:13px system-ui,sans-serif}
+.maestro-genie-form input::placeholder{color:#afbaca}
+.maestro-genie-form button,.maestro-genie-go{border:0;border-radius:10px;background:linear-gradient(115deg,#ffe09a,#db9b42);color:#192132;padding:10px 12px;font:800 12px system-ui,sans-serif;cursor:pointer}
+.maestro-genie-go{margin:0 12px 12px;padding:10px;display:block;text-align:center}
+.maestro-genie-note{margin:0 13px 10px;color:#b5bfc9;font-size:10px}
+.maestro-genie-panel button:focus-visible,.maestro-genie-panel input:focus-visible,.maestro-genie-launcher:focus-visible,.maestro-genie-nav:focus-visible{outline:3px solid #74e5e8;outline-offset:2px}
+@keyframes maestro-genie-rise{from{opacity:0;transform:translateY(35px) scale(.92);filter:blur(6px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes maestro-genie-float{0%,100%{transform:translateY(2px)}50%{transform:translateY(-6px)}}
+@keyframes maestro-genie-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes maestro-genie-spark{to{opacity:.35;transform:translateY(-12px) scale(.7)}}
+@keyframes maestro-genie-talk{to{transform:scaleY(2.2)}}
+@media(max-width:640px){.maestro-genie-launcher{right:12px;bottom:calc(83px + env(safe-area-inset-bottom));padding:10px 13px}.maestro-genie-panel{right:12px;bottom:calc(144px + env(safe-area-inset-bottom));max-height:calc(100dvh - 160px);border-radius:20px}.maestro-genie-stage{min-height:113px}.maestro-genie-avatar{height:175px;width:180px;margin:-34px auto -28px}.maestro-genie-msg{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.maestro-genie-panel,.maestro-genie-avatar,.maestro-genie-star,.maestro-genie-stage:after,.maestro-genie-panel.is-talking .maestro-genie-mouth{animation:none!important}.maestro-genie-launcher{transition:none}}
+
+.maestro-genie-go[hidden]{display:none!important}
+
+/* The on-screen keyboard can reduce the viewport on Android. Let the complete
+   conversation scroll as a last resort rather than hiding CTAs or form fields. */
+@media(max-width:640px){
+  .maestro-genie-panel{overflow-y:auto;overscroll-behavior:contain}
+  .maestro-genie-chat{flex:0 0 auto;min-height:120px;max-height:190px}
+  .maestro-genie-quick{flex-shrink:0}
+  .maestro-genie-form,.maestro-genie-note,.maestro-genie-go{flex-shrink:0}
+  .maestro-genie-form{position:sticky;bottom:0;z-index:5}
+}
