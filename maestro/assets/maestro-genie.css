@@ -40,3 +40,5 @@
 @keyframes maestro-genie-talk{to{transform:scaleY(2.2)}}
 @media(max-width:640px){.maestro-genie-launcher{right:12px;bottom:calc(83px + env(safe-area-inset-bottom));padding:10px 13px}.maestro-genie-panel{right:12px;bottom:calc(144px + env(safe-area-inset-bottom));max-height:calc(100dvh - 160px);border-radius:20px}.maestro-genie-stage{min-height:113px}.maestro-genie-avatar{height:175px;width:180px;margin:-34px auto -28px}.maestro-genie-msg{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.maestro-genie-panel,.maestro-genie-avatar,.maestro-genie-star,.maestro-genie-stage:after,.maestro-genie-panel.is-talking .maestro-genie-mouth{animation:none!important}.maestro-genie-launcher{transition:none}}
+
+.maestro-genie-go[hidden]{display:none!important}
