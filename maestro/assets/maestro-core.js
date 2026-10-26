@@ -11,9 +11,10 @@
     automation: {label:'Автоматизация', title:'Автоматизация', words:['автоматиз','процесс','интеграц']}
   });
   const normalize = value => String(value || '').toLocaleLowerCase('ru').replace(/ё/g,'е');
+  const botWord = /(?:^|[^\p{L}\p{N}_])(?:чат[-\s]?)?бот(?:а|ов|у|ом|е|ы|ам|ами|ах)?(?=$|[^\p{L}\p{N}_])/u;
   function service(text) {
     const q = normalize(text);
-    for (const [key, item] of Object.entries(services)) if (item.words.some(w => q.includes(w))) return key;
+    for (const [key, item] of Object.entries(services)) if (item.words.some(w => w === 'бот' ? botWord.test(q) : q.includes(w))) return key;
     return null;
   }
   function intent(text) {
@@ -28,7 +29,7 @@
   }
   function briefKind(text) {
     const q=normalize(text);
-    if (/бот/.test(q)) return 'Бот';
+    if (botWord.test(q)) return 'Бот';
     return services[service(text)]?.label || 'Автоматизация';
   }
   function integrations(text) {

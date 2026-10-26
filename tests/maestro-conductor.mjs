@@ -21,6 +21,22 @@ try{
  check('Service survives price and submit intents',await page.locator('#interest').inputValue()==='ИИ-оператор');
  check('Initial project survives last message', (await page.locator('#business').inputValue()).includes('Нужен бот для сайта'));
  check('Compound bot for website is a bot',await page.evaluate(()=>MaestroCore.briefKind('Бот для сайта'))==='Бот');
+ for(const [text,service,kind] of [
+  ['Разработать сайт','web','Сайт'],
+  ['Разработка CRM','crm','CRM'],
+  ['Автоматизация обработки заявок','automation','Автоматизация'],
+  ['Чатбот для сайта','ai','Бот'],
+  ['Telegram-бот','ai','Бот']
+ ]){
+  const result=await page.evaluate(text=>({service:MaestroCore.service(text),kind:MaestroCore.briefKind(text)}),text);
+  check('Service and brief classify '+text,result.service===service&&result.kind===kind);
+ }
+ await page.locator('.maestro-genie-launcher').click();
+ await page.locator('.maestro-genie-form input').fill('Нужна автоматизация');
+ await page.locator('.maestro-genie-form button').click();
+ const automationAnswer=await page.locator('.maestro-genie-msg.assistant').last().innerText();
+ check('Automation request receives a specific answer',automationAnswer.includes('повторяющиеся операции')&&!automationAnswer.startsWith('Здравствуйте!'));
+ await page.locator('[data-mg="close"]').click();
  check('Cyrillic integration aliases',JSON.stringify(await page.evaluate(()=>MaestroCore.integrations('Телеграм, макс и црм')))===JSON.stringify(['Telegram','MAX','CRM']));
  await page.goto(base+'brief-builder.html');await page.locator('#kind').selectOption('Бот');await page.locator('#goal').fill('Собирать обращения');
  await page.locator('#lead').click();await page.waitForURL('**/index.html#lead');
