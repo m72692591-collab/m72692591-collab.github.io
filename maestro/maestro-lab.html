@@ -114,8 +114,8 @@ function render(){
 const d=data[current];
 $("process-name").textContent=d.name;$("process-headline").textContent=d.headline;$("process-description").textContent=d.description;
 $("incoming").textContent=d.incoming;$("response").textContent=step===0?"Нажмите «Следующий этап», чтобы увидеть работу сценария.":d.responses[step-1];
-nodes.forEach((node,i)=>{node.querySelector("strong").textContent=d.steps[i];node.classList.toggle("active",i===step)});
-$("progress").textContent="Этап "+(step+1)+" из 5";
+nodes.forEach((node,i)=>{node.querySelector("strong").textContent=d.steps[i];node.classList.toggle("active",i===Math.max(0,step-1))});
+$("progress").textContent=step===0?"Готов к запуску":"Этап "+step+" из 5";
 $("advance").disabled=step===5;
 $("advance").textContent=step===5?"Сценарий завершён ✓":"Следующий этап →";
 $("advance").style.opacity=step===5?".5":"1";
