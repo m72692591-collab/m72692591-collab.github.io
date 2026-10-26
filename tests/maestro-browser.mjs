@@ -64,7 +64,7 @@ try {
   await page.locator("#restart").click();
   okay("Lab restart", await page.locator("#progress").innerText() === "Готов к запуску");
   okay("Calculator initial value", await page.locator("#hours").innerText() === "45,0");
-  await page.locator("#fraction").fill("50");
+  await page.locator("#fraction").evaluate(el => { el.value = "50"; el.dispatchEvent(new Event("input", { bubbles: true })); });
   okay("Calculator responds to input", await page.locator("#hours").innerText() === "34,6");
   await page.screenshot({ path: artifacts + "/lab-desktop.png", fullPage: true });
 
