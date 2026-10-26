@@ -1,12 +1,10 @@
 <?php
 declare(strict_types=1);
 
-/**
- * MAESTRO lead receiver for a PHP 8.2+ host in Russia.
- * Deploy to a separately configured Russian-hosted HTTPS endpoint.
- * It is NOT executable on GitHub Pages.
- * All credentials are server-side environment variables.
- * No third-party analytics, email gateways, Telegram API, or outgoing PD transfers.
+/** Private RF-hosted receiver. Never executable on GitHub Pages.
+ * All production credentials remain server-side. No external notification or AI call.
+ * Apply the v2 schema/migration before activation. Legacy clients without request_id
+ * remain supported; the new web client always supplies an unpredictable UUID.
  */
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
@@ -21,11 +19,15 @@ function setting(string $name): string {
     $value = getenv($name);
     return is_string($value) ? trim($value) : '';
 }
-function clean(mixed $value, int $max): string {
-    if (!is_string($value)) return '';
+function clean(mixed $value, int $max, string $field): string {
+    if (!is_string($value) || !mb_check_encoding($value, 'UTF-8')) {
+        respond(422, ['ok' => false, 'error' => 'invalid_field', 'field' => $field]);
+    }
     $value = trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', ' ', $value) ?? '');
-    if (!mb_check_encoding($value, 'UTF-8')) return '';
-    return mb_substr($value, 0, $max, 'UTF-8');
+    if (mb_strlen($value, 'UTF-8') > $max) {
+        respond(422, ['ok' => false, 'error' => 'field_too_long', 'field' => $field, 'limit' => $max]);
+    }
+    return $value; // Never silently truncate a user's specification.
 }
 function connection(): PDO {
     $dsn = setting('MAESTRO_DB_DSN');
@@ -43,6 +45,22 @@ function connection(): PDO {
         respond(503, ['ok' => false, 'error' => 'unavailable']);
     }
 }
+function receipt(int $id, bool $duplicate): never {
+    respond($duplicate ? 200 : 201, [
+        'ok' => true, 'received' => true, 'duplicate' => $duplicate,
+        'reference' => 'M-' . str_pad((string)$id, 7, '0', STR_PAD_LEFT),
+    ]);
+}
+function existingRequest(PDO $db, string $requestId, string $payloadHash): bool {
+    $query = $db->prepare('SELECT id, request_hash FROM maestro_leads WHERE request_id = :request_id LIMIT 1');
+    $query->execute(['request_id' => $requestId]);
+    $row = $query->fetch();
+    if ($row === false) return false;
+    if (!is_string($row['request_hash']) || !hash_equals($row['request_hash'], $payloadHash)) {
+        respond(409, ['ok' => false, 'error' => 'request_conflict']);
+    }
+    receipt((int)$row['id'], true);
+}
 $method = $_SERVER['REQUEST_METHOD'] ?? '';
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 $allowedOrigin = setting('MAESTRO_ALLOWED_ORIGIN');
@@ -59,7 +77,6 @@ if ($method === 'OPTIONS') {
     exit;
 }
 if ($method === 'GET') {
-    // Operator-only read endpoint. Never expose MAESTRO_ADMIN_TOKEN in JS or source.
     $adminToken = setting('MAESTRO_ADMIN_TOKEN');
     $provided = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
     if ($adminToken === '' || !hash_equals('Bearer ' . $adminToken, $provided)) {
@@ -67,8 +84,7 @@ if ($method === 'GET') {
         respond(401, ['ok' => false, 'error' => 'unauthorized']);
     }
     try {
-        $db = connection();
-        $rows = $db->query(
+        $rows = connection()->query(
             'SELECT id, created_at, name, contact, interest, business, channels FROM maestro_leads ORDER BY id DESC LIMIT 50'
         )->fetchAll();
         respond(200, ['ok' => true, 'leads' => $rows]);
@@ -85,62 +101,69 @@ if (!hash_equals($allowedOrigin, $origin)) respond(403, ['ok' => false, 'error' 
 if (strtolower(trim(explode(';', $_SERVER['CONTENT_TYPE'] ?? '')[0])) !== 'application/json') {
     respond(415, ['ok' => false, 'error' => 'json_required']);
 }
-$size = (int)($_SERVER['CONTENT_LENGTH'] ?? 0);
-if ($size > 16000) respond(413, ['ok' => false, 'error' => 'too_large']);
+const MAX_BODY_BYTES = 65536;
+if ((int)($_SERVER['CONTENT_LENGTH'] ?? 0) > MAX_BODY_BYTES) respond(413, ['ok' => false, 'error' => 'too_large']);
 $stream = fopen('php://input', 'rb');
 if ($stream === false) respond(400, ['ok' => false, 'error' => 'invalid_body']);
-$raw = stream_get_contents($stream, 16001);
+$raw = stream_get_contents($stream, MAX_BODY_BYTES + 1);
 fclose($stream);
-if ($raw === false || strlen($raw) > 16000) respond(413, ['ok' => false, 'error' => 'too_large']);
+if ($raw === false || strlen($raw) > MAX_BODY_BYTES) respond(413, ['ok' => false, 'error' => 'too_large']);
 try {
     $data = json_decode($raw, true, 16, JSON_THROW_ON_ERROR);
 } catch (JsonException $e) {
     respond(400, ['ok' => false, 'error' => 'invalid_json']);
 }
 if (!is_array($data)) respond(400, ['ok' => false, 'error' => 'invalid_data']);
-if (clean($data['website'] ?? '', 50) !== '') {
-    // Honeypot: no storage, no alert.
+if (($data['consent'] ?? false) !== true) respond(422, ['ok' => false, 'error' => 'consent_required']);
+if (clean($data['website'] ?? '', 100, 'website') !== '') {
     respond(200, ['ok' => true, 'received' => false]);
 }
+$requestId = $data['request_id'] ?? null;
+if ($requestId !== null) {
+    if (!is_string($requestId) || !preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iD', $requestId)) {
+        respond(422, ['ok' => false, 'error' => 'invalid_request_id']);
+    }
+    $requestId = strtolower($requestId);
+}
 $allowedInterests = ['Сайт', 'Лендинг', 'Блог', 'Бот', 'CRM', 'ИИ-оператор', 'Автоматизация', 'Аудит', 'HR', 'Другое'];
-$name = clean($data['name'] ?? '', 100);
-$contact = clean($data['contact'] ?? '', 160);
-$interest = clean($data['interest'] ?? '', 60);
-$business = clean($data['business'] ?? '', 6000);
-$channels = clean($data['channels'] ?? '', 1500);
-if (($data['consent'] ?? false) !== true) respond(422, ['ok' => false, 'error' => 'consent_required']);
+$name = clean($data['name'] ?? '', 100, 'name');
+$contact = clean($data['contact'] ?? '', 160, 'contact');
+$interest = clean($data['interest'] ?? '', 60, 'interest');
+$business = clean($data['business'] ?? '', 6000, 'business');
+$channels = clean($data['channels'] ?? '', 1500, 'channels');
 if ($name === '' || $contact === '' || $business === '' || $channels === '') {
     respond(422, ['ok' => false, 'error' => 'fields_required']);
 }
-if (!in_array($interest, $allowedInterests, true)) {
-    respond(422, ['ok' => false, 'error' => 'invalid_interest']);
-}
-if (mb_strlen($contact) < 4 || mb_strlen($name) < 2) {
-    respond(422, ['ok' => false, 'error' => 'invalid_contact']);
-}
+if (!in_array($interest, $allowedInterests, true)) respond(422, ['ok' => false, 'error' => 'invalid_interest']);
+if (mb_strlen($contact) < 4 || mb_strlen($name) < 2) respond(422, ['ok' => false, 'error' => 'invalid_contact']);
 $pepper = setting('MAESTRO_IP_PEPPER');
 if (strlen($pepper) < 32) respond(503, ['ok' => false, 'error' => 'not_configured']);
-$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-$ipHash = hash_hmac('sha256', $ip, $pepper);
+$ipHash = hash_hmac('sha256', $_SERVER['REMOTE_ADDR'] ?? 'unknown', $pepper);
+$payloadHash = hash_hmac('sha256', json_encode([$name, $contact, $interest, $business, $channels], JSON_THROW_ON_ERROR), $pepper);
 try {
     $db = connection();
-    // This is a basic rate limit, not a substitute for WAF/CAPTCHA during an attack.
-    $limiter = $db->prepare(
-        'SELECT COUNT(*) FROM maestro_leads WHERE ip_hash = :ip_hash AND created_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 HOUR)'
-    );
+    // Check completed retries before the rate limit: a retry is not a new lead.
+    if ($requestId !== null) existingRequest($db, $requestId, $payloadHash);
+    $limiter = $db->prepare('SELECT COUNT(*) FROM maestro_leads WHERE ip_hash = :ip_hash AND created_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 1 HOUR)');
     $limiter->execute(['ip_hash' => $ipHash]);
     if ((int)$limiter->fetchColumn() >= 5) respond(429, ['ok' => false, 'error' => 'rate_limited']);
     $stmt = $db->prepare(
-        'INSERT INTO maestro_leads (created_at,name,contact,interest,business,channels,ip_hash,consent_at)
-         VALUES (UTC_TIMESTAMP(), :name, :contact, :interest, :business, :channels, :ip_hash, UTC_TIMESTAMP())'
+        'INSERT INTO maestro_leads (created_at,name,contact,interest,business,channels,ip_hash,consent_at,request_id,request_hash)
+         VALUES (UTC_TIMESTAMP(), :name, :contact, :interest, :business, :channels, :ip_hash, UTC_TIMESTAMP(), :request_id, :request_hash)'
     );
-    $stmt->execute([
-        'name' => $name, 'contact' => $contact, 'interest' => $interest,
-        'business' => $business, 'channels' => $channels, 'ip_hash' => $ipHash
-    ]);
-    $leadId = (int)$db->lastInsertId();
-    respond(201, ['ok' => true, 'received' => true, 'reference' => 'M-' . str_pad((string)$leadId, 7, '0', STR_PAD_LEFT)]);
+    try {
+        $stmt->execute([
+            'name' => $name, 'contact' => $contact, 'interest' => $interest,
+            'business' => $business, 'channels' => $channels, 'ip_hash' => $ipHash,
+            'request_id' => $requestId, 'request_hash' => $requestId === null ? null : $payloadHash,
+        ]);
+    } catch (PDOException $e) {
+        // Database UNIQUE constraint also protects simultaneous identical retries.
+        if ($e->getCode() === '23000' && $requestId !== null) existingRequest($db, $requestId, $payloadHash);
+        throw $e;
+    }
+    receipt((int)$db->lastInsertId(), false);
 } catch (Throwable $e) {
-    error_log('MAESTRO leads insert error');
+    error_log('MAESTRO leads storage operation failed');
     respond(503, ['ok' => false, 'error' => 'unavailable']);
 }
