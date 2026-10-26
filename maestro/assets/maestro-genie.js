@@ -44,9 +44,11 @@
       '<div class="maestro-genie-chat" role="log" aria-label="История диалога" aria-live="polite" aria-relevant="additions"></div>' +
       '<div class="maestro-genie-quick"><button type="button" data-mg-question="Нужен ИИ-оператор для заявок">ИИ-оператор</button>' +
       '<button type="button" data-mg-question="Нужен сайт">Сайт</button><button type="button" data-mg-question="Нужны CRM и продажи">CRM и продажи</button>' +
-      '<button type="button" data-mg-question="Как заказать проект?">Оставить заявку</button></div>' +
+      '<button type="button" data-mg-question="Как заказать проект?">Оставить заявку</button>' +
+      '<button type="button" data-mg="brief-start">Собрать ТЗ</button></div>' +
       '<form class="maestro-genie-form"><input name="question" type="text" maxlength="400" autocomplete="off" aria-label="Ваш вопрос" placeholder="Расскажите, что нужно бизнесу" required><button type="submit">Отправить</button></form>' +
       '<button type="button" class="maestro-genie-go" data-mg="lead">Перейти к заявке →</button>' +
+      '<button type="button" class="maestro-genie-go" data-mg="brief-go" hidden>Открыть готовый черновик ТЗ →</button>' +
       '<p class="maestro-genie-note">Первый этап: ответы по направлениям услуг, без подключения нейросети. Голос браузера может обрабатываться его провайдером. Контакты не отправляются без вашего действия.</p>' +
     '</aside>';
   document.body.append(root);
@@ -58,7 +60,7 @@
   const input = root.querySelector('input[name="question"]');
   const voiceButton = root.querySelector('[data-mg="voice"]');
   const micButton = root.querySelector('[data-mg="mic"]');
-  const state = { voice: false, topic: 'general', lastQuestion: '', recognition: null, speaking: false };
+  const state = { voice: false, topic: 'general', lastQuestion: '', recognition: null, speaking: false, wizard: null };
 
   const knowledge = {
     general: 'Здравствуйте! Я МАЭСТРО. Помогаю выбрать подходящее направление: сайты, боты, ИИ-операторы, CRM, маркетинг, команда и аналитика. Расскажите, что вы хотите улучшить. Я могу помочь сформулировать заявку.',
@@ -125,12 +127,64 @@
     u.onend = u.onerror = () => { state.speaking = false; panel.classList.remove('is-talking'); setStatus('Готов к вашему вопросу'); };
     window.speechSynthesis.speak(u);
   }
+  const wizardPrompts = [
+    'Какую услугу или систему хотите получить? Например: бот для сайта, CRM или автоматизация обработки заявок.',
+    'Чем занимается компания? Укажи сферу бизнеса, без персональных данных.',
+    'Какую проблему необходимо решить и каким должен быть результат?',
+    'Как этот процесс организован сейчас? Какие операции выполняют люди?',
+    'К каким сервисам нужно подключиться: сайт, MAX, Telegram, CRM, почта или другое?'
+  ];
+  function startWizard() {
+    cancelSpeech();
+    state.wizard = { step: 0, answers: [] };
+    root.querySelector('[data-mg="brief-go"]').hidden = true;
+    const first = 'Создадим предварительное ТЗ за пять коротких вопросов. Если захотите остановиться, напишите «отмена». ' + wizardPrompts[0];
+    addMessage('assistant', first);
+    setStatus('Конструктор ТЗ: вопрос 1 из 5');
+    void say(first);
+    input.focus();
+  }
+  function answerWizard(answer) {
+    if (/^отмена$/i.test(answer.trim())) {
+      state.wizard = null;
+      const message = 'Сбор ТЗ отменён. Можем продолжить обсуждение любой услуги.';
+      addMessage('assistant', message);
+      setStatus('Режим консультанта');
+      void say(message);
+      return;
+    }
+    state.wizard.answers.push(answer);
+    state.wizard.step++;
+    if (state.wizard.step < wizardPrompts.length) {
+      const number = state.wizard.step + 1;
+      const prompt = 'Вопрос ' + number + ' из 5. ' + wizardPrompts[state.wizard.step];
+      addMessage('assistant', prompt);
+      setStatus('Конструктор ТЗ: вопрос ' + number + ' из 5');
+      void say(prompt);
+    } else {
+      const complete = 'Черновик готов! Нажмите «Открыть готовый черновик ТЗ», проверьте требования и при желании сохраните документ или подготовьте заявку.';
+      addMessage('assistant', complete);
+      try {
+        sessionStorage.setItem('maestro_genie_brief_v1', JSON.stringify({
+          answers: state.wizard.answers, created: Date.now()
+        }));
+        root.querySelector('[data-mg="brief-go"]').hidden = false;
+        setStatus('Черновик ТЗ готов');
+      } catch (_) {
+        addMessage('assistant', 'Передать заполненные поля не удалось из-за настроек браузера. Можно заполнить конструктор вручную.');
+        setStatus('Хранение в браузере недоступно');
+      }
+      state.wizard = null;
+      void say(complete);
+    }
+  }
   function ask(text) {
     const question = String(text || '').trim().slice(0, 400);
     if (!question) return;
     cancelSpeech();
     state.lastQuestion = question;
     addMessage('user', question);
+    if (state.wizard) { answerWizard(question); return; }
     const topic = chooseTopic(question);
     if (topic !== 'general') state.topic = topic;
     const answer = knowledge[topic] || knowledge.general;
@@ -184,6 +238,8 @@
   launcher.addEventListener('click', open);
   root.querySelector('[data-mg="close"]').addEventListener('click', close);
   root.querySelector('[data-mg="lead"]').addEventListener('click', fillLead);
+  root.querySelector('[data-mg="brief-start"]').addEventListener('click', startWizard);
+  root.querySelector('[data-mg="brief-go"]').addEventListener('click', () => { window.location.href = 'brief-builder.html'; });
   voiceButton.addEventListener('click', () => {
     state.voice = !state.voice;
     voiceButton.setAttribute('aria-pressed', String(state.voice));
