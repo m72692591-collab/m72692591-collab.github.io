@@ -154,6 +154,36 @@ try{sessionStorage.setItem("maestro_spec_handoff_v1",JSON.stringify({text:build(
 catch(e){notify("Браузер заблокировал передачу данных. Скопируйте ТЗ вручную.");return}
 location.href="index.html#lead";
 });
+
+try {
+  const raw=sessionStorage.getItem("maestro_genie_brief_v1");
+  if(raw){
+    sessionStorage.removeItem("maestro_genie_brief_v1");
+    const parsed=JSON.parse(raw);
+    const a=parsed.answers;
+    if(Array.isArray(a)&&a.length===5&&a.every(x=>typeof x==="string"&&x.length<=400)&&
+      Number.isFinite(parsed.created)&&Date.now()-parsed.created>=0&&Date.now()-parsed.created<20*60*1000){
+      const title=a[0].toLocaleLowerCase("ru");
+      const options=[...$("kind").options].map(x=>x.value);
+      const guess=title.includes("сайт")||title.includes("лендинг")?"Сайт":
+        title.includes("crm")||title.includes("црм")?"CRM":
+        title.includes("hr")||title.includes("найм")?"HR":
+        title.includes("бот")?"Бот":
+        title.includes("ии")||title.includes("оператор")?"ИИ-оператор":
+        title.includes("аудит")?"Аудит":"Автоматизация";
+      if(options.includes(guess))$("kind").value=guess;
+      $("industry").value=a[1];
+      $("goal").value=a[2];
+      $("process").value=a[3];
+      $("notes").value="Желаемый проект: "+a[0]+"\nИнтеграции: "+a[4];
+      for(const field of document.querySelectorAll("#integrations input")){
+        const label=field.value.toLocaleLowerCase("ru");
+        if(a[4].toLocaleLowerCase("ru").includes(label))field.checked=true;
+      }
+      notify("Черновик из беседы с МАЭСТРО перенесён. Проверьте поля перед сохранением.");
+    }
+  }
+} catch (_) { /* Invalid/blocked session storage: manual brief remains available. */ }
 render();
 })();
 </script>
