@@ -67,6 +67,8 @@ try {
       if(typeof parsed.interest==='string'&&[...interest.options].some(o=>o.value===parsed.interest))interest.value=parsed.interest;
       const businessField=document.getElementById('business');
       if(businessField&&!businessField.value.trim())businessField.value='Подготовлено конструктором МАЭСТРО:\n'+text;
+      const channelsField=document.getElementById('channels');
+      if(channelsField&&!channelsField.value.trim())channelsField.value='Текущий процесс и желаемые интеграции описаны в приложенном черновике ТЗ.';
     }
   }
 } catch (_) { /* Storage unavailable or malformed. Existing form remains usable. */ }document.querySelectorAll('[data-interest]').forEach(el=>el.addEventListener('click',()=>{const v=el.dataset.interest;if([...interest.options].some(o=>o.value===v))interest.value=v;}));
