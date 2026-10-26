@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Лаборатория МАЭСТРО: интерактивные демонстрации автоматизации, сценарии ИИ-оператора, CRM и HR, калькулятор трудозатрат.">
+<meta name="theme-color" content="#081529">
+<title>Лаборатория МАЭСТРО — попробуйте автоматизацию</title>
+<style>
+:root{--bg:#081529;--ink:#f7faff;--muted:#a8bbcf;--accent:#55e0de;--gold:#ffcf7a;--line:rgba(150,198,216,.19);--panel:#10243b;--shade:#091c31}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 70% 0,#1e3657,#081529 52%,#060e1f);color:var(--ink);font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100dvh}
+a{color:inherit}button,input,select{font:inherit}button{cursor:pointer}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #ffcf7a;outline-offset:3px}
+.skip{position:absolute;left:-9999px;top:0}.skip:focus{left:12px;z-index:10;padding:12px;background:#fff;color:#000}
+.top{height:72px;display:flex;justify-content:space-between;align-items:center;padding:0 max(20px,calc((100% - 1260px)/2));border-bottom:1px solid var(--line);background:#061429a6;backdrop-filter:blur(16px)}
+.brand{font-weight:950;letter-spacing:.14em;text-decoration:none;display:flex;gap:12px;align-items:center}.brand i{font-size:32px;font-weight:500;color:var(--gold);font-style:normal}.topnav{display:flex;align-items:center;gap:18px}.topnav a{font-size:13px;text-decoration:none;color:#c9d8e9}
+.flag{font-size:11px;letter-spacing:.13em;color:var(--accent);text-transform:uppercase;font-weight:800}
+.wrap{max-width:1260px;margin:auto;padding:0 22px}.intro{padding:65px 0 39px;position:relative}
+h1{font-size:clamp(44px,6vw,78px);line-height:1.02;letter-spacing:-.065em;margin:13px 0 20px;max-width:950px;font-weight:850}
+h1 em{font-style:normal;color:var(--gold)}.lead{max-width:740px;color:#b9cce0;font-size:clamp(16px,1.8vw,19px)}
+.state{display:inline-flex;align-items:center;gap:8px;border:1px solid #69e9e755;border-radius:99px;padding:7px 11px;background:#43d5d51c;color:#b2eded;font-size:12px;margin-top:10px}.pulse{width:7px;height:7px;border-radius:50%;background:#64f5dd;box-shadow:0 0 10px #60fff3}
+.lab{margin:4px auto 48px;display:grid;grid-template-columns:320px minmax(0,1fr);gap:18px;align-items:start}
+.console{padding:20px;background:linear-gradient(165deg,#122c46,#0c1b30);border:1px solid var(--line);border-radius:23px;box-shadow:0 18px 45px #0005}
+.smalltitle{font-size:11px;color:#8eacbf;text-transform:uppercase;font-weight:800;letter-spacing:.13em;margin-bottom:16px}
+.choices{display:grid;gap:10px}.choice{border:1px solid #58758a77;border-radius:12px;padding:15px;text-align:left;display:flex;align-items:center;gap:12px;color:#e6f2f7;background:#12253c;transition:background .15s,border .15s}
+.choice:hover{background:#17354c}.choice[aria-pressed="true"]{border-color:var(--gold);background:linear-gradient(100deg,#70532d5e,#17334b)}
+.choice svg{width:22px;height:22px;flex:none;color:var(--gold)}.choice span{font-weight:750;font-size:13px}.choice small{display:block;color:#9fb5c7;font-size:11px;font-weight:400}
+.console-note{border-top:1px solid var(--line);padding-top:16px;margin-top:22px;color:#9db6c7;font-size:12px}
+.workspace{position:relative;border:1px solid #83bdd244;border-radius:23px;overflow:hidden;background:linear-gradient(160deg,#0f263e,#0c172a 90%);min-height:455px;box-shadow:0 28px 70px #01061191}
+.workspace:before{content:"";position:absolute;inset:0;background-image:linear-gradient(#b4d6ef08 1px,transparent 1px),linear-gradient(90deg,#b4d6ef08 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+.worktop{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:16px 19px;background:#162b3b99;position:relative;z-index:1}
+.worktop b{font-size:14px}.worktop small{color:#98b4c7;font-size:11px;display:block}.worktop .dot{display:inline-flex;gap:6px}.worktop .dot i{width:7px;height:7px;background:#e1bd70;border-radius:50%}.worktop .dot i:nth-child(2){background:#4cabc9}.worktop .dot i:nth-child(3){background:#68e2b4}
+.stage{padding:35px 24px 16px;position:relative;z-index:1}.stage h2{font-size:clamp(21px,3.4vw,34px);margin:0 0 8px;letter-spacing:-.035em}
+.stage p{color:#a4c3d5;margin:0 0 28px;max-width:630px;font-size:14px}
+.flow{display:flex;justify-content:space-between;align-items:center;gap:6px;position:relative;padding:18px 2px 42px}
+.flow:before{content:"";height:2px;left:6%;right:6%;top:43px;position:absolute;background:linear-gradient(90deg,#39c2d1,#c3a967,#44dbb7);box-shadow:0 0 13px #44cbdf6e}
+.node{position:relative;z-index:2;width:19%;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px}
+.node-number{width:50px;height:50px;border:1px solid #77cccfad;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#22455b,#15253b);box-shadow:0 5px 20px #06121f;color:#ffdc91;font-size:19px;font-weight:900}
+.node strong{font-size:11px;line-height:1.35;color:#d9e8f4;max-width:105px}
+.node.active .node-number{box-shadow:0 0 20px #f5d187a8;background:#5c4e33;border-color:#fbd98c}
+.messages{border:1px solid #68869c55;border-radius:15px;margin:5px 18px 16px;display:grid;grid-template-columns:1fr 1fr;gap:0;overflow:hidden;background:#122338;position:relative;z-index:1}
+.message{padding:17px 18px;border-right:1px solid var(--line)}.message:last-child{border-right:none;background:#103a43aa}
+.message strong{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8fb3c7;margin-bottom:7px}
+.message p{font-size:13px;color:#ecf4fb;line-height:1.55;margin:0}
+.controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:0 18px 19px;position:relative;z-index:2}
+.action{border:1px solid #ffdc9699;color:#172033;background:linear-gradient(130deg,#ffe4a8,#e3a754);border-radius:12px;padding:12px 17px;font-weight:850}
+.action.secondary{background:#19374d;color:#e5f2f5;border-color:#607f91}
+.status{font-size:12px;color:#93b7c6}
+.sectionhead{margin:70px 0 25px}.sectionhead h2{font-size:clamp(28px,4vw,45px);margin:6px 0 12px;letter-spacing:-.045em}.sectionhead p{max-width:750px;color:var(--muted)}
+.calc{display:grid;grid-template-columns:minmax(0,1fr) 360px;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#102339;box-shadow:0 14px 46px #0004}
+.calcfields{padding:29px;display:grid;gap:24px}.field label{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:#dceaf0;font-weight:700}.field output{font-variant-numeric:tabular-nums;color:var(--gold)}
+.field input[type="range"]{width:100%;accent-color:#f1bd6e;margin-top:16px;cursor:pointer}.field p{font-size:11px;color:#9fb3c5;margin:7px 0 0}
+.calcresult{padding:29px;display:flex;flex-direction:column;justify-content:center;background:radial-gradient(circle at 60% 30%,#245064,#0c1d31);border-left:1px solid var(--line)}
+.calcresult .bigresult{font-size:clamp(48px,5vw,75px);font-weight:900;letter-spacing:-.065em;line-height:1;color:#ffd98d;font-variant-numeric:tabular-nums}
+.calcresult .unit{font-size:18px;color:#a9d5e1;font-weight:700}.calcresult p{font-size:13px;color:#b7d1df}
+.calcresult .formula{padding:13px;border-top:1px solid #ffffff22;margin-top:24px;line-height:1.5;font-size:12px;color:#93bac7}
+.cta{margin:70px 0;padding:37px;border:1px solid #e0b3717a;background:linear-gradient(100deg,#4038277c,#092738);border-radius:23px;display:flex;gap:24px;align-items:center;justify-content:space-between}
+.cta h2{font-size:clamp(26px,3.3vw,40px);line-height:1.1;margin:0 0 10px}.cta p{margin:0;color:#a9c5d4;max-width:690px}
+footer{padding:34px 0 45px;border-top:1px solid var(--line);font-size:12px;color:#9fb4c7}
+@media(max-width:930px){.lab{grid-template-columns:1fr}.choices{grid-template-columns:repeat(3,1fr)}.choice{padding:12px}.calc{grid-template-columns:1fr}.calcresult{border-left:0;border-top:1px solid var(--line)}.cta{flex-direction:column;align-items:start}}
+@media(max-width:580px){.top{height:66px;padding:0 13px}.brand{font-size:12px}.topnav{gap:10px}.topnav a{font-size:11px}.wrap{padding:0 14px}.intro{padding:45px 0 24px}.choices{grid-template-columns:1fr}.stage{padding:25px 12px 10px}.flow{overflow-x:auto;padding:14px 0 26px;gap:4px}.flow:before{top:37px;left:7%;right:7%}.node-number{width:40px;height:40px;border-radius:12px;font-size:14px}.node strong{font-size:9px}.messages{grid-template-columns:1fr;margin:4px 12px 14px}.message{border-right:0;border-bottom:1px solid var(--line)}.message:last-child{border-bottom:0}.calcfields,.calcresult{padding:20px}.cta{padding:23px}.status{width:100%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.choice{transition:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Перейти к демонстрации</a>
+<header class="top"><a href="index.html" class="brand" aria-label="На главную МАЭСТРО"><i>◈</i> МАЭСТРО <span style="font-size:10px;color:#8aafc4">/ ЛАБ</span></a><nav class="topnav" aria-label="Разделы"><a href="#demo">Сценарии</a><a href="#calculator">Калькулятор</a><a href="index.html#lead" style="color:#ffd68b">Обсудить проект ↗</a></nav></header>
+<main class="wrap" id="main">
+<section class="intro"><span class="flag">МАЭСТРО / ИНТЕРАКТИВНАЯ ЛАБОРАТОРИЯ</span><h1>Бизнес-процессы, которые <em>видно в действии.</em></h1><p class="lead">Выберите ситуацию, запустите сценарий и посмотрите, как может работать автоматизация. Без регистрации, оплаты и рекламных обещаний.</p><span class="state"><i class="pulse" aria-hidden="true"></i> Демонстрационный режим · данные вымышленные</span></section>
+<section class="lab" id="demo" aria-label="Интерактивные демонстрации">
+<aside class="console"><div class="smalltitle">01 / Выберите направление</div>
+<div class="choices" role="group" aria-label="Сценарии автоматизации">
+<button type="button" class="choice" data-scenario="sales" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 5h18v11H9l-6 4z"/><path d="M7 9h10M7 12h7"/></svg><span>ИИ-оператор<small>Обработка входящих заявок</small></span></button>
+<button type="button" class="choice" data-scenario="crm" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M8 14h8M8 17h5"/></svg><span>CRM и продажи<small>Контроль этапов и задач</small></span></button>
+<button type="button" class="choice" data-scenario="hr" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 19v-2a6 6 0 0 1 12 0v2M17 7h4M17 11h4M17 15h4"/></svg><span>HR и команда<small>Организация найма</small></span></button>
+</div><div class="console-note">Это интерактивная симуляция процессов, а не подключение к настоящей CRM или рабочему ИИ. Все данные демонстрационные.</div></aside>
+<div class="workspace" aria-label="Экран демонстрации">
+<div class="worktop"><div><b id="process-name">ИИ-оператор · обработка заявки</b><small>MAESTRO / PROCESS SIMULATOR</small></div><div class="dot" aria-hidden="true"><i></i><i></i><i></i></div></div>
+<div class="stage"><h2 id="process-headline">От сообщения до понятной задачи</h2><p id="process-description">Посмотрим, как система может принять обращение и подготовить его к работе менеджера.</p>
+<div class="flow" id="flow" aria-label="Пять этапов процесса">
+<div class="node active"><span class="node-number">01</span><strong>Новая заявка</strong></div>
+<div class="node"><span class="node-number">02</span><strong>Проверка данных</strong></div>
+<div class="node"><span class="node-number">03</span><strong>Уточнение задачи</strong></div>
+<div class="node"><span class="node-number">04</span><strong>Запись в CRM</strong></div>
+<div class="node"><span class="node-number">05</span><strong>Передача человеку</strong></div>
+</div></div>
+<div class="messages"><div class="message"><strong>Входящее событие</strong><p id="incoming">Здравствуйте! Нам нужен бот для сайта, чтобы принимать заявки.</p></div><div class="message"><strong>Ответ системы / результат</strong><p id="response" aria-live="polite">Нажмите «Следующий этап», чтобы увидеть работу сценария.</p></div></div>
+<div class="controls"><button type="button" class="action" id="advance">Следующий этап →</button><button type="button" class="action secondary" id="restart">↻ Начать заново</button><span class="status" id="progress" aria-live="polite">Этап 1 из 5</span></div>
+</div>
+</section>
+<section id="calculator" aria-labelledby="calc-title"><div class="sectionhead"><span class="flag">02 / ПРОВЕРКА ГИПОТЕЗЫ</span><h2 id="calc-title">Сколько времени уходит на повторяющиеся задачи?</h2><p>Изменяйте исходные данные. Расчёт показывает только теоретическую экономию рабочего времени при заданной доле автоматизации — это не прогноз прибыли и не обещание результата.</p></div>
+<div class="calc"><div class="calcfields">
+<div class="field"><label for="volume">Повторяющихся операций в неделю <output id="volume-value" for="volume">80</output></label><input id="volume" type="range" min="1" max="500" value="80" step="1"><p>Заявки, сообщения, документы или другие повторяющиеся действия.</p></div>
+<div class="field"><label for="minutes">Минут на одну операцию <output id="minutes-value" for="minutes">12 мин</output></label><input id="minutes" type="range" min="1" max="90" value="12" step="1"><p>Сколько времени занимает одна операция вручную.</p></div>
+<div class="field"><label for="fraction">Доля времени, которую удаётся устранить <output id="fraction-value" for="fraction">65%</output></label><input id="fraction" type="range" min="0" max="100" value="65" step="5"><p>Ваше допущение: в реальности зависит от процессов, ошибок и контроля.</p></div>
+</div>
+<div class="calcresult" aria-live="polite"><span class="flag">ТЕОРЕТИЧЕСКИ В МЕСЯЦ</span><div class="bigresult" id="hours">45,0</div><div class="unit">часов ручной работы</div><p id="days">Это примерно 5,6 восьмичасового рабочего дня.</p><div class="formula" id="formula">80 операций × 12 минут × 4,33 недели × 65% ÷ 60 = 45,0 ч.</div><button type="button" class="action secondary" id="copy" style="margin-top:20px">Скопировать расчёт и задачу</button><span class="status" id="copy-status" role="status"></span></div></div>
+</section>
+<section class="cta"><div><span class="flag">ОТ ДЕМО — К РЕАЛЬНОМУ ПРОЕКТУ</span><h2>Хотите такую систему для своей компании?</h2><p>Консультант МАЭСТРО поможет определить направление. Затем согласуем задачи, интеграции и стоимость, прежде чем что-либо внедрять.</p></div><a class="action" id="lead-link" href="index.html?interest=ИИ-оператор#lead" style="text-decoration:none;display:inline-block;white-space:nowrap">Обсудить свой проект ↗</a></section>
+</main>
+<footer><div class="wrap">МАЭСТРО BUSINESS · Интерактивная лаборатория. Сценарии и цифры демонстрационные. <a href="index.html">На главную</a> · <a href="privacy.html">Политика ПД</a></div></footer>
+<script>
+(function(){
+"use strict";
+const data={
+sales:{name:"ИИ-оператор · обработка заявки",headline:"От сообщения до понятной задачи",description:"Как система может принять обращение, задать уточнения и подготовить его к работе менеджера.",steps:["Новая заявка","Проверка данных","Уточнение задачи","Запись в CRM","Передача человеку"],incoming:"Здравствуйте! Нам нужен бот для сайта, чтобы принимать заявки.",responses:["Новое сообщение получено. Начинаем регистрацию обращения.","Проверяем, указан ли способ связи и о чём спрашивает клиент.","Здравствуйте! Уточните, пожалуйста, на каком сайте нужен бот и куда сейчас поступают обращения.","Готова структурированная запись: интерес — ИИ-оператор; канал — сайт; требуется уточнение CRM.","Передаём обращение менеджеру. Передача в этой демонстрации условная."],interest:"ИИ-оператор"},
+crm:{name:"CRM · от заявки до следующего шага",headline:"Ни одна задача не теряется в воронке",description:"Сценарий распределения нового обращения и контроля следующего действия.",steps:["Новое обращение","Определение этапа","Назначение ответственного","Напоминание","Контроль статуса"],incoming:"Клиент попросил коммерческое предложение на автоматизацию отдела продаж.",responses:["Создано новое обращение в демонстрационной воронке.","Определяем этап: запрос коммерческого предложения.","Назначаем ответственного менеджера в сценарии.","Фиксируем задачу: связаться с клиентом и собрать вводные.","Отображаем, на каком этапе находится обращение. Изменений в реальной CRM нет."],interest:"CRM"},
+hr:{name:"HR · путь кандидата",headline:"Порядок в найме без лишней рутины",description:"Симуляция сбора откликов и организации интервью, без автоматических решений о найме.",steps:["Отклик кандидата","Проверка анкеты","Запрос уточнений","Организация интервью","Решение человеком"],incoming:"Соискатель откликнулся на вакансию инженера-планировщика.",responses:["Отклик принят в учебной модели.","Проверяем, заполнены ли необходимые поля анкеты.","Подготовлен перечень вопросов об опыте, графике и квалификации.","Сценарий предлагает согласовать удобное время собеседования.","Решение о найме принимает человек, а не автоматическая система."],interest:"HR"}
+};
+let current="sales",step=0;
+const $=id=>document.getElementById(id);
+const buttons=[...document.querySelectorAll("[data-scenario]")], nodes=[...document.querySelectorAll(".node")];
+function render(){
+const d=data[current];
+$("process-name").textContent=d.name;$("process-headline").textContent=d.headline;$("process-description").textContent=d.description;
+$("incoming").textContent=d.incoming;$("response").textContent=step===0?"Нажмите «Следующий этап», чтобы увидеть работу сценария.":d.responses[step-1];
+nodes.forEach((node,i)=>{node.querySelector("strong").textContent=d.steps[i];node.classList.toggle("active",i===step)});
+$("progress").textContent="Этап "+(step+1)+" из 5";
+$("advance").disabled=step===5;
+$("advance").textContent=step===5?"Сценарий завершён ✓":"Следующий этап →";
+$("advance").style.opacity=step===5?".5":"1";
+buttons.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.scenario===current)));
+$("lead-link").href="index.html?interest="+encodeURIComponent(d.interest)+"#lead";
+}
+buttons.forEach(button=>button.addEventListener("click",()=>{current=button.dataset.scenario;step=0;render()}));
+$("advance").addEventListener("click",()=>{if(step<5){step+=1;render()}});
+$("restart").addEventListener("click",()=>{step=0;render()});
+const locale=n=>n.toLocaleString("ru-RU",{maximumFractionDigits:1,minimumFractionDigits:1});
+function calculate(){
+const v=Number($("volume").value),m=Number($("minutes").value),f=Number($("fraction").value);
+const hours=v*m*4.33*f/100/60;
+$("volume-value").value=v;$("minutes-value").value=m+" мин";$("fraction-value").value=f+"%";
+$("hours").textContent=locale(hours);
+$("days").textContent="Это примерно "+locale(hours/8)+" восьмичасового рабочего дня.";
+$("formula").textContent=v+" операций × "+m+" минут × 4,33 недели × "+f+"% ÷ 60 = "+locale(hours)+" ч.";
+return "Лаборатория МАЭСТРО\nСценарий: "+data[current].name+"\nОпераций в неделю: "+v+"\nМинут на операцию: "+m+"\nПредполагаемое сокращение ручной работы: "+f+"%\nТеоретически освобождается: "+locale(hours)+" ч/мес.\nЭто модельный расчёт, не гарантия экономии.";
+}
+["volume","minutes","fraction"].forEach(id=>$(id).addEventListener("input",calculate));
+$("copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(calculate());$("copy-status").textContent="Расчёт скопирован";}catch(e){$("copy-status").textContent="Копирование недоступно в этом браузере.";}});
+render();calculate();
+})();
+</script>
+</body>
+</html>
