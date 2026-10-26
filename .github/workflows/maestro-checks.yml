@@ -5,6 +5,7 @@ on:
       - 'maestro/**'
       - 'tests/maestro-smoke.mjs'
       - 'tests/maestro-browser.mjs'
+      - 'tests/maestro-leads-api.mjs'
       - '.github/workflows/maestro-checks.yml'
   push:
     branches:
@@ -54,3 +55,43 @@ jobs:
           path: test-artifacts/maestro/
           if-no-files-found: ignore
           retention-days: 7
+  lead-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-only-database-password
+          MYSQL_DATABASE: maestro_ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pci-only-database-password"
+          --health-interval=5s
+          --health-timeout=4s
+          --health-retries=15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_mysql
+          tools: none
+          coverage: none
+      - name: Install database schema
+        run: mysql -h 127.0.0.1 -u root -pci-only-database-password maestro_ci < maestro/server/lead_schema.sql
+      - name: Verify API consent, storage and rate limits with synthetic data
+        env:
+          MAESTRO_ALLOWED_ORIGIN: https://m72692591-collab.github.io
+          MAESTRO_DB_DSN: mysql:host=127.0.0.1;port=3306;dbname=maestro_ci;charset=utf8mb4
+          MAESTRO_DB_USER: root
+          MAESTRO_DB_PASSWORD: ci-only-database-password
+          MAESTRO_ADMIN_TOKEN: maestro-ci-test-admin-token-not-valid-in-production-2026-10
+          MAESTRO_IP_PEPPER: ci-only-pepper-string-not-valid-for-real-visitors-20261026
+        run: |
+          php -S 127.0.0.1:8766 -t maestro/server > /tmp/maestro-php.log 2>&1 &
+          node tests/maestro-leads-api.mjs
