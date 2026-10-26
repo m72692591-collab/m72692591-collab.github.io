@@ -52,6 +52,27 @@ try {
   await page.getByRole("button", { name: /Перейти к заявке/ }).click();
   okay("Genie moved topic to form", await page.locator("#interest").inputValue() === "ИИ-оператор");
 
+  // Real visitor journey: build a brief through the conversational advisor.
+  await page.locator(".maestro-genie-launcher").click();
+  await page.locator('[data-mg="brief-start"]').click();
+  const questions = [
+    "Нужен бот для обработки заявок",
+    "Строительная компания",
+    "Собирать обращения клиентов автоматически",
+    "Сейчас заявки обрабатывает менеджер",
+    "Telegram и CRM"
+  ];
+  for (const answer of questions) {
+    await page.locator('.maestro-genie-form input[name="question"]').fill(answer);
+    await page.locator('.maestro-genie-form button[type="submit"]').click();
+  }
+  okay("Genie questionnaire completed", await page.locator('[data-mg="brief-go"]').isVisible());
+  await page.locator('[data-mg="brief-go"]').click();
+  await page.waitForURL(/brief-builder\.html$/);
+  okay("Genie questionnaire copied to builder", await page.locator("#goal").inputValue() === questions[2]);
+  okay("Genie preselected Telegram integration", await page.locator('#integrations input[value="Telegram"]').isChecked());
+  okay("Genie preselected CRM integration", await page.locator('#integrations input[value="CRM"]').isChecked());
+
   await goto(page, "maestro-lab.html");
   okay("Lab has scenario buttons", await page.locator("[data-scenario]").count() === 3);
   await page.locator('[data-scenario="crm"]').click();
