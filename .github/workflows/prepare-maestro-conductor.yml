@@ -55,11 +55,11 @@ jobs:
             image-optimization.json
           if-no-files-found: ignore
           retention-days: 14
-      - name: Commit verified changes to feature branch only
+      - name: Commit verified site changes to feature branch only
         run: |
           git config user.name 'Maestro release builder'
           git config user.email 'maestro-release@users.noreply.github.com'
-          git add maestro/ _config.yml image-optimization.json .github/workflows/maestro-checks.yml
+          git add maestro/ _config.yml image-optimization.json
           if ! git diff --cached --quiet; then
             git commit -m 'feat(maestro): apply tested conductor navigation, context fixes and optimized images'
             git push origin HEAD:feature/maestro-conductor-20261026
