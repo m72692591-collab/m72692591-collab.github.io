@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="МАЭСТРО — интерактивная демонстрация обработки заявок: квалификация, приоритет, карточка CRM, проект ответа и передача менеджеру.">
+<title>МАЭСТРО · Демо ИИ-администратора заявок</title>
+<style>
+:root{color-scheme:dark;--bg:#101623;--panel:#192435;--line:#314058;--text:#f1f6fc;--muted:#a9bacd;--orange:#ff7947;--aqua:#70ded2;--good:#9be4b9}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#243c56 0%,transparent 35%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
+a{color:var(--aqua)}.wrap{max-width:1150px;margin:auto;padding:0 20px}.top{border-bottom:1px solid var(--line)}.top-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:18px}.brand{font-weight:900;letter-spacing:.12em;color:var(--text);text-decoration:none}.tag{border:1px solid #6b5a50;color:#ffd5c5;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:800}
+.hero{padding:56px 0 30px}.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--aqua);text-transform:uppercase;font-weight:800}h1{font-size:clamp(30px,5.7vw,57px);line-height:1.1;max-width:860px;margin:14px 0}h1 span{color:var(--orange)}h2{font-size:23px;margin:0 0 14px}p{margin:7px 0;color:var(--muted)}.hero p{max-width:800px}.notice{margin:20px 0;border:1px solid #9a734d;padding:12px 16px;border-radius:14px;background:#34271f;color:#ffe1c6}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;padding-bottom:55px}.card{border:1px solid var(--line);border-radius:21px;padding:24px;background:rgba(25,36,53,.96);min-width:0}.card.large{grid-column:1/-1}.meta{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.pill{font-size:12px;border:1px solid var(--line);padding:5px 9px;border-radius:20px;color:var(--muted)}
+label{display:block;color:var(--text);font-size:14px;font-weight:700;margin:16px 0 8px}input,textarea,select{width:100%;padding:12px 14px;color:var(--text);background:#101927;border:1px solid #42526b;border-radius:11px;font:inherit}textarea{min-height:160px;resize:vertical}button{background:var(--orange);color:#201b1a;font:inherit;font-weight:800;cursor:pointer;border:0;border-radius:11px;padding:12px 17px}button:hover{filter:brightness(1.09)}button.secondary{color:var(--text);background:#334762}button.ghost{color:var(--aqua);background:transparent;border:1px solid #4b7579}button:focus-visible,a:focus-visible{outline:3px solid var(--aqua);outline-offset:3px}.buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.result{display:none}.result.active{display:block}.headline{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.score{font-size:30px;color:var(--aqua);font-weight:900}.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:18px 0}.metric{border:1px solid var(--line);padding:12px;border-radius:12px;overflow-wrap:anywhere}.metric small{display:block;color:var(--muted);font-size:12px}.metric strong{display:block;font-size:16px}pre{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--line);background:#0b1422;border-radius:13px;padding:16px;color:#d9e6f4;font-size:14px}ul{padding-left:20px;color:var(--muted)}.hint{font-size:13px}.timeline{display:flex;gap:7px;flex-wrap:wrap}.stage{border:1px solid #4c617b;background:#172334;border-radius:14px;padding:9px 12px;font-size:13px;color:var(--text)}.stage.active{background:#315249;color:var(--good)}.callout{border-left:3px solid var(--aqua);padding-left:13px;margin-top:20px}.foot{border-top:1px solid var(--line);padding:25px 0 38px;color:var(--muted);font-size:13px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.card.large{grid-column:auto}.hero{padding-top:35px}.card{padding:18px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap top-inner"><a class="brand" href="index.html">М · МАЭСТРО BUSINESS</a><span class="tag">СОБСТВЕННЫЙ ПРОТОТИП</span></div></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">Рабочая логика · М-030 / М-031 / М-032 / М-033 / М-073</div><h1>Из свободного сообщения — <span>в понятную заявку</span></h1>
+<p>Проверьте, как программа определяет направление запроса, его приоритет, извлекает контакты, создаёт карточку и черновик ответа для менеджера. Никакой регистрации.</p>
+<div class="notice" role="note"><strong>Демонстрационный режим.</strong> Здесь используется локальный анализ по правилам — <strong>без вызова нейросети, без реальной CRM и без отправки сообщений</strong>. Введённые данные остаются в этой вкладке; используйте вымышленные контакты. Для внедрения потребуется согласовать API, защиту персональных данных, тесты и права доступа.</div></section>
+<div class="grid">
+<section class="card" aria-labelledby="in-title">
+<h2 id="in-title">01. Входящий запрос</h2><p>Можно вставить свой пример или выбрать типовую ситуацию.</p>
+<label for="scenario">Отраслевой сценарий</label>
+<select id="scenario">
+<option value="crm">Заявка → бот → CRM</option><option value="docs">Договоры и Excel</option><option value="catalog">Поиск товаров по каталогу</option><option value="content">Контент-конвейер</option><option value="custom">Свой текст</option>
+</select>
+<label for="message">Сообщение клиента</label>
+<textarea id="message" maxlength="4000" required spellcheck="true"></textarea>
+<div class="buttons"><button id="analyze">Разобрать заявку</button><button class="ghost" id="clear">Очистить</button></div>
+<p class="hint" id="input-error" role="alert" style="color:#ffb4a6"></p>
+<div class="meta"><span class="pill">Локально в браузере</span><span class="pill">Без сторонних ключей</span><span class="pill">Без платного API</span></div>
+</section>
+<section class="card" aria-labelledby="out-title">
+<div class="headline"><h2 id="out-title">02. Карточка обращения</h2><span class="score" id="score" aria-live="polite">—</span></div>
+<p id="empty">Нажмите «Разобрать заявку», чтобы сформировать результат.</p>
+<div class="result" id="result">
+<div class="metrics">
+<div class="metric"><small>Категория</small><strong id="category"></strong></div>
+<div class="metric"><small>Приоритет</small><strong id="priority"></strong></div>
+<div class="metric"><small>Бюджет</small><strong id="budget"></strong></div>
+<div class="metric"><small>Контакт</small><strong id="contact"></strong></div>
+</div>
+<div class="callout"><strong>Следующий шаг</strong><p id="next"></p></div>
+<p class="hint" id="explanation"></p>
+</div></section>
+<section class="card large result" id="response-section" aria-labelledby="resp-title">
+<div class="headline"><h2 id="resp-title">03. Черновик ответа и контроль</h2><span class="pill">Не отправляется автоматически</span></div>
+<pre id="draft"></pre>
+<div class="buttons"><button id="copy">Скопировать ответ</button><button class="secondary" id="next-stage">Передать на рассмотрение</button></div>
+<p role="status" id="copy-status" class="hint"></p>
+<h2 style="margin-top:24px">Статус воронки</h2><div class="timeline"><span class="stage active" data-stage="0">Принята</span><span class="stage" data-stage="1">На рассмотрении</span><span class="stage" data-stage="2">КП подготовлено</span><span class="stage" data-stage="3">Передано менеджеру</span></div>
+<p class="hint">Этапы меняются только внутри демонстрационной страницы. Уведомления и записи в CRM не производятся.</p>
+</section>
+<section class="card large" aria-labelledby="next-title"><h2 id="next-title">Что добавляем при заказе полноценного решения</h2><div class="metrics">
+<div class="metric"><small>Сбор обращений</small><strong>Telegram, MAX, сайт, почта</strong></div><div class="metric"><small>Учёт</small><strong>CRM, таблицы, журнал ошибок</strong></div><div class="metric"><small>ИИ-слой</small><strong>Модели, база знаний, уверенность</strong></div><div class="metric"><small>Безопасность</small><strong>Согласования, роли, аудит, повторы</strong></div>
+</div><p>Сценарии для бизнеса разрабатываются индивидуально. Не обещаем интеграцию без проверки возможности доступа к API заказчика.</p><div class="buttons"><a class="stage active" style="text-decoration:none" href="index.html#lead">Обсудить внедрение →</a><a class="stage" style="text-decoration:none" href="agency.html">Другие услуги →</a></div></section>
+</div>
+</main>
+<footer class="foot"><div class="wrap">МАЭСТРО BUSINESS · Собственная демонстрация, не оплаченный клиентский кейс · <a href="index.html">На главную</a></div></footer>
+<script>
+(()=>{
+"use strict";
+const samples={
+crm:"Здравствуйте! Нужно срочно настроить Telegram-бота с передачей заявок с сайта в Битрикс24. Бюджет около 35000 руб. Хотели бы начать на этой неделе. Контакт demo@example.com",
+docs:"Добрый день! Необходимо автоматизировать заполнение договоров Word, расчёт маржинальности в Excel и подготовку отчётности. Бюджет 30000 рублей. Что понадобится для пилота?",
+catalog:"Ищем решение: сотрудники присылают список стройматериалов, бот находит соответствия в каталоге и предлагает три точных варианта с артикулами. Очень важно избежать подмены товаров.",
+content:"Нужна автоматическая подготовка роликов и публикаций для соцсетей: контент-план, тексты, согласование, публикация и аналитика. Расскажите, как построите процесс.",
+custom:""
+};
+const catRules=[
+["Автоматизация продаж и CRM",/crm|битрикс|bitrix|amocrm|заявк|лид|воронк|бот|telegram|телеграм|max|мессенджер/i],
+["Документы и отчётность",/договор|excel|word|отч[её]т|документ|таблиц|маржинал|смет/i],
+["Каталоги и снабжение",/каталог|артикул|закупк|поставщик|материал|оборудован|поиск товар/i],
+["Контент и маркетинг",/контент|ролик|видео|соцсет|реклам|публикац|пост|seo/i],
+["Сайты и интерфейсы",/сайт|лендинг|интерфейс|ux|ui|figma|дизайн/i]
+];
+const el=id=>document.getElementById(id);let stage=0,record=null;
+function categoryOf(t){for(const [label,re] of catRules){if(re.test(t))return label}return "Общая цифровая задача"}
+function phoneOf(t){const m=t.match(/(?:\+7|8)[\s(.-]*\d{3}[\s).-]*\d{3}[\s.-]*\d{2}[\s.-]*\d{2}\b/);return m?m[0]:""}
+function extract(t){
+const email=(t.match(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i)||[])[0]||"";
+const phone=phoneOf(t);const budgetMatch=t.match(/(?:бюджет|до|около|примерно)[^\d]{0,18}(\d[\d\s]{2,10})\s*(?:руб(?:лей|ля)?|₽)/i);
+const budget=budgetMatch?Number(budgetMatch[1].replace(/\s+/g,"")):null;
+const rush=/(срочно|сегодня|завтра|на этой неделе|быстро|до конца недели)/i.test(t);
+const category=categoryOf(t);
+let score=25+(email||phone?25:0)+(budget?20:0)+(rush?20:0)+(t.length>100?10:0);
+score=Math.min(100,score);const priority=score>=75?"Высокий":score>=50?"Средний":"Требует уточнения";
+return{category,email,phone,budget,rush,score,priority}
+}
+function nextOf(x){if(!x.email&&!x.phone)return "Уточнить удобный контакт и ответственного со стороны заказчика.";if(x.category==="Документы и отчётность")return "Запросить обезличенный образец документа, шаблон и правила проверки.";if(x.category==="Каталоги и снабжение")return "Запросить пример номенклатуры и правила определения точного соответствия.";if(x.category==="Контент и маркетинг")return "Согласовать форматы, площадки, процесс проверки и объём публикаций.";return "Уточнить источники обращений, обязательные поля и доступные интеграции."}
+function draftOf(x){const category=x.category.toLowerCase();return "Здравствуйте! МАЭСТРО рассматривает вашу задачу: "+category+".\n\nПредлагаем начать с короткого разбора текущего процесса и согласовать первый проверяемый этап: входные данные → обработка → результат → контроль ошибок.\n\n"+nextOf(x)+"\n\nПосле уточнения состава работ определим стоимость, сроки, критерии приёмки и необходимость сторонних сервисов. Пример на нашем сайте — учебная демонстрация логики; действующую интеграцию с вашей системой она не подтверждает.\n\nМАЭСТРО BUSINESS"}
+function showStage(){document.querySelectorAll("[data-stage]").forEach(n=>n.classList.toggle("active",Number(n.dataset.stage)<=stage))}
+function setSample(){const key=el("scenario").value;if(key!=="custom")el("message").value=samples[key]}
+function reset(){record=null;stage=0;el("message").value="";el("scenario").value="custom";el("result").classList.remove("active");el("response-section").classList.remove("active");el("empty").hidden=false;el("score").textContent="—";el("copy-status").textContent="";el("input-error").textContent="";showStage()}
+function analyze(){const t=el("message").value.trim();if(t.length<20){el("input-error").textContent="Опишите задачу минимум в 20 символах.";return}el("input-error").textContent="";record=extract(t);stage=0;el("score").textContent=record.score+"/100";el("category").textContent=record.category;el("priority").textContent=record.priority;el("budget").textContent=record.budget?record.budget.toLocaleString("ru-RU")+" ₽":"Не указан";el("contact").textContent=record.email||record.phone||"Не указан";el("next").textContent=nextOf(record);el("explanation").textContent="Оценка демонстрационная: контакт +25, бюджет +20, срочность +20, подробное описание +10, базовый уровень 25. Это не вероятность оплаты.";el("draft").textContent=draftOf(record);el("empty").hidden=true;el("result").classList.add("active");el("response-section").classList.add("active");el("copy-status").textContent="";showStage()}
+async function copy(){if(!record)return;const value=el("draft").textContent;try{await navigator.clipboard.writeText(value);el("copy-status").textContent="Черновик скопирован"}catch{el("copy-status").textContent="Не удалось скопировать автоматически; выделите текст черновика."}}
+el("scenario").addEventListener("change",setSample);el("analyze").addEventListener("click",analyze);el("clear").addEventListener("click",reset);el("copy").addEventListener("click",copy);el("next-stage").addEventListener("click",()=>{if(!record)return;stage=Math.min(3,stage+1);showStage();el("next-stage").textContent=stage>=3?"Этапы пройдены в демо":"Перевести на следующий этап";});
+setSample();
+})();
+</script>
+</body>
+</html>
