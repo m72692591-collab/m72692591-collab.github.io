@@ -31,9 +31,10 @@ button:focus-visible,input:focus-visible{outline:3px solid #65e2e2;outline-offse
 (() => {
 "use strict";
 const $=id=>document.getElementById(id),cards=$("cards");
-let items=[];
+let items=[],loadVersion=0,requestController=null;
+function cancelLoad(){loadVersion++;requestController?.abort();requestController=null}
 function line(parent,tag,text,className){const el=document.createElement(tag);if(className)el.className=className;el.textContent=String(text ?? "");parent.append(el);return el}
-function hide(){items=[];$("token").value="";cards.replaceChildren();line(cards,"p","Данные скрыты.","empty");$("count").textContent="0 обращений";$("status").textContent="Данные скрыты."}
+function hide(){cancelLoad();items=[];$("token").value="";cards.replaceChildren();line(cards,"p","Данные скрыты.","empty");$("count").textContent="0 обращений";$("status").textContent="Данные скрыты."}
 function render(){
 const q=$("search").value.trim().toLocaleLowerCase("ru");
 const matches=items.filter(x=>[x.name,x.interest,x.contact,x.business,x.channels].some(v=>String(v||"").toLocaleLowerCase("ru").includes(q)));
@@ -53,16 +54,19 @@ line(section,"p",item.channels);
 $("load").addEventListener("click",async()=>{
 const token=$("token").value.trim();
 if(token.length<32){$("status").textContent="Введите полный токен администратора.";return}
+cancelLoad();const version=loadVersion,controller=new AbortController();requestController=controller;
 $("status").textContent="Загрузка…";
 try{
-const response=await fetch("lead-api.php",{method:"GET",headers:{"Authorization":"Bearer "+token},cache:"no-store",credentials:"same-origin"});
+const response=await fetch("lead-api.php",{method:"GET",headers:{"Authorization":"Bearer "+token},cache:"no-store",credentials:"same-origin",signal:controller.signal});
 const data=await response.json();
+if(version!==loadVersion)return;
 if(!response.ok||data.ok!==true||!Array.isArray(data.leads))throw Error(response.status===401?"Неверный токен.":"Не удалось получить список.");
 items=data.leads;$("token").value="";$("status").textContent="Загружено "+items.length+" обращений. Данные останутся только на этой странице.";render();
-}catch(e){items=[];cards.replaceChildren();line(cards,"p","Нет данных для отображения.","empty");$("status").textContent=e.message||"Сервер недоступен."}
+}catch(e){if(version!==loadVersion||e.name==="AbortError")return;items=[];cards.replaceChildren();line(cards,"p","Нет данных для отображения.","empty");$("status").textContent=e.message||"Сервер недоступен."}
+finally{if(version===loadVersion)requestController=null}
 });
 $("clear").addEventListener("click",hide);
 $("search").addEventListener("input",render);
-window.addEventListener("pagehide",()=>{items=[]});
+window.addEventListener("pagehide",hide);
 })();
 </script></body></html>

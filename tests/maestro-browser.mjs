@@ -112,6 +112,40 @@ try {
   // Test what visitors see if the server has not yet been configured.
   okay("Not claiming backend receipt", (await page.locator('meta[name="maestro-lead-endpoint"]').getAttribute("content")) === "");
 
+  // A delayed response must not undo the operator's explicit privacy action.
+  const admin = await desktop.newPage();
+  watchErrors(admin, errors);
+  await admin.addInitScript(() => {
+    window.pendingAdminLoads = [];
+    window.fetch = (_url, options) => new Promise((resolve, reject) => {
+      window.pendingAdminLoads.push({
+        signal: options?.signal,
+        resolve: leads => resolve({ ok: true, status: 200, json: async () => ({ ok: true, leads }) }),
+        reject
+      });
+    });
+  });
+  await goto(admin, "server/leads-admin.html");
+  await admin.locator("#token").fill("maestro-ci-synthetic-token-not-for-production");
+  await admin.locator("#load").click();
+  await admin.locator("#clear").click();
+  await admin.evaluate(async () => {
+    pendingAdminLoads[0].resolve([{ id: "synthetic", name: "CI only", contact: "synthetic contact", business: "Synthetic project", channels: "Demo", interest: "Бот" }]);
+    await new Promise(resolve => setTimeout(resolve, 0));
+  });
+  okay("Hidden client data stays hidden after delayed response", await admin.locator("#cards").innerText() === "Данные скрыты.");
+  okay("Hidden status and empty count survive delayed response", await admin.locator("#status").innerText() === "Данные скрыты." && await admin.locator("#count").innerText() === "0 обращений");
+  okay("Hide aborts the pending network request", await admin.evaluate(() => pendingAdminLoads[0].signal.aborted));
+  await admin.locator("#token").fill("maestro-ci-synthetic-token-not-for-production");
+  await admin.locator("#load").click();
+  await admin.locator("#clear").click();
+  await admin.evaluate(async () => {
+    pendingAdminLoads[1].reject(new Error("Synthetic delayed failure"));
+    await new Promise(resolve => setTimeout(resolve, 0));
+  });
+  okay("Late failure cannot replace hidden status", await admin.locator("#status").innerText() === "Данные скрыты.");
+  await admin.close();
+
   // Verify responsive layout, launcher position and mobile interactions.
   const mobile = await browser.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
