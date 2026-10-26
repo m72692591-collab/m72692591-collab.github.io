@@ -42,3 +42,13 @@
 @media(prefers-reduced-motion:reduce){.maestro-genie-panel,.maestro-genie-avatar,.maestro-genie-star,.maestro-genie-stage:after,.maestro-genie-panel.is-talking .maestro-genie-mouth{animation:none!important}.maestro-genie-launcher{transition:none}}
 
 .maestro-genie-go[hidden]{display:none!important}
+
+/* The on-screen keyboard can reduce the viewport on Android. Let the complete
+   conversation scroll as a last resort rather than hiding CTAs or form fields. */
+@media(max-width:640px){
+  .maestro-genie-panel{overflow-y:auto;overscroll-behavior:contain}
+  .maestro-genie-chat{flex:0 0 auto;min-height:120px;max-height:190px}
+  .maestro-genie-quick{flex-shrink:0}
+  .maestro-genie-form,.maestro-genie-note,.maestro-genie-go{flex-shrink:0}
+  .maestro-genie-form{position:sticky;bottom:0;z-index:5}
+}
