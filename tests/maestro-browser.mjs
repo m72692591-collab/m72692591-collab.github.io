@@ -125,7 +125,22 @@ try {
   okay("Mobile genie panel visible", await m.locator(".maestro-genie-panel").isVisible());
   const bounds = await m.locator(".maestro-genie-panel").boundingBox();
   okay("Genie panel fits mobile width", Boolean(bounds && bounds.x >= -1 && bounds.x + bounds.width <= 391));
+  await m.waitForTimeout(600); // Capture after the panel's entry animation, not mid-fade.
   await m.screenshot({ path: artifacts + "/genie-mobile.png", fullPage: false });
+  await m.locator('[data-mg="brief-start"]').click();
+  const mobileAnswers = [
+    "Создать сайт услуг",
+    "Сервисная компания",
+    "Получать заявки",
+    "Звонки принимаются вручную",
+    "Сайт и Telegram"
+  ];
+  for (const answer of mobileAnswers) {
+    await m.locator('.maestro-genie-form input[name="question"]').fill(answer);
+    await m.locator('.maestro-genie-form button[type="submit"]').click();
+  }
+  await m.locator('[data-mg="brief-go"]').scrollIntoViewIfNeeded();
+  okay("Mobile genie five-question brief can finish without clipped CTA", await m.locator('[data-mg="brief-go"]').isVisible());
   await m.locator('[data-mg="close"]').click();
   await goto(m, "maestro-lab.html");
   okay("Mobile lab demo visible", await m.locator("#advance").isVisible());
