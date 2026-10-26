@@ -26,6 +26,7 @@
     '<path d="M84 103Q91 130 111 140Q131 135 141 104Q138 127 121 144L110 150L95 139Z" fill="#a0afb1" opacity=".8"/>',
     '<path d="M67 169Q90 185 111 194Q137 184 152 165" fill="none" stroke="#f5c56d" stroke-width="2"/>',
     '<circle cx="111" cy="175" r="6" fill="#ffd484" stroke="#ffffff" stroke-width="1"/>',
+    '<g class="maestro-genie-arm"><path d="M145 153L168 133L179 110" fill="none" stroke="#268a98" stroke-width="13" stroke-linecap="round"/><circle cx="181" cy="105" r="8" fill="#e5d3af"/><path d="M184 101L206 50" stroke="#ffda8a" stroke-width="3"/></g>',
     '</svg>'
   ].join('');
 
@@ -45,7 +46,7 @@
       '<div class="maestro-genie-quick"><button type="button" data-mg-question="Нужен ИИ-оператор для заявок">ИИ-оператор</button>' +
       '<button type="button" data-mg-question="Нужен сайт">Сайт</button><button type="button" data-mg-question="Нужны CRM и продажи">CRM и продажи</button>' +
       '<button type="button" data-mg-question="Как заказать проект?">Оставить заявку</button>' +
-      '<button type="button" data-mg="brief-start">Собрать ТЗ</button></div>' +
+      '<button type="button" data-mg="brief-start">Собрать ТЗ</button><button type="button" data-mg="lab-go">Показать демо</button></div>' +
       '<form class="maestro-genie-form"><input name="question" type="text" maxlength="400" autocomplete="off" aria-label="Ваш вопрос" placeholder="Расскажите, что нужно бизнесу" required><button type="submit">Отправить</button></form>' +
       '<button type="button" class="maestro-genie-go" data-mg="lead">Перейти к заявке →</button>' +
       '<button type="button" class="maestro-genie-go" data-mg="brief-go" hidden>Открыть готовый черновик ТЗ →</button>' +
@@ -60,7 +61,7 @@
   const input = root.querySelector('input[name="question"]');
   const voiceButton = root.querySelector('[data-mg="voice"]');
   const micButton = root.querySelector('[data-mg="mic"]');
-  const state = { voice: false, topic: 'general', lastQuestion: '', recognition: null, speaking: false, wizard: null };
+  const state = { voice: false, topic: 'general', lastQuestion: '', recognition: null, speaking: false, wizard: null, service: null, messages: [] };
 
   const knowledge = {
     general: 'Здравствуйте! Я МАЭСТРО. Помогаю выбрать подходящее направление: сайты, боты, ИИ-операторы, CRM, маркетинг, команда и аналитика. Расскажите, что вы хотите улучшить. Я могу помочь сформулировать заявку.',
@@ -183,9 +184,16 @@
     if (!question) return;
     cancelSpeech();
     state.lastQuestion = question;
+    state.messages.push(question); if(state.messages.length>12)state.messages.shift();
     addMessage('user', question);
     if (state.wizard) { answerWizard(question); return; }
-    const topic = chooseTopic(question);
+    const topic = window.MaestroCore?.intent(question) || chooseTopic(question);
+    const chosen = window.MaestroCore?.service(question);
+    if(chosen) state.service = chosen;
+    if(topic==='navigate_lab'||topic==='navigate_brief'){
+      const to=topic==='navigate_lab'?'maestro-lab.html':'brief-builder.html';
+      if(window.MaestroNavigate?.go(to))return;
+    }
     if (topic !== 'general') state.topic = topic;
     const answer = knowledge[topic] || knowledge.general;
     addMessage('assistant', answer);
@@ -198,12 +206,15 @@
     launcher.setAttribute('aria-expanded', 'true');
     launcher.hidden = true;
     if (!chat.children.length) addMessage('assistant', knowledge.general);
-    input.focus();
+    if(matchMedia('(pointer:fine)').matches)input.focus();
+    else root.querySelector('[data-mg="close"]').focus({preventScroll:true});
+    document.body.classList.add('maestro-consulting');
   }
   function close() {
     cancelSpeech();
     if (state.recognition) { try { state.recognition.stop(); } catch (_) {} }
     panel.hidden = true;
+    document.body.classList.remove('maestro-consulting');
     launcher.hidden = false;
     launcher.setAttribute('aria-expanded', 'false');
     launcher.focus();
@@ -213,8 +224,8 @@
     const details = document.getElementById('business');
     const form = document.getElementById('lead');
     const values = { ai: 'ИИ-оператор', web: 'Сайт', crm: 'CRM', marketing: 'Другое', hr: 'HR', audit: 'Аудит', price: 'Другое', general: 'Другое', lead: 'Другое' };
-    if (select) select.value = values[state.topic] || 'Другое';
-    if (details && !details.value.trim() && state.lastQuestion) details.value = 'Обсуждали с консультантом: ' + state.lastQuestion;
+    if (select) select.value = window.MaestroCore?.services[state.service]?.label || values[state.topic] || 'Другое';
+    if(details&&!details.value.trim()&&state.messages.length) details.value=window.MaestroCore?.summary(state.messages,state.service)||state.messages.join('\n');
     close();
     if (form) form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     setTimeout(() => document.getElementById('name')?.focus({ preventScroll: true }), 400);
@@ -235,11 +246,12 @@
     try { recognition.start(); } catch (_) { state.recognition = null; setStatus('Не удалось включить микрофон'); }
   }
 
+  root.querySelector('[data-mg="lab-go"]').addEventListener('click',()=>{if(!window.MaestroNavigate?.go('maestro-lab.html'))location.href='maestro-lab.html';});
   launcher.addEventListener('click', open);
   root.querySelector('[data-mg="close"]').addEventListener('click', close);
   root.querySelector('[data-mg="lead"]').addEventListener('click', fillLead);
   root.querySelector('[data-mg="brief-start"]').addEventListener('click', startWizard);
-  root.querySelector('[data-mg="brief-go"]').addEventListener('click', () => { window.location.href = 'brief-builder.html'; });
+  root.querySelector('[data-mg="brief-go"]').addEventListener('click', () => { if(!window.MaestroNavigate?.go('brief-builder.html'))window.location.href='brief-builder.html'; });
   voiceButton.addEventListener('click', () => {
     state.voice = !state.voice;
     voiceButton.setAttribute('aria-pressed', String(state.voice));
@@ -272,3 +284,4 @@
   }
   window.MAESTRO_GENIE = Object.freeze({ open, close, ask, stopVoice: cancelSpeech });
 })();
+/* MAESTRO v1.1 context and motion */

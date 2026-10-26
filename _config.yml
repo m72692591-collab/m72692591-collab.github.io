@@ -1,0 +1,8 @@
+exclude:
+  - tools
+  - tests
+  - infra
+  - integrations
+  - maestro/server
+  - maestro/GENIE_ENGINE.md
+  - image-optimization.json
