@@ -9,13 +9,19 @@ on:
       - '.github/workflows/maestro-checks.yml'
   push:
     branches:
-      - 'feature/maestro-*'
+      - main
     paths:
       - 'maestro/**'
       - 'tests/maestro-smoke.mjs'
+      - 'tests/maestro-browser.mjs'
+      - 'tests/maestro-leads-api.mjs'
       - '.github/workflows/maestro-checks.yml'
+  workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: maestro-checks-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   smoke:
     runs-on: ubuntu-latest
