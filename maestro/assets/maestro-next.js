@@ -19,7 +19,7 @@ if(root){
     active=item;title.textContent=item.title;description.textContent=item.description;open.href=item.href;
     lead.href='#lead';orbit.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
     answer.textContent='';scene?.focus(catalog.indexOf(item));
-    if(userSelected){const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest}
+    if(userSelected){const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest;window.MAESTRO_GENIE?.setLeadInterest?.(item.interest)}
   };
   const classicList=document.getElementById('next-classic-list');
   catalog.forEach((item)=>{
@@ -63,7 +63,7 @@ if(root){
     const task=question.value.trim();
     if(!task){answer.textContent='Расскажите, что хотите изменить в работе.';question.focus();return}
     if(!window.MAESTRO_GENIE){answer.textContent='Консультант сейчас недоступен. Вы можете описать задачу в заявке ниже.';return}
-    answer.textContent='';window.MAESTRO_GENIE.open();window.MAESTRO_GENIE.ask(`${active.title}: ${task}`);
+    answer.textContent='';window.MAESTRO_GENIE.setLeadInterest(active.interest);window.MAESTRO_GENIE.open();window.MAESTRO_GENIE.ask(`${active.title}: ${task}`);
   });
   const requestedMode=new URLSearchParams(location.search).get('mode');
   try{if(requestedMode==='live'||(requestedMode!=='classic'&&sessionStorage.getItem('maestro_next_mode')==='live'))setMode('live')}catch{if(requestedMode==='live')setMode('live')}

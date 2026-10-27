@@ -38,7 +38,7 @@ function watchErrors(page, errors) {
 }
 try {
   await ready();
-  browser = await chromium.launch({ headless: true, ...(process.env.CI ? {} : { channel: "chrome" }) });
+  browser = await chromium.launch({ headless: true, args: ["--enable-webgl", "--use-gl=angle", "--use-angle=swiftshader"], ...(process.env.CI ? {} : { channel: "chrome" }) });
   const desktop = await browser.newContext({ viewport: { width: 1400, height: 900 }, acceptDownloads: true });
   const page = await desktop.newPage();
   const errors = [];
@@ -52,8 +52,20 @@ try {
   okay("NEXT uses the shared direction catalog", await page.locator("#next-classic-list a").count() === 11);
   await page.locator('[data-next-mode="live"]').click();
   okay("Live mode changes the whole homepage", await page.locator(".hero").isHidden());
+  await page.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
+  okay("Desktop Architect GLB rendered", await page.locator("#next-canvas canvas").count() === 1);
   await page.locator('#next-orbit button[data-id="automation"]').click();
   okay("NEXT selection opens the chosen direction", await page.locator("#next-title").innerText() === "Автоматизация");
+  await page.locator("#next-question").fill("Заявки теряются в чатах");
+  await page.locator("#next-ask").click();
+  okay("NEXT opens the existing consultant inline", await page.locator(".next-detail #maestro-genie-panel").isVisible());
+  await page.locator('.next-detail [data-mg="lead"]').click();
+  okay("Consultant preserves the selected service", await page.locator("#interest").inputValue() === "Автоматизация");
+  await page.locator('#next-orbit button[data-id="strategy"]').click();
+  await page.locator("#next-question").fill("Нужен первый план роста");
+  await page.locator("#next-ask").click();
+  await page.locator('.next-detail [data-mg="lead"]').click();
+  okay("Strategy handoff keeps its catalog service", await page.locator("#interest").inputValue() === "Аудит");
   await page.locator('[data-next-mode="classic"]').click();
   okay("Classic site remains available", await page.locator(".hero").isVisible());
 
@@ -195,6 +207,11 @@ try {
   await goto(m, "brief-builder.html");
   okay("Mobile builder visible", await m.locator("#download").isVisible());
   await m.screenshot({ path: artifacts + "/brief-mobile.png", fullPage: true });
+  const mobileModel = m.waitForResponse(response => response.url().endsWith("architect-mobile.glb") && response.status() === 200);
+  await goto(m, "index.html?mode=live");
+  await mobileModel;
+  await m.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
+  okay("Mobile loads its smaller Architect GLB", await m.locator("#next-canvas canvas").count() === 1);
   okay("Browser produced no uncaught errors", errors.length === 0 || (process.stderr.write(errors.join("\n")), false));
   process.stdout.write("\nPASSED " + checks + " browser assertions (desktop + mobile)\n");
 } finally {

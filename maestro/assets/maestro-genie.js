@@ -60,7 +60,7 @@
   const input = root.querySelector('input[name="question"]');
   const voiceButton = root.querySelector('[data-mg="voice"]');
   const micButton = root.querySelector('[data-mg="mic"]');
-  const state = { voice: false, topic: 'general', lastQuestion: '', recognition: null, speaking: false, wizard: null };
+  const state = { voice: false, topic: 'general', lastQuestion: '', leadInterest: null, recognition: null, speaking: false, wizard: null };
 
   const knowledge = {
     general: 'Здравствуйте! Я МАЭСТРО. Помогаю выбрать подходящее направление: сайты, боты, ИИ-операторы, CRM, маркетинг, команда и аналитика. Расскажите, что вы хотите улучшить. Я могу помочь сформулировать заявку.',
@@ -206,14 +206,19 @@
     panel.hidden = true;
     launcher.hidden = false;
     launcher.setAttribute('aria-expanded', 'false');
+    state.leadInterest = null;
     launcher.focus();
+  }
+  function setLeadInterest(value) {
+    const select = document.getElementById('interest');
+    state.leadInterest = select && [...select.options].some(option => option.value === value) ? value : null;
   }
   function fillLead() {
     const select = document.getElementById('interest');
     const details = document.getElementById('business');
     const form = document.getElementById('lead');
     const values = { ai: 'ИИ-оператор', web: 'Сайт', crm: 'CRM', marketing: 'Другое', hr: 'HR', audit: 'Аудит', price: 'Другое', general: 'Другое', lead: 'Другое' };
-    if (select) select.value = values[state.topic] || 'Другое';
+    if (select) select.value = state.leadInterest || values[state.topic] || 'Другое';
     if (details && !details.value.trim() && state.lastQuestion) details.value = 'Обсуждали с консультантом: ' + state.lastQuestion;
     close();
     if (form) form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
@@ -270,5 +275,5 @@
     });
     nav.append(navButton);
   }
-  window.MAESTRO_GENIE = Object.freeze({ open, close, ask, stopVoice: cancelSpeech });
+  window.MAESTRO_GENIE = Object.freeze({ open, close, ask, setLeadInterest, stopVoice: cancelSpeech });
 })();
