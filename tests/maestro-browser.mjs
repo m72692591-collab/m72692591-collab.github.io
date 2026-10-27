@@ -3,13 +3,14 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
+import http from "node:http";
 import { setTimeout as delay } from "node:timers/promises";
 import fs from "node:fs";
 
 const base = "http://127.0.0.1:8765/maestro/";
 const artifacts = "test-artifacts/maestro";
 fs.mkdirSync(artifacts, { recursive: true });
-const server = spawn("python3", ["-m", "http.server", "8765", "--bind", "127.0.0.1", "--directory", "."], { stdio: "ignore" });
+const server = spawn(process.platform === "win32" ? "python" : "python3", ["-m", "http.server", "8765", "--bind", "127.0.0.1", "--directory", "."], { stdio: "ignore" });
 let browser;
 let checks = 0;
 function okay(label, condition) {
@@ -19,7 +20,11 @@ function okay(label, condition) {
 }
 async function ready() {
   for (let i = 0; i < 50; i++) {
-    try { if ((await fetch(base + "index.html")).ok) return; } catch { }
+    const online = await new Promise(resolve => {
+      http.get(base + "index.html", response => { response.resume(); resolve(response.statusCode === 200); })
+        .on("error", () => resolve(false));
+    });
+    if (online) return;
     await delay(200);
   }
   throw Error("Static test server did not start");
@@ -33,7 +38,7 @@ function watchErrors(page, errors) {
 }
 try {
   await ready();
-  browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({ headless: true, ...(process.env.CI ? {} : { channel: "chrome" }) });
   const desktop = await browser.newContext({ viewport: { width: 1400, height: 900 }, acceptDownloads: true });
   const page = await desktop.newPage();
   const errors = [];
@@ -41,8 +46,16 @@ try {
   await goto(page, "index.html");
   okay("Home title", (await page.title()).includes("Maestro"));
   okay("Lead form exists", await page.locator("#leadForm").count() === 1);
-  okay("LAB hero entry", await page.getByRole("link", { name: /Испытать автоматизацию/ }).count() > 0);
+  okay("LAB hero entry", await page.locator('.hero a[href="#lab"]').count() === 1);
   okay("Builder menu entry", await page.getByRole("link", { name: "Создать ТЗ" }).count() === 1);
+  await page.locator("#next-classic-list a").first().waitFor();
+  okay("NEXT uses the shared direction catalog", await page.locator("#next-classic-list a").count() === 11);
+  await page.locator('[data-next-mode="live"]').click();
+  okay("Live mode changes the whole homepage", await page.locator(".hero").isHidden());
+  await page.locator('#next-orbit button[data-id="automation"]').click();
+  okay("NEXT selection opens the chosen direction", await page.locator("#next-title").innerText() === "Автоматизация");
+  await page.locator('[data-next-mode="classic"]').click();
+  okay("Classic site remains available", await page.locator(".hero").isVisible());
 
   const call = page.getByRole("button", { name: "Вызвать консультанта МАЭСТРО" });
   await call.click();
