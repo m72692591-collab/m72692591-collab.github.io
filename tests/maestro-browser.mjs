@@ -38,6 +38,8 @@ function watchErrors(page, errors) {
 }
 try {
   await ready();
+  okay("Desktop Architect GLB stays under 4 MB", fs.statSync("maestro/assets/models/architect-rigged.glb").size < 4_000_000);
+  okay("Mobile Architect GLB stays under 1.5 MB", fs.statSync("maestro/assets/models/architect-mobile.glb").size < 1_500_000);
   browser = await chromium.launch({ headless: true, args: ["--enable-webgl", "--use-gl=angle", "--use-angle=swiftshader"], ...(process.env.CI ? {} : { channel: "chrome" }) });
   const desktop = await browser.newContext({ viewport: { width: 1400, height: 900 }, acceptDownloads: true });
   const page = await desktop.newPage();
@@ -235,7 +237,7 @@ try {
   await goto(m, "brief-builder.html");
   okay("Mobile builder visible", await m.locator("#download").isVisible());
   await m.screenshot({ path: artifacts + "/brief-mobile.png", fullPage: true });
-  const mobileModel = m.waitForResponse(response => response.url().endsWith("architect-mobile.glb") && response.status() === 200);
+  const mobileModel = m.waitForResponse(response => new URL(response.url()).pathname.endsWith("architect-mobile.glb") && response.status() === 200);
   await goto(m, "index.html?mode=live");
   await mobileModel;
   await m.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });

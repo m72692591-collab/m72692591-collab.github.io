@@ -25,7 +25,7 @@ export function createScene(container,orbit,catalog,reduced,onSelect){
   let modelStatus=container.parentElement.querySelector('#next-model-status');
   if(!modelStatus){modelStatus=document.createElement('div');modelStatus.id='next-model-status';modelStatus.className='next-loading';modelStatus.setAttribute('aria-live','polite');container.parentElement.append(modelStatus)}
   modelStatus.hidden=false;modelStatus.textContent='Загружаем объёмную модель…';
-  const modelSource=matchMedia('(max-width:650px)').matches?'./assets/models/architect-mobile.glb':'./assets/models/architect-rigged.glb';
+  const modelSource=matchMedia('(max-width:650px)').matches?'./assets/models/architect-mobile.glb?v=model-q1':'./assets/models/architect-rigged.glb?v=model-q1';
   new GLTFLoader().load(modelSource,gltf=>{
     if(disposed)return;
     const model=gltf.scene;
