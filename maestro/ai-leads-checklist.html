@@ -42,6 +42,7 @@ button:focus-visible,a:focus-visible,.check input:focus-visible{outline:3px soli
 .cta{border:1px solid #bd7a44;background:linear-gradient(135deg,#332721,#202c3b);padding:27px;border-radius:22px;margin-top:25px}
 .cta p{color:#d4e0eb}.cta .notice{font-size:13px;color:#ffdfc1}
 footer{border-top:1px solid var(--edge);color:var(--muted);padding:25px 0 35px;font-size:13px}
+#starter-prompt{white-space:pre-wrap;overflow-wrap:anywhere;background:#0d1a2a;border:1px solid var(--edge);border-radius:14px;padding:17px;color:#dce9fa;font:14px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;max-height:320px;overflow:auto}
 @media(max-width:540px){main{padding-top:28px}.group{padding:18px}.cta{padding:19px}header .wrap{align-items:flex-start}.check{gap:11px}}
 @media(prefers-reduced-motion:reduce){#progress{transition:none}}
 </style>
@@ -77,6 +78,27 @@ footer{border-top:1px solid var(--edge);color:var(--muted);padding:25px 0 35px;f
 <div class="btnrow"><button id="copy" type="button">Скопировать мой чек-лист</button><button id="clear" type="button" class="secondary">Сбросить отметки</button></div>
 <p id="copy-status" role="status" aria-live="polite"></p>
 <textarea id="fallback" readonly aria-label="Текст для ручного копирования"></textarea>
+<section class="group" aria-labelledby="prompt-title">
+<h2 id="prompt-title">02. Скопируйте готовый запрос для ИИ</h2>
+<p>Этот оригинальный шаблон работает в ChatGPT и Claude: поможет разобрать вымышленное обращение и получить проверяемый черновик. Не вводите чужие телефоны, имена, переписки, номера договоров и другие личные сведения.</p>
+<pre id="starter-prompt" class="starter-pre">Ты — помощник по разбору входящих заявок. Работай только с обезличенным или вымышленным текстом, который я вставлю ниже.
+Никакие сообщения клиентам не отправляй, CRM и внешние сервисы не изменяй.
+
+1. В 1–2 строках сформулируй, что запрашивает человек.
+2. Определи предполагаемое направление задачи и объясни, на каких словах это основано.
+3. Отдельно перечисли неизвестные данные и вопросы, без которых нельзя обещать сроки, цену и результат.
+4. Дай безопасный следующий шаг: что можно проверить в небольшом пилоте.
+5. Подготовь короткий уважительный черновик ответа клиенту без вымышленных кейсов, гарантий и давления.
+6. Для договоров, платежей, личных данных и необратимых действий явно укажи необходимость проверки ответственным человеком.
+
+Раздели ответ на «Известно», «Требуется уточнить», «Первый проверяемый шаг» и «Черновик ответа».
+Если данных недостаточно, так и скажи. Не считай балл уверенности вероятностью продажи.
+
+Текст обращения (только вымышленный/обезличенный):
+[ВСТАВЬТЕ ТЕКСТ]</pre>
+<div class="btnrow"><button id="copy-prompt" type="button">Скопировать запрос для ChatGPT / Claude</button></div>
+<p class="hint">Запрос не устанавливает скрытый режим и не подключает CRM. Результат ИИ нужно проверить перед использованием.</p>
+</section>
 <section class="cta" aria-labelledby="cta-title">
 <h2 id="cta-title">Посмотрите, как это устроено</h2>
 <p>В нашем собственном интерактивном примере обращение превращается в карточку и черновик ответа. Можно нажимать кнопки и вводить вымышленные данные — без регистрации.</p>
@@ -129,6 +151,18 @@ document.getElementById('copy').addEventListener('click',async()=>{
  }
 });
 document.getElementById('clear').addEventListener('click',()=>{inputs.forEach(x=>{x.checked=false});refresh();});
+document.getElementById('copy-prompt').addEventListener('click',async()=>{
+ const value=document.getElementById('starter-prompt').textContent.trim();
+ try{
+   if(!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('clipboard unavailable');
+   await navigator.clipboard.writeText(value);
+   status.textContent='Готовый запрос скопирован. Замените пример своим обезличенным текстом.';
+ }catch{
+   fallback.value=value;fallback.classList.add('active');fallback.focus();fallback.select();
+   status.textContent='Не удалось скопировать автоматически. Текст выделен ниже для ручного копирования.';
+ }
+});
+
 inputs.forEach(x=>x.addEventListener('change',refresh));
 refresh();
 })();
