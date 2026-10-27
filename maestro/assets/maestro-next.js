@@ -15,11 +15,12 @@ if(root){
   const detail=root.querySelector('.next-detail');
   let active=catalog[0],scene=null,loading=null;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+  const setFormInterest=(item)=>{const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest};
   const select=(item,userSelected=false)=>{
     active=item;title.textContent=item.title;description.textContent=item.description;open.href=item.href;
     lead.href='#lead';orbit.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
     answer.textContent='';scene?.focus(catalog.indexOf(item));
-    if(userSelected){const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest}
+    if(userSelected)setFormInterest(item);
   };
   const classicList=document.getElementById('next-classic-list');
   catalog.forEach((item)=>{
@@ -31,6 +32,7 @@ if(root){
     button.addEventListener('click',()=>select(item,true));orbit.append(button);
   });
   select(active);
+  lead.addEventListener('click',()=>setFormInterest(active));
   const fallback=(message)=>{document.getElementById('next-canvas').replaceChildren();document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.style.left='';button.style.top=''})};
   const start=async()=>{
     if(scene||loading)return loading;

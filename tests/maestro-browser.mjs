@@ -54,6 +54,8 @@ try {
   okay("Live mode changes the whole homepage", await page.locator(".hero").isHidden());
   await page.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
   okay("Desktop Architect GLB rendered", await page.locator("#next-canvas canvas").count() === 1);
+  await page.locator('#next-lead').click();
+  okay("Initial Strategy lead maps to Audit", await page.locator("#interest").inputValue() === "Аудит");
   await page.locator('#next-orbit button[data-id="automation"]').click();
   okay("NEXT selection opens the chosen direction", await page.locator("#next-title").innerText() === "Автоматизация");
   await page.locator("#next-question").fill("Заявки теряются в чатах");
