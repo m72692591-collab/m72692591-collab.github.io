@@ -10,7 +10,7 @@ import fs from "node:fs";
 const base = "http://127.0.0.1:8765/maestro/";
 const artifacts = "test-artifacts/maestro";
 fs.mkdirSync(artifacts, { recursive: true });
-const server = spawn(process.platform === "win32" ? "python" : "python3", ["-m", "http.server", "8765", "--bind", "127.0.0.1", "--directory", "."], { stdio: "ignore" });
+const server = spawn(process.platform === "win32" ? "python" : "python3", ["-m", "http.server", "8765", "--bind", "127.0.0.1", "--directory", "."], { stdio: "ignore", windowsHide: true });
 let browser;
 let checks = 0;
 function okay(label, condition) {
@@ -36,6 +36,16 @@ async function goto(page, path) {
 function watchErrors(page, errors) {
   page.on("pageerror", e => errors.push(e.message));
 }
+async function carouselClearsConsultation(page) {
+  const detail = await page.locator(".next-detail").boundingBox();
+  const controls = await page.locator(".architect-carousel-controls").boundingBox();
+  return Boolean(detail && controls && (
+    controls.y >= detail.y + detail.height ||
+    controls.y + controls.height <= detail.y ||
+    controls.x >= detail.x + detail.width ||
+    controls.x + controls.width <= detail.x
+  ));
+}
 try {
   await ready();
   okay("Desktop Architect GLB stays under 4 MB", fs.statSync("maestro/assets/models/architect-rigged.glb").size < 4_000_000);
@@ -56,17 +66,49 @@ try {
   okay("Live mode changes the whole homepage", await page.locator(".hero").isHidden());
   okay("Live announces scene loading", await page.locator("#next-model-status").isVisible());
   await page.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
-  okay("Desktop Architect GLB rendered", await page.locator("#next-canvas canvas").count() === 1);
+  okay("Desktop Architect GLB loaded with the WebGL scene", await page.locator("#next-canvas canvas").count() === 1);
+  await page.waitForFunction(() => {
+    const image = document.querySelector(".architect-art");
+    return image?.complete && image.naturalWidth > 500;
+  });
+  okay("Reference portrait is loaded and identified separately from the model", await page.locator("#next-live").getAttribute("data-presentation") === "portrait" && (await page.locator("#architect-view-note").innerText()).includes("Портрет"));
+  await page.locator('button[data-presentation="model"]').click();
+  okay("Visitor can select the actual 3D model", await page.locator("#next-live").getAttribute("data-presentation") === "model" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "true");
+  await page.screenshot({ path: artifacts + "/architect-model-desktop.png", fullPage: false });
+  await page.locator('button[data-presentation="portrait"]').click();
+  okay("Visitor can return to the portrait composition", await page.locator("#next-live").getAttribute("data-presentation") === "portrait" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "false");
+  await page.locator("#architect-next").click();
+  okay("Carousel advances the detail and form together", await page.locator("#next-title").innerText() === "Сайты и дизайн" && await page.locator("#interest").inputValue() === "Сайт");
+  await page.locator("#architect-prev").click();
+  okay("Carousel returns to Strategy and its Audit service", await page.locator("#next-title").innerText() === "Стратегия" && await page.locator("#interest").inputValue() === "Аудит");
+  await page.locator("#architect-pause").click();
+  await page.mouse.move(1, 1);
+  const pausedPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
+  await page.waitForTimeout(350);
+  okay("Carousel pause holds its position", await page.locator("#architect-pause").getAttribute("aria-pressed") === "true" && await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") === pausedPosition);
+  await page.locator("#architect-pause").click();
+  await page.mouse.move(1, 1);
+  await page.waitForTimeout(100);
+  const resumedPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
+  await page.waitForTimeout(350);
+  okay("Carousel resumes movement on request", await page.locator("#architect-pause").getAttribute("aria-pressed") === "false" && await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") !== resumedPosition);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const reducedPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
+  await page.waitForTimeout(350);
+  okay("Reduced motion stops the carousel without disabling navigation", await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") === reducedPosition && await page.locator("#architect-next").isEnabled());
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.locator('#next-lead').click();
   okay("Initial Strategy lead maps to Audit", await page.locator("#interest").inputValue() === "Аудит");
-  await page.locator('#next-orbit button[data-id="automation"]').click();
+  await page.locator('#architect-select').selectOption('automation');
   okay("NEXT selection opens the chosen direction", await page.locator("#next-title").innerText() === "Автоматизация");
+  if (!await page.locator("#next-question").isVisible()) await page.locator(".architect-question summary").click();
   await page.locator("#next-question").fill("Заявки теряются в чатах");
   await page.locator("#next-ask").click();
   okay("NEXT opens the existing consultant inline", await page.locator(".next-detail #maestro-genie-panel").isVisible());
   await page.locator('.next-detail [data-mg="lead"]').click();
   okay("Consultant preserves the selected service", await page.locator("#interest").inputValue() === "Автоматизация");
-  await page.locator('#next-orbit button[data-id="strategy"]').click();
+  await page.locator('#architect-select').selectOption('strategy');
+  if (!await page.locator("#next-question").isVisible()) await page.locator(".architect-question summary").click();
   await page.locator("#next-question").fill("Нужен первый план роста");
   await page.locator("#next-ask").click();
   await page.locator('.next-detail [data-mg="lead"]').click();
@@ -75,7 +117,7 @@ try {
   okay("Classic site remains available", await page.locator(".hero").isVisible());
 
   const fallbackPage = await desktop.newPage();
-  await fallbackPage.route('**/maestro-next-scene.js*', route => route.abort());
+  await fallbackPage.route('**/architect-scene.js*', route => route.abort());
   await goto(fallbackPage, 'index.html');
   await fallbackPage.locator('[data-next-mode="live"]').click();
   await fallbackPage.locator('#next-fallback').waitFor({ state: 'visible' });
@@ -94,7 +136,7 @@ try {
 
   const call = page.getByRole("button", { name: "Вызвать консультанта МАЭСТРО" });
   await page.locator('[data-next-mode="live"]').click();
-  await page.locator('#next-orbit button[data-id="automation"]').click();
+  await page.locator('#architect-select').selectOption('automation');
   await page.locator('[data-next-mode="classic"]').click();
   await call.click();
   await page.locator('[data-mg-question="Нужен сайт"]').click();
@@ -242,6 +284,24 @@ try {
   await mobileModel;
   await m.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
   okay("Mobile loads its smaller Architect GLB", await m.locator("#next-canvas canvas").count() === 1);
+  await m.waitForFunction(() => {
+    const image = document.querySelector(".architect-art");
+    return image?.complete && image.naturalWidth > 500;
+  });
+  okay("Mobile portrait is loaded", await m.locator("#next-live").getAttribute("data-presentation") === "portrait");
+  await m.locator("#architect-next").click();
+  okay("Mobile carousel updates the selected service", await m.locator("#next-title").innerText() === "Сайты и дизайн" && await m.locator("#interest").inputValue() === "Сайт");
+  await m.locator('button[data-presentation="model"]').click();
+  okay("Mobile can switch to the GLB view", await m.locator("#next-live").getAttribute("data-presentation") === "model");
+  await m.locator('button[data-presentation="portrait"]').click();
+  okay("Mobile reference layout has no horizontal overflow", await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+  okay("Mobile carousel controls do not cover the consultation panel", await carouselClearsConsultation(m));
+  await m.locator(".architect-question summary").click();
+  await m.locator("#next-question").fill("Как связать сайт с обработкой заявок?");
+  okay("Expanded mobile question form stays clear of carousel controls", await carouselClearsConsultation(m));
+  await m.screenshot({ path: artifacts + "/architect-question-mobile.png", fullPage: true });
+  await m.locator(".architect-question summary").click();
+  await m.screenshot({ path: artifacts + "/architect-portrait-mobile.png", fullPage: true });
   okay("Browser produced no uncaught errors", errors.length === 0 || (process.stderr.write(errors.join("\n")), false));
   process.stdout.write("\nPASSED " + checks + " browser assertions (desktop + mobile)\n");
 } finally {

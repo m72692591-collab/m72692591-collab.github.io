@@ -5,7 +5,7 @@ The new experience is additive to the current homepage and defaults to Classic. 
 ## Implemented
 
 - Shared catalog of eleven real site directions for Classic and Live views.
-- Lazy loaded Three.js WebGL scene with a genuine rigged GLB man in a business suit, blue translucent material, orbiting selectable 3D panels, light touch effect, drag rotation and a programmed arm gesture.
+- Live mode now opens the selected Architect composition: a generated portrait backdrop matching the supplied central panel, overlaid with the real Three.js carousel. The interface explicitly identifies this as portrait + 3D carousel. The separate 3D-model control shows the genuine rigged GLB, blue material, drag rotation and programmed arm gesture.
 - Clicking a 3D panel or its accessible text control opens that direction beside the scene. Questions open the site's existing MAESTRO text consultant with the selected direction, and the existing lead form receives the same direction.
 - Mobile uses a separate 1.30 MB GLB, smaller render scale and simpler orbit layout. A 2D direction list is available when WebGL fails; reduced motion is respected.
 - Three.js 0.180.0 and its GLTFLoader are vendored under the MIT license in `assets/vendor/`.
@@ -21,7 +21,7 @@ The new experience is additive to the current homepage and defaults to Classic. 
 
 ## Remaining limitations
 
-The source model is stylized and the programmed gesture is a prototype. This full-body model is a simpler interpretation of the approved blue translucent, photoreal, waist-up Architect in the triptych. The lighter mobile model has no arm rig. There is no lip sync or connected AI consultant; the existing scripted text consultant can optionally use browser speech synthesis. The current lead form prepares a copyable application for the visitor to send manually; its server endpoint is not configured.
+The portrait artwork is static and does not have facial animation. The separate source GLB model is stylized and its programmed gesture is a prototype. This full-body model is a simpler interpretation of the approved blue translucent, photoreal, waist-up Architect in the triptych. The lighter mobile model has no arm rig. There is no lip sync or connected AI consultant; the existing scripted text consultant can optionally use browser speech synthesis. The current lead form prepares a copyable application for the visitor to send manually; its server endpoint is not configured.
 
 ## Verification
 
