@@ -39,7 +39,7 @@ if(root){
     loading=import('./maestro-next-scene.js?v=model-q1').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.focus(catalog.indexOf(active),false);
-    }).catch(()=>fallback('3D-сцена недоступна. Направления и заявка остаются доступны.'));
+    }).catch(()=>fallback('3D-сцена недоступна. Направления и форма остаются доступны.'));
     return loading;
   };
   const setMode=(mode,scroll=false)=>{
