@@ -3,18 +3,17 @@ on:
   pull_request:
     paths:
       - 'maestro/**'
-      - 'tests/maestro-smoke.mjs'
-      - 'tests/maestro-browser.mjs'
-      - 'tests/maestro-leads-api.mjs'
+      - 'integrations/**'
+      - 'tests/**'
       - '.github/workflows/maestro-checks.yml'
   push:
     branches:
       - main
+      - 'feature/maestro-*'
     paths:
       - 'maestro/**'
-      - 'tests/maestro-smoke.mjs'
-      - 'tests/maestro-browser.mjs'
-      - 'tests/maestro-leads-api.mjs'
+      - 'integrations/**'
+      - 'tests/**'
       - '.github/workflows/maestro-checks.yml'
   workflow_dispatch:
 permissions:
@@ -32,6 +31,8 @@ jobs:
           node-version: '22'
       - name: Verify JavaScript syntax, static links and integration invariants
         run: node tests/maestro-smoke.mjs
+      - name: Verify isolated adapter using a synthetic bot engine
+        run: python -m unittest discover -s tests -p 'test_site_channel.py' -v
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
@@ -52,15 +53,17 @@ jobs:
           npm install --no-save --no-audit --no-fund playwright@1.56.1
           npx playwright install --with-deps chromium
       - name: Run desktop and mobile browser journeys
-        run: node tests/maestro-browser.mjs
-      - name: Save visual QA screenshots
+        run: |
+          node tests/maestro-browser.mjs
+          node tests/maestro-conductor.mjs
+      - name: Save visual QA screenshots and gesture recording
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: maestro-browser-screenshots
-          path: test-artifacts/maestro/
+          path: test-artifacts/
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 14
   lead-api:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -101,3 +104,4 @@ jobs:
         run: |
           php -S 127.0.0.1:8766 -t maestro/server > /tmp/maestro-php.log 2>&1 &
           node tests/maestro-leads-api.mjs
+

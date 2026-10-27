@@ -61,6 +61,8 @@ footer{padding:34px 0 45px;border-top:1px solid var(--line);font-size:12px;color
 @media(max-width:580px){.top{height:66px;padding:0 13px}.brand{font-size:12px}.topnav{gap:10px}.topnav a{font-size:11px}.wrap{padding:0 14px}.intro{padding:45px 0 24px}.choices{grid-template-columns:1fr}.stage{padding:25px 12px 10px}.flow{overflow-x:auto;padding:14px 0 26px;gap:4px}.flow:before{top:37px;left:7%;right:7%}.node-number{width:40px;height:40px;border-radius:12px;font-size:14px}.node strong{font-size:9px}.messages{grid-template-columns:1fr;margin:4px 12px 14px}.message{border-right:0;border-bottom:1px solid var(--line)}.message:last-child{border-bottom:0}.calcfields,.calcresult{padding:20px}.cta{padding:23px}.status{width:100%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.choice{transition:none}}
 </style>
+<script src="assets/maestro-core.js?v=11"></script>
+<link rel="stylesheet" href="assets/maestro-motion.css?v=11">
 </head>
 <body>
 <a class="skip" href="#main">Перейти к демонстрации</a>
@@ -75,7 +77,7 @@ footer{padding:34px 0 45px;border-top:1px solid var(--line);font-size:12px;color
 <button type="button" class="choice" data-scenario="hr" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 19v-2a6 6 0 0 1 12 0v2M17 7h4M17 11h4M17 15h4"/></svg><span>HR и команда<small>Организация найма</small></span></button>
 </div><div class="console-note">Это интерактивная симуляция процессов, а не подключение к настоящей CRM или рабочему ИИ. Все данные демонстрационные.</div></aside>
 <div class="workspace" aria-label="Экран демонстрации">
-<div class="worktop"><div><b id="process-name">ИИ-оператор · обработка заявки</b><small>MAESTRO / PROCESS SIMULATOR</small></div><div class="dot" aria-hidden="true"><i></i><i></i><i></i></div></div>
+<div class="worktop"><div><b id="process-name">ИИ-оператор · обработка заявки</b><small>МАЭСТРО / ДЕМОНСТРАЦИЯ ПРОЦЕССА</small></div><div class="dot" aria-hidden="true"><i></i><i></i><i></i></div></div>
 <div class="stage"><h2 id="process-headline">От сообщения до понятной задачи</h2><p id="process-description">Посмотрим, как система может принять обращение и подготовить его к работе менеджера.</p>
 <div class="flow" id="flow" aria-label="Пять этапов процесса">
 <div class="node active"><span class="node-number">01</span><strong>Новая заявка</strong></div>
@@ -140,5 +142,6 @@ $("copy").addEventListener("click",async()=>{try{await navigator.clipboard.write
 render();calculate();
 })();
 </script>
+<script src="assets/maestro-motion.js?v=11"></script>
 </body>
 </html>

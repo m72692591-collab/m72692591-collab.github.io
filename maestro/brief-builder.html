@@ -43,16 +43,19 @@ button{border-radius:11px;padding:11px 14px}
 footer{border-top:1px solid var(--edge);padding:25px 0 40px;color:var(--muted);font-size:12px}
 @media(max-width:850px){.layout{grid-template-columns:1fr}.preview{position:static}}
 @media(max-width:520px){.intro{padding:38px 0 18px}.panel{padding:17px}.two,.checks{grid-template-columns:1fr}.wrap{width:calc(100% - 22px)}}
+@media print{body{background:white!important;color:black!important}.intro,header,footer,#builder,.preview .notice,.preview .link,.preview .desc{display:none!important}.layout{display:block!important}.preview{border:0;box-shadow:none;background:white!important;position:static}.preview pre{color:black!important;background:white!important;border:0;max-height:none;overflow:visible;font:12pt/1.5 sans-serif;padding:0}.preview h2{color:black}.preview .eyebrow{display:none}}
 </style>
+<script src="assets/maestro-core.js?v=11"></script>
+<link rel="stylesheet" href="assets/maestro-motion.css?v=11">
 </head>
 <body>
 <header><div class="wrap"><a href="index.html" class="brand"><b>◈</b> МАЭСТРО</a><a href="maestro-lab.html" style="font-size:13px">Лаборатория ↗</a></div></header>
 <main class="wrap">
-<section class="intro"><span class="eyebrow">MAESTRO / PROJECT DESIGNER</span><h1>Превратите идею в <em>понятное ТЗ.</em></h1>
+<section class="intro"><span class="eyebrow">МАЭСТРО / КОНСТРУКТОР ПРОЕКТА</span><h1>Превратите идею в <em>понятное ТЗ.</em></h1>
 <p>Опишите задачу. Система сформирует структурированный черновик требований, который можно скопировать, сохранить или перенести в заявку. Без регистрации и оплаты.</p></section>
 <div class="layout">
 <form id="builder" class="panel">
-<h2>Параметры проекта</h2><p class="desc">Изменения мгновенно отражаются в документе справа. Поля с личными данными необязательны.</p>
+<h2>Параметры проекта</h2><p class="desc">Изменения сразу отражаются в предпросмотре документа. Поля с личными данными необязательны.</p>
 <fieldset><legend>01 / Задача</legend>
 <div class="field"><label for="kind">Что нужно разработать?</label><select id="kind"><option value="ИИ-оператор">ИИ-оператор / цифровой консультант</option><option value="Сайт">Сайт или лендинг</option><option value="Бот">Telegram / MAX бот</option><option value="CRM">CRM и продажи</option><option value="Автоматизация">Автоматизация процессов</option><option value="Аудит">Аудит и аналитика</option><option value="HR">HR и команда</option><option value="Другое">Другое</option></select></div>
 <div class="field"><label for="industry">Сфера деятельности</label><input id="industry" maxlength="100" placeholder="Например, строительная компания" autocomplete="off"></div>
@@ -81,11 +84,11 @@ footer{border-top:1px solid var(--edge);padding:25px 0 40px;color:var(--muted);f
 <div class="field"><label for="notes">Дополнительные требования</label><textarea id="notes" maxlength="700" placeholder="Мобильная версия, ограничения интернета, язык, безопасность и другое"></textarea></div></fieldset>
 <div class="actions">
 <button type="button" id="download" class="primary">Сохранить ТЗ (.txt)</button>
-<button type="button" id="copy" class="secondary">Копировать</button>
+<button type="button" id="copy" class="secondary">Копировать</button><button type="button" id="print-brief" class="secondary">Печать / PDF</button>
 <button type="button" id="lead" class="secondary">Перейти к заявке →</button>
 </div><span class="status" role="status" id="state"></span>
 </form>
-<section class="panel preview" aria-labelledby="preview-title"><span class="eyebrow">LIVE DOCUMENT</span><h2 id="preview-title" style="margin-top:8px">Предварительное техническое задание</h2>
+<section class="panel preview" aria-labelledby="preview-title"><span class="eyebrow">ПРЕДПРОСМОТР ДОКУМЕНТА</span><h2 id="preview-title" style="margin-top:8px">Предварительное техническое задание</h2>
 <p class="desc">Документ формируется локально в вашем браузере. Пока вы не нажмёте «Перейти к заявке», он никуда не отправляется.</p>
 <pre id="output" aria-live="polite" aria-atomic="true"></pre>
 <div class="notice">Это черновик для обсуждения, а не финальная спецификация или коммерческое предложение. Стоимость, архитектура, сроки и интеграции подтверждаются после изучения задачи.</div>
@@ -141,6 +144,7 @@ return sections.join("\n");
 function render(){ $("output").textContent=build(); }
 ids.forEach(id=>$(id).addEventListener("input",render));
 document.querySelectorAll("#integrations input").forEach(el=>el.addEventListener("change",render));
+$("print-brief").addEventListener("click",()=>window.print());
 function notify(message){$("state").textContent=message}
 $("copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(build());notify("Документ скопирован.");}catch(e){notify("Копирование недоступно. Можно выделить текст справа.");}});
 $("download").addEventListener("click",()=>{
@@ -152,7 +156,7 @@ setTimeout(()=>URL.revokeObjectURL(url),1000);notify("Документ сфор�
 $("lead").addEventListener("click",()=>{
 try{sessionStorage.setItem("maestro_spec_handoff_v1",JSON.stringify({text:build().slice(0,6000),interest:v("kind"),created:Date.now()}));}
 catch(e){notify("Браузер заблокировал передачу данных. Скопируйте ТЗ вручную.");return}
-location.href="index.html#lead";
+if(!window.MaestroNavigate?.go("index.html#lead"))location.href="index.html#lead";
 });
 
 try {
@@ -165,12 +169,7 @@ try {
       Number.isFinite(parsed.created)&&Date.now()-parsed.created>=0&&Date.now()-parsed.created<20*60*1000){
       const title=a[0].toLocaleLowerCase("ru");
       const options=[...$("kind").options].map(x=>x.value);
-      const guess=title.includes("сайт")||title.includes("лендинг")?"Сайт":
-        title.includes("crm")||title.includes("црм")?"CRM":
-        title.includes("hr")||title.includes("найм")?"HR":
-        title.includes("бот")?"Бот":
-        title.includes("ии")||title.includes("оператор")?"ИИ-оператор":
-        title.includes("аудит")?"Аудит":"Автоматизация";
+      const guess=window.MaestroCore.briefKind(title);
       if(options.includes(guess))$("kind").value=guess;
       $("industry").value=a[1];
       $("goal").value=a[2];
@@ -178,7 +177,7 @@ try {
       $("notes").value="Желаемый проект: "+a[0]+"\nИнтеграции: "+a[4];
       for(const field of document.querySelectorAll("#integrations input")){
         const label=field.value.toLocaleLowerCase("ru");
-        if(a[4].toLocaleLowerCase("ru").includes(label))field.checked=true;
+        if(window.MaestroCore.integrations(a[4]).includes(field.value))field.checked=true;
       }
       notify("Черновик из беседы с МАЭСТРО перенесён. Проверьте поля перед сохранением.");
     }
@@ -187,4 +186,5 @@ try {
 render();
 })();
 </script>
+<script src="assets/maestro-motion.js?v=11"></script>
 </body></html>

@@ -1,0 +1,71 @@
+name: Maestro lead reliability
+on:
+  push:
+    branches: [feature/maestro-conductor-20261026]
+    paths:
+      - 'maestro/server/**'
+      - 'maestro/assets/maestro-leads.js'
+      - 'tests/maestro-leads-*.mjs'
+      - '.github/workflows/maestro-lead-reliability.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: maestro-lead-reliability-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-only-database-password
+          MYSQL_DATABASE: maestro_ci
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pci-only-database-password"
+          --health-interval=5s --health-timeout=4s --health-retries=15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_mysql
+          tools: none
+          coverage: none
+      - name: Static and isolated adapter tests
+        run: |
+          node tests/maestro-smoke.mjs
+          python -m unittest discover -s tests -p 'test_site_channel.py' -v
+          php -l maestro/server/lead-api.php
+      - name: Actual MySQL duplicate and Unicode checks
+        env:
+          MAESTRO_ALLOWED_ORIGIN: https://m72692591-collab.github.io
+          MAESTRO_DB_DSN: mysql:host=127.0.0.1;port=3306;dbname=maestro_ci;charset=utf8mb4
+          MAESTRO_DB_USER: root
+          MAESTRO_DB_PASSWORD: ci-only-database-password
+          MAESTRO_ADMIN_TOKEN: maestro-ci-test-admin-token-not-valid-in-production-2026-10
+          MAESTRO_IP_PEPPER: ci-only-pepper-string-not-valid-for-real-visitors-20261026
+        run: |
+          mysql -h 127.0.0.1 -u root -pci-only-database-password maestro_ci < maestro/server/lead_schema.sql
+          php -S 127.0.0.1:8766 -t maestro/server > /tmp/maestro-api.log 2>&1 &
+          node tests/maestro-leads-api.mjs
+      - name: Browser tests with synthetic data and intercepted receiver
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+          node tests/maestro-browser.mjs
+          node tests/maestro-conductor.mjs
+          node tests/maestro-leads-client.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: maestro-two-pillars-checks
+          path: test-artifacts/
+          if-no-files-found: ignore
+          retention-days: 14

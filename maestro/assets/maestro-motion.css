@@ -1,0 +1,23 @@
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:mg-old .72s ease both}
+::view-transition-new(root){animation:mg-reveal .72s cubic-bezier(.18,.65,.24,1) both}
+@keyframes mg-old{to{opacity:.65}}
+@keyframes mg-reveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
+.maestro-travel{position:fixed;inset:0;z-index:10000;pointer-events:none;isolation:isolate;overflow:hidden}
+.mg-travel-curtain{position:absolute;inset:0;background:#09172b;transform-origin:right}
+.is-leaving .mg-travel-curtain{animation:mg-cover .24s ease both}
+.is-arriving .mg-travel-curtain{animation:mg-uncover .8s cubic-bezier(.2,.65,.3,1) both}
+.mg-travel-guide{position:absolute;left:7vw;bottom:15vh;width:clamp(150px,25vw,290px);filter:drop-shadow(0 0 25px #4bd9cc77)}
+.is-leaving .mg-travel-guide{animation:mg-show .2s ease both}
+.is-arriving .mg-travel-guide{animation:mg-guide-away .9s ease both}
+.mg-travel-guide svg{width:100%;display:block}.mg-travel-arm{transform-origin:145px 145px;animation:mg-wave .8s cubic-bezier(.2,.8,.2,1) both}
+.mg-travel-ray{position:absolute;inset:0;width:3px;background:linear-gradient(transparent,#ffe0a6,#70dfd0,transparent);box-shadow:0 0 45px 18px #f1c57144;animation:mg-ray .8s cubic-bezier(.2,.65,.3,1) both}
+@keyframes mg-wave{0%{transform:rotate(-32deg)}70%{transform:rotate(50deg)}100%{transform:rotate(42deg)}}
+@keyframes mg-cover{from{opacity:0}to{opacity:.92}}
+@keyframes mg-uncover{from{clip-path:inset(0)}to{clip-path:inset(0 0 0 100%)}}
+@keyframes mg-show{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:none}}
+@keyframes mg-guide-away{0%,65%{opacity:1}100%{opacity:0;transform:translateY(15px)}}
+@keyframes mg-ray{from{transform:translateX(0)}to{transform:translateX(102vw)}}
+.maestro-genie-panel.is-guiding .maestro-genie-avatar{animation:mg-show .3s ease both}
+.maestro-genie-panel.is-guiding .maestro-genie-arm{transform-origin:145px 145px;animation:mg-wave .65s both}
+@media(prefers-reduced-motion:reduce){.maestro-travel{display:none!important}::view-transition-old(root),::view-transition-new(root){animation:none!important}}

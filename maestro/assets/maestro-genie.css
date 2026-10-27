@@ -52,3 +52,8 @@
   .maestro-genie-form,.maestro-genie-note,.maestro-genie-go{flex-shrink:0}
   .maestro-genie-form{position:sticky;bottom:0;z-index:5}
 }
+
+/* v1.1 viewport and avatar framing */
+.maestro-genie-stage{min-height:178px}.maestro-genie-avatar{height:205px;margin:-2px auto -18px}
+.maestro-genie-status{background:#09172bc9;border-radius:8px;padding:3px 7px;width:max-content;max-width:calc(100% - 24px);margin:auto;bottom:4px}
+@media(max-width:640px){.maestro-consulting .mobilecta{visibility:hidden}.maestro-genie-panel{bottom:max(12px,env(safe-area-inset-bottom));top:auto;max-height:calc(100dvh - 90px)}.maestro-genie-stage{min-height:137px}.maestro-genie-avatar{height:153px;width:170px;margin:-3px auto -13px}.maestro-genie-chat{max-height:170px}.maestro-genie-form input{font-size:16px}}
