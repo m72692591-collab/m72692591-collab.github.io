@@ -7,3 +7,7 @@ The owner supplied the triptych “Триптих интерфейсов «Ма�
 - Output SHA-256: `CA62EABCDEB1AB1F3A8BF48356D49574560283A1C0241D893FE364BE78B107B6`.
 - This file is a flat portrait backdrop, explicitly described in the interface as “Портрет и объёмная карусель”. It is not a GLB and is not presented as a rotatable human. The separate “3D-модель” control reveals the licensed GLB documented in `../models/LICENSE.txt`.
 - No stock-asset purchase or paid API was used. This generated derivative is not described as a pixel-identical copy of the reference.
+
+- `architect-mark.webp`: Image Gen derivative of the gold twin-peak emblem in the supplied reference, resized for the live header. 128 × 128 RGBA, lossless WebP, 4,118 bytes; SHA-256 `34CA6312F01B58AC9894A3928210190A69F3E79E79E72133203A68C08FF64E28`. Approximation of the supplied mark, not a claimed exact vector extraction.
+
+- `architect-orb.webp`: Image Gen derivative of the blue luminous orb in the supplied reference, resized for the consultant control. 128 × 128 RGBA, 7,712 bytes; SHA-256 `9EB1A68748D3E3BCAB76B640D8776735EA383B837AD3F9844738038D0837BD32`. This is a decorative button image, not a 3D object.

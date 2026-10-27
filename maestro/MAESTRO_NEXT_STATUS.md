@@ -25,6 +25,8 @@ The portrait artwork is static and does not have facial animation. The separate 
 
 ## Verification
 
+The reference composition adds broad content slides (300 px desktop / 260 px mobile), a consultant orb, a gold emblem and an explicitly labelled portrait view. `design-qa.md` records the reference comparison and remaining fidelity gap. The implementation is not claimed to be a pixel-identical or fully animated reproduction.
+
 The repository Playwright suite covered desktop/mobile GLB loading, the initial Strategy lead action, Automation/Strategy consultant-to-form handoffs and isolation of a later Classic consultation. Separate local Chrome runs at 1440x900 and 390x844 selected a 3D panel and a text control, retained `?interest=Бот` until explicit selection, switched entire page modes, and had no page errors or horizontal overflow. The reduced-motion path and the 2D fallback were also exercised. Desktop and mobile screenshots and a gesture frame were inspected.
 
 ## Live release — 2026-10-28

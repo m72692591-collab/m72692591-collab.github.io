@@ -58,12 +58,19 @@ if(root){
     scene?.setPresentation(presentation);
   }));
   lead.addEventListener('click',()=>setFormInterest(active));
+  document.getElementById('architect-orb')?.addEventListener('click',()=>{
+    if(!window.MAESTRO_GENIE)return;
+    window.MAESTRO_GENIE.setLeadInterest(active.interest);
+    window.MAESTRO_GENIE.open();
+    detail.scrollIntoView({behavior:reduce.matches?'instant':'smooth',block:'center'});
+  });
   const fallback=(message)=>{root.querySelector('button[data-presentation=model]').disabled=true;live.dataset.presentation='portrait';document.getElementById('architect-view-note').textContent='Портретный режим. 3D недоступно.';document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.hidden=false;button.style.left='';button.style.top=''})};
   const start=async()=>{
     if(scene||loading)return loading;
     loading=import('./architect-scene.js?v=1').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.setPresentation(presentation);scene.setMotion(!orbitPaused);scene.focus(catalog.indexOf(active),false);
+      orbit.classList.add('architect-ready');
     }).catch(()=>fallback('3D-сцена недоступна. Направления и форма остаются доступны.'));
     return loading;
   };
