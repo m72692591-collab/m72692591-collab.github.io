@@ -19,7 +19,7 @@ if(root){
     active=item;title.textContent=item.title;description.textContent=item.description;open.href=item.href;
     lead.href='#lead';orbit.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
     answer.textContent='';scene?.focus(catalog.indexOf(item));
-    if(userSelected){const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest;window.MAESTRO_GENIE?.setLeadInterest?.(item.interest)}
+    if(userSelected){const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest}
   };
   const classicList=document.getElementById('next-classic-list');
   catalog.forEach((item)=>{
@@ -47,7 +47,7 @@ if(root){
     const headerToggle=document.getElementById('next-header-toggle');
     if(headerToggle)headerToggle.textContent=isLive?'Классический':'Живой 3D';
     try{sessionStorage.setItem('maestro_next_mode',mode)}catch{}
-    if(isLive){if(scene)scene.resume();else start()}else scene?.pause();
+    if(isLive){if(scene)scene.resume();else start()}else{scene?.pause();window.MAESTRO_GENIE?.setLeadInterest?.(null)}
     const genieRoot=document.getElementById('maestro-genie-root');
     if(genieRoot)(isLive?detail:document.body).append(genieRoot);
     if(scroll)window.scrollTo(0,0);

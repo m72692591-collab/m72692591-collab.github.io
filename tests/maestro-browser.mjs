@@ -70,6 +70,13 @@ try {
   okay("Classic site remains available", await page.locator(".hero").isVisible());
 
   const call = page.getByRole("button", { name: "Вызвать консультанта МАЭСТРО" });
+  await page.locator('[data-next-mode="live"]').click();
+  await page.locator('#next-orbit button[data-id="automation"]').click();
+  await page.locator('[data-next-mode="classic"]').click();
+  await call.click();
+  await page.locator('[data-mg-question="Нужен сайт"]').click();
+  await page.getByRole("button", { name: /Перейти к заявке/ }).click();
+  okay("Classic consultant is not bound to a stale NEXT choice", await page.locator("#interest").inputValue() === "Сайт");
   await call.click();
   okay("Genie appeared", await page.locator("#maestro-genie-panel").isVisible());
   await page.locator('[data-mg-question="Нужен ИИ-оператор для заявок"]').click();
