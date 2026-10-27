@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101623">
+<meta name="description" content="Бесплатный практический чек-лист МАЭСТРО: как не терять обращения клиентов, выбрать первый участок автоматизации и проверить результат. Без регистрации.">
+<title>Бесплатный чек-лист заявок · МАЭСТРО BUSINESS</title>
+<style>
+:root{color-scheme:dark;--bg:#101623;--ink:#f4f7ff;--muted:#aebcce;--soft:#1b293d;--edge:#3b526c;--sun:#ffb567;--orange:#ff7947;--teal:#80e3d9}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 75% -16%,#385072 0%,transparent 48%),var(--bg);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}
+a{color:var(--teal)}.wrap{width:min(930px,calc(100% - 32px));margin:auto}
+header{border-bottom:1px solid var(--edge)}
+header .wrap{padding:17px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand{text-decoration:none;font-weight:900;letter-spacing:.08em;color:var(--ink)}
+.back{font-size:13px;text-decoration:none}
+main{padding:36px 0 64px}.eyebrow{color:var(--sun);text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:850}
+h1{font-size:clamp(30px,6vw,54px);line-height:1.09;letter-spacing:-.04em;margin:12px 0 17px}
+h1 span{color:var(--orange)}h2{margin:0 0 9px;font-size:24px}p{color:var(--muted);margin:8px 0 16px}
+.intro{max-width:770px;font-size:18px}.label{display:inline-block;font-size:12px;border:1px solid var(--edge);padding:4px 10px;border-radius:50px;color:var(--teal)}
+.summary{background:var(--soft);border:1px solid var(--edge);border-radius:21px;padding:20px;margin:22px 0 26px}
+.count{font-size:28px;font-weight:900;color:var(--sun)}.bar{height:9px;border-radius:30px;background:#38475e;overflow:hidden;margin-top:12px}
+#progress{background:linear-gradient(90deg,var(--orange),var(--sun));height:100%;width:0;transition:width .2s ease;border-radius:30px}
+.group{background:rgba(27,41,61,.93);border:1px solid var(--edge);border-radius:22px;padding:24px;margin-bottom:17px}
+.group > p{font-size:14px;margin:0 0 15px}
+.check{display:flex;align-items:flex-start;gap:14px;padding:15px 0;cursor:pointer;border-top:1px solid rgba(164,185,213,.18)}
+.check:first-of-type{border-top:0}
+.check input{width:22px;height:22px;flex:0 0 22px;accent-color:var(--orange);margin:2px 0 0;cursor:pointer}
+.check strong{display:block;color:var(--ink);font-size:16px;line-height:1.35}
+.check small{display:block;color:var(--muted);font-size:14px;margin-top:5px}
+.check input:checked + span strong{color:var(--teal)}
+.btnrow{display:flex;flex-wrap:wrap;gap:11px;margin-top:22px;align-items:center}
+button,.btn{font:inherit;font-weight:850;border-radius:12px;padding:12px 17px;cursor:pointer;min-height:48px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+button{border:0;color:#1c1d1d;background:linear-gradient(125deg,var(--sun),var(--orange))}
+button.secondary{background:#31445c;color:var(--ink)}.btn{border:1px solid #ffb567;background:#372b26;color:#ffe1c4}
+button:hover,.btn:hover{filter:brightness(1.07)}
+button:focus-visible,a:focus-visible,.check input:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+#copy-status{min-height:27px;color:var(--teal);font-size:14px}
+#fallback{display:none;background:#101926;color:#fff;border:1px solid var(--edge);width:100%;min-height:200px;border-radius:12px;padding:14px;margin:9px 0;font:14px/1.5 monospace}
+#fallback.active{display:block}
+.cta{border:1px solid #bd7a44;background:linear-gradient(135deg,#332721,#202c3b);padding:27px;border-radius:22px;margin-top:25px}
+.cta p{color:#d4e0eb}.cta .notice{font-size:13px;color:#ffdfc1}
+footer{border-top:1px solid var(--edge);color:var(--muted);padding:25px 0 35px;font-size:13px}
+@media(max-width:540px){main{padding-top:28px}.group{padding:18px}.cta{padding:19px}header .wrap{align-items:flex-start}.check{gap:11px}}
+@media(prefers-reduced-motion:reduce){#progress{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="index.html">М · МАЭСТРО BUSINESS</a><a class="back" href="ai-leads-demo.html">Открыть интерактивную демонстрацию</a></div></header>
+<main class="wrap">
+<div class="eyebrow">Практическая инструкция · Бесплатно</div>
+<h1>Перестаньте терять <span>обращения клиентов</span></h1>
+<p class="intro">10 проверок перед внедрением бота, CRM или ИИ-помощника. Отметьте готовые пункты, скопируйте итог и посмотрите, какой участок процесса стоит автоматизировать первым.</p>
+<span class="label">Без регистрации, отслеживания и платного доступа</span>
+<div class="summary" aria-live="polite">
+<div><strong>Готовность процесса:</strong> <span class="count" id="counter">0 из 10</span></div>
+<div class="bar" role="progressbar" id="meter" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" aria-label="Готовые пункты"><div id="progress"></div></div>
+<p id="advice" style="margin-bottom:0">Начните с фиксации источников заявок. Автоматизация без понятного процесса часто только ускоряет хаос.</p>
+</div>
+<section class="group" aria-labelledby="collect"><h2 id="collect">01. Где появляется заявка</h2><p>Сначала определить входные точки и минимальные данные, а потом подключать нейросеть.</p>
+<label class="check"><input type="checkbox" data-id="1"><span><strong>Перечислены все каналы</strong><small>Сайт, Telegram, MAX, телефон, почта, маркетплейсы — именно те, которые действительно используются.</small></span></label>
+<label class="check"><input type="checkbox" data-id="2"><span><strong>У обращения есть уникальный номер</strong><small>Это защищает от повторной обработки, дублей сообщений и потери истории.</small></span></label>
+<label class="check"><input type="checkbox" data-id="3"><span><strong>Описан минимум информации</strong><small>Кто обращается, о чём просит, как с ним связаться, что делать дальше. Не собирать лишние личные данные.</small></span></label>
+</section>
+<section class="group" aria-labelledby="process"><h2 id="process">02. Кто и как отвечает</h2><p>ИИ готовит полезное решение, но не должен незаметно принимать финансовые обязательства.</p>
+<label class="check"><input type="checkbox" data-id="4"><span><strong>Назначен ответственный</strong><small>Понятно, кто получит обращение и примет сложное решение.</small></span></label>
+<label class="check"><input type="checkbox" data-id="5"><span><strong>Есть правило срочности</strong><small>Определите, какие сообщения требуют ответа в первую очередь, без выдуманного «скоринга продаж».</small></span></label>
+<label class="check"><input type="checkbox" data-id="6"><span><strong>Есть честный шаблон ответа</strong><small>Клиент узнаёт следующий шаг, а не обещание несуществующего решения.</small></span></label>
+<label class="check"><input type="checkbox" data-id="7"><span><strong>Исключения передаются человеку</strong><small>Споры, нетипичные условия, платежи, договоры, неизвестные товары — с подтверждением ответственного.</small></span></label>
+</section>
+<section class="group" aria-labelledby="measure"><h2 id="measure">03. Что считать результатом</h2><p>Нас интересуют реальные заявки и качество работы, а не только красивые цифры на панели.</p>
+<label class="check"><input type="checkbox" data-id="8"><span><strong>Измеряется время первого ответа</strong><small>Есть исходный показатель «до», иначе нечем доказать улучшение.</small></span></label>
+<label class="check"><input type="checkbox" data-id="9"><span><strong>Записываются ошибки и недоставленные сообщения</strong><small>Отдельный журнал + безопасный повтор без спама и дублей.</small></span></label>
+<label class="check"><input type="checkbox" data-id="10"><span><strong>Доступ и хранение данных ограничены</strong><small>Проверены права сотрудников, согласия, сроки хранения и запрет публикации личной информации.</small></span></label>
+</section>
+<div class="btnrow"><button id="copy" type="button">Скопировать мой чек-лист</button><button id="clear" type="button" class="secondary">Сбросить отметки</button></div>
+<p id="copy-status" role="status" aria-live="polite"></p>
+<textarea id="fallback" readonly aria-label="Текст для ручного копирования"></textarea>
+<section class="cta" aria-labelledby="cta-title">
+<h2 id="cta-title">Посмотрите, как это устроено</h2>
+<p>В нашем собственном интерактивном примере обращение превращается в карточку и черновик ответа. Можно нажимать кнопки и вводить вымышленные данные — без регистрации.</p>
+<div class="btnrow"><a class="btn" href="ai-leads-demo.html">Проверить демонстрацию МАЭСТРО</a><a class="back" href="index.html#lead">Обсудить свою задачу</a></div>
+<p class="notice">Это учебный прототип в браузере, не работающая связка с CRM или внешней нейросетью. Реальные интеграции и стоимость согласовываются отдельно.</p>
+</section>
+</main>
+<footer><div class="wrap">© МАЭСТРО BUSINESS · Оригинальный полезный материал. Отметки не отправляются на сервер и исчезают при закрытии страницы. <a href="index.html">На главную</a>.</div></footer>
+<script>
+(() => {
+"use strict";
+const inputs = Array.from(document.querySelectorAll('.check input'));
+const counter = document.getElementById('counter');
+const meter = document.getElementById('meter');
+const progress = document.getElementById('progress');
+const advice = document.getElementById('advice');
+const status = document.getElementById('copy-status');
+const fallback = document.getElementById('fallback');
+function refresh(){
+ const complete=inputs.filter(x=>x.checked).length;
+ counter.textContent=complete+' из '+inputs.length;
+ progress.style.width=(complete*100/inputs.length)+'%';
+ meter.setAttribute('aria-valuenow',String(complete));
+ advice.textContent=complete===10
+  ? 'Базовый процесс описан. Следующий шаг — ограниченный пилот на тестовых обращениях и сравнение результата «до/после».'
+  : complete>=6
+    ? 'Основа уже есть. Важно зафиксировать оставшиеся риски, прежде чем подключать автоматическую отправку.'
+    : 'Начните с фиксации источников заявок и ответственных. ИИ без понятного процесса часто только ускоряет хаос.';
+ status.textContent='';
+ fallback.classList.remove('active');
+}
+function report(){
+ const lines=['МАЭСТРО BUSINESS — 10 проверок перед автоматизацией','Отметки отражают самооценку, не являются аудитом безопасности.',''];
+ inputs.forEach((x,i)=>{
+   const name=x.parentElement.querySelector('strong').textContent.trim();
+   lines.push((x.checked?'[x] ':'[ ] ')+(i+1)+'. '+name);
+ });
+ lines.push('','Демо: https://m72692591-collab.github.io/maestro/ai-leads-demo.html');
+ return lines.join('\n');
+}
+document.getElementById('copy').addEventListener('click',async()=>{
+ const value=report();
+ try{
+   if(!navigator.clipboard || !navigator.clipboard.writeText)throw new Error('clipboard unavailable');
+   await navigator.clipboard.writeText(value);
+   status.textContent='Готово — отметки скопированы. Текст можно вставить в заметки или письмо.';
+ }catch{
+   fallback.value=value; fallback.classList.add('active'); fallback.focus(); fallback.select();
+   status.textContent='Автоматическое копирование недоступно. Выделенный текст можно скопировать вручную.';
+ }
+});
+document.getElementById('clear').addEventListener('click',()=>{inputs.forEach(x=>{x.checked=false});refresh();});
+inputs.forEach(x=>x.addEventListener('change',refresh));
+refresh();
+})();
+</script>
+</body>
+</html>
