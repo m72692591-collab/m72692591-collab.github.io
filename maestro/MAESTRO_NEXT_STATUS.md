@@ -21,8 +21,14 @@ The new experience is additive to the current homepage and defaults to Classic. 
 
 ## Remaining limitations
 
-The source model is stylized and the programmed gesture is a prototype. This is an interpretation of the approved blue translucent Architect, not a frame-for-frame reconstruction of the reference. The lighter mobile model has no arm rig. There is no lip sync or connected AI consultant; the existing scripted text consultant can optionally use browser speech synthesis. The current lead form prepares a copyable application for the visitor to send manually; its server endpoint is not configured. Production availability must be verified separately after merging.
+The source model is stylized and the programmed gesture is a prototype. This full-body model is a simpler interpretation of the approved blue translucent, photoreal, waist-up Architect in the triptych. The lighter mobile model has no arm rig. There is no lip sync or connected AI consultant; the existing scripted text consultant can optionally use browser speech synthesis. The current lead form prepares a copyable application for the visitor to send manually; its server endpoint is not configured.
 
 ## Verification
 
 The repository Playwright suite covered desktop/mobile GLB loading, the initial Strategy lead action, Automation/Strategy consultant-to-form handoffs and isolation of a later Classic consultation. Separate local Chrome runs at 1440x900 and 390x844 selected a 3D panel and a text control, retained `?interest=Бот` until explicit selection, switched entire page modes, and had no page errors or horizontal overflow. The reduced-motion path and the 2D fallback were also exercised. Desktop and mobile screenshots and a gesture frame were inspected.
+
+## Live release — 2026-10-28
+
+- Main commit `63dff496d33d1464c728d8d34be2de4031e151bd` includes PRs #3, #6 and #7. The repository suite passed 70 structural checks and 64 Chrome browser assertions; all three CI jobs passed on the final model PR.
+- `https://m72692591-collab.github.io/maestro/` opens Classic by default; `https://m72692591-collab.github.io/maestro/?mode=live` opens Live 3D. Live desktop and mobile Chrome checks loaded the optimized GLBs (3,168,856 and 1,299,128 bytes), exercised the panels, form context and mode switch, and found no page errors or horizontal overflow. These observations establish publication, not a server-side lead receipt.
+- Independent Russian-copy review corrected three misleading/awkward phrases. Gemini multimodal review is `ROUTE_UNAVAILABLE` for this run: its Chrome tab did not attach to browser automation (`Debugger unattached`), so no Gemini output is claimed or used.
