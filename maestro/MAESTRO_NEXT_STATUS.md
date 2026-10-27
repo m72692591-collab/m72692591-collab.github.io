@@ -7,7 +7,7 @@ The new experience is additive to the current homepage and defaults to Classic. 
 - Shared catalog of eleven real site directions for Classic and Live views.
 - Lazy loaded Three.js WebGL scene with a genuine rigged GLB man in a business suit, blue translucent material, orbiting selectable 3D panels, light touch effect, drag rotation and a programmed arm gesture.
 - Clicking a 3D panel or its accessible text control opens that direction beside the scene. Questions open the site's existing MAESTRO text consultant with the selected direction, and the existing lead form receives the same direction.
-- Mobile uses a separate 6.7 MB GLB, smaller render scale and simpler orbit layout. A 2D direction list is available when WebGL fails; reduced motion is respected.
+- Mobile uses a separate 1.30 MB GLB, smaller render scale and simpler orbit layout. A 2D direction list is available when WebGL fails; reduced motion is respected.
 - Three.js 0.180.0 and its GLTFLoader are vendored under the MIT license in `assets/vendor/`.
 
 ## Model provenance
@@ -15,8 +15,9 @@ The new experience is additive to the current homepage and defaults to Classic. 
 - Source: `https://grab3d.com/models/characters/businessman/`
 - Download: `https://grab3d.com/dl/businessman-rigged/businessman-rigged.glb`
 - License: CC0 1.0, preserved in `assets/models/LICENSE.txt`. The source discloses AI-assisted creation.
-- Imported file: `assets/models/architect-rigged.glb`, SHA-256 `F50A22D464F1A5A4D72422D5DB5EDD82B6F709C59D94789FC560E31C1BDFF19B`.
-- Mobile file: `assets/models/architect-mobile.glb`, SHA-256 `E6107DAAF41AD4CE9B949D661BDA452CC7D49A47AB41CC1EAF751C241F659BCA`.
+- Imported file: `assets/models/architect-rigged.glb`, 3.17 MB, SHA-256 `16E0EDAC8E6E4AFC6F2863ED9795B628656E4BDFDAB2554A0E5F0937219401B4`.
+- Mobile file: `assets/models/architect-mobile.glb`, 1.30 MB, SHA-256 `FD9758C9647F19EBD9B7944F849BBC12366DFBF895139C5E90F0CB3C98D906D2`.
+- Both are locally optimized derivatives of the CC0 source with glTF Transform 4.5.1: `quantize` followed by `simplify --ratio 0.25 --error 0.003`. The desktop skin and arm bones remain present. Both derivatives passed glTF validation with zero errors and loaded in Chrome through the current Three.js scene; the desktop rig preserved its programmed gesture. The `NODE_SKINNED_MESH_NON_ROOT` warning was already present in the source GLB.
 
 ## Remaining limitations
 
