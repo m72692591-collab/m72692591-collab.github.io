@@ -33,10 +33,10 @@ if(root){
   });
   select(active);
   lead.addEventListener('click',()=>setFormInterest(active));
-  const fallback=(message)=>{document.getElementById('next-canvas').replaceChildren();document.getElementById('next-model-status').hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.style.left='';button.style.top=''})};
+  const fallback=(message)=>{document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.style.left='';button.style.top=''})};
   const start=async()=>{
     if(scene||loading)return loading;
-    loading=import('./maestro-next-scene.js').then(module=>{
+    loading=import('./maestro-next-scene.js?v=loading-v2').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.focus(catalog.indexOf(active),false);
     }).catch(()=>fallback('3D-сцена недоступна. Направления и заявка остаются доступны.'));

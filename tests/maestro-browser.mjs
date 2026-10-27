@@ -73,12 +73,22 @@ try {
   okay("Classic site remains available", await page.locator(".hero").isVisible());
 
   const fallbackPage = await desktop.newPage();
-  await fallbackPage.route('**/maestro-next-scene.js', route => route.abort());
+  await fallbackPage.route('**/maestro-next-scene.js*', route => route.abort());
   await goto(fallbackPage, 'index.html');
   await fallbackPage.locator('[data-next-mode="live"]').click();
   await fallbackPage.locator('#next-fallback').waitFor({ state: 'visible' });
   okay("2D fallback clears the loading indicator", await fallbackPage.locator('#next-model-status').isHidden() && await fallbackPage.locator('#next-orbit button').count() === 11);
   await fallbackPage.close();
+
+  const compatPage = await desktop.newPage();
+  const compatErrors = [];
+  watchErrors(compatPage, compatErrors);
+  await goto(compatPage, 'index.html');
+  await compatPage.locator('#next-model-status').evaluate(element => element.remove());
+  await compatPage.locator('[data-next-mode="live"]').click();
+  await compatPage.waitForFunction(() => document.querySelector('#next-model-status')?.textContent.includes('загружена'), null, { timeout: 30000 });
+  okay("Older cached markup can still load the Architect scene", await compatPage.locator('#next-canvas canvas').count() === 1 && await compatPage.locator('#next-model-status').count() === 1 && compatErrors.length === 0);
+  await compatPage.close();
 
   const call = page.getByRole("button", { name: "Вызвать консультанта МАЭСТРО" });
   await page.locator('[data-next-mode="live"]').click();
