@@ -11,7 +11,7 @@ export function createScene(container,orbit,catalog,reduced,onSelect){
   scene.add(new THREE.AmbientLight(0x77c9ff,1.5));
   const key=new THREE.PointLight(0xb6ecff,110);key.position.set(-3,4,4);scene.add(key);
   const rim=new THREE.PointLight(0x279dff,115);rim.position.set(3,1,-3);scene.add(rim);
-  const human=new THREE.Group();scene.add(human);
+  const human=new THREE.Group();human.visible=false;scene.add(human);
   const shell=new THREE.MeshPhysicalMaterial({color:0x58bfff,transparent:true,opacity:.38,metalness:.48,roughness:.2,side:THREE.DoubleSide,depthWrite:false});
   const wire=new THREE.MeshBasicMaterial({color:0x91eaff,wireframe:true,transparent:true,opacity:.22,depthWrite:false});
   const head=new THREE.Mesh(new THREE.SphereGeometry(.42,24,18),shell);head.scale.set(.8,1.16,.86);head.position.y=1.45;human.add(head);
@@ -22,7 +22,9 @@ export function createScene(container,orbit,catalog,reduced,onSelect){
   function arm(x){const group=new THREE.Group();group.position.set(x,.82,0);const upper=new THREE.Mesh(new THREE.CylinderGeometry(.16,.13,.95,12),armMaterial);upper.position.set(x>0?.21:-.21,-.42,0);upper.rotation.z=x>0?-.4:.4;group.add(upper);const lower=new THREE.Mesh(new THREE.CylinderGeometry(.12,.09,.84,12),armMaterial);lower.position.set(x>0?.48:-.48,-1.12,.25);lower.rotation.z=x>0?-.25:.25;group.add(lower);human.add(group);return group}
   arm(-.58);const gesture=arm(.58);
   let character=human,armBone=null,armRest=null,leftArmBone=null,leftArmRest=null,disposed=false;
-  const modelStatus=document.createElement('div');modelStatus.id='next-model-status';modelStatus.textContent='Загружаем объёмную модель…';container.parentElement.append(modelStatus);
+  let modelStatus=container.parentElement.querySelector('#next-model-status');
+  if(!modelStatus){modelStatus=document.createElement('div');modelStatus.id='next-model-status';modelStatus.className='next-loading';modelStatus.setAttribute('aria-live','polite');container.parentElement.append(modelStatus)}
+  modelStatus.hidden=false;modelStatus.textContent='Загружаем объёмную модель…';
   const modelSource=matchMedia('(max-width:650px)').matches?'./assets/models/architect-mobile.glb':'./assets/models/architect-rigged.glb';
   new GLTFLoader().load(modelSource,gltf=>{
     if(disposed)return;
@@ -44,7 +46,7 @@ export function createScene(container,orbit,catalog,reduced,onSelect){
     human.visible=false;scene.add(model);character=model;
     modelStatus.textContent='Объёмная модель загружена';setTimeout(()=>{modelStatus.hidden=true},1400);
     redraw();
-  },undefined,()=>{modelStatus.textContent='Модель не загрузилась: показан 3D-прототип';redraw()});
+  },undefined,()=>{human.visible=true;modelStatus.textContent='Модель не загрузилась: показан 3D-прототип';setTimeout(()=>{modelStatus.hidden=true},5000);redraw()});
   const base=new THREE.Mesh(new THREE.CylinderGeometry(1.35,1.55,.12,64),new THREE.MeshStandardMaterial({color:0x06243b,metalness:.8,roughness:.25}));base.position.y=-1.42;scene.add(base);
   const rings=[];for(const radius of [1.43,2.48]){const ring=new THREE.Mesh(new THREE.TorusGeometry(radius,.014,5,96),new THREE.MeshBasicMaterial({color:0x53d8ff,transparent:true,opacity:.55}));ring.rotation.x=Math.PI/2;ring.position.y=-1.31;scene.add(ring);rings.push(ring)}
   function panelTexture(label){

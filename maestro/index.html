@@ -6,7 +6,7 @@
 <title>Maestro Business — решения для роста и управления бизнесом</title>
 <meta name="description" content="Maestro Business: стратегия, маркетинг, сайты, продажи, CRM, автоматизация, аналитика, документы и работа с командой. ИП Григоров Михаил Владимирович.">
 <meta name="theme-color" content="#050b15">
-<link rel="stylesheet" href="assets/maestro-next.css">
+<link rel="stylesheet" href="assets/maestro-next.css?v=loading-v2">
 <!-- Activate only after RF-hosted receiver, HTTPS, security and legal verification. -->
 <meta name="maestro-lead-endpoint" content="">
 <style>
@@ -37,7 +37,7 @@ body{background:#fffaf4;color:var(--text)}.hero{background:radial-gradient(circl
   <div class="wrap">
     <div class="next-heading"><div><span class="eyebrow">МАЭСТРО NEXT</span><h2 id="next-heading">С чего начнём?</h2><p>Выберите направление в привычном списке или в объёмной сцене. Оставить заявку можно в любом режиме.</p></div><div class="next-switch" role="group" aria-label="Режим сайта"><button type="button" data-next-mode="classic" aria-pressed="true">Классический</button><button type="button" data-next-mode="live" aria-pressed="false">Живой 3D</button></div></div>
     <div id="next-classic" class="next-classic"><div id="next-classic-list" class="next-classic-list"></div></div>
-    <div id="next-live" class="next-live" hidden><div class="next-stage"><div id="next-canvas" class="next-canvas" aria-label="Интерактивная трёхмерная сцена направлений МАЭСТРО"></div><div id="next-orbit" class="next-orbit" role="group" aria-label="Направления работы"></div><div id="next-fallback" class="next-fallback" hidden>3D-сцена недоступна на этом устройстве. Выберите направление из списка ниже.</div></div><aside class="next-detail" aria-live="polite"><span class="next-kicker">Ваше направление</span><h3 id="next-title"></h3><p id="next-description"></p><div class="next-detail-actions"><a id="next-open" class="btn ghost" href="#solutions">Открыть раздел</a><a id="next-lead" class="btn primary" href="#lead">Обсудить задачу</a></div><label for="next-question">Опишите задачу</label><textarea id="next-question" placeholder="Например: заявки теряются между сайтом и мессенджером"></textarea><button type="button" id="next-ask" class="btn ghost">Спросить Маэстро</button><div id="next-answer" class="next-answer" aria-live="polite"></div><small>Ответы основаны на материалах сайта. Голос включается отдельно.</small></aside></div>
+    <div id="next-live" class="next-live" hidden><div class="next-stage"><div id="next-canvas" class="next-canvas" aria-label="Интерактивная трёхмерная сцена направлений МАЭСТРО"></div><div id="next-model-status" class="next-loading" aria-live="polite">Загружаем 3D-сцену…</div><div id="next-orbit" class="next-orbit" role="group" aria-label="Направления работы"></div><div id="next-fallback" class="next-fallback" hidden>3D-сцена недоступна на этом устройстве. Выберите направление из списка ниже.</div></div><aside class="next-detail" aria-live="polite"><span class="next-kicker">Ваше направление</span><h3 id="next-title"></h3><p id="next-description"></p><div class="next-detail-actions"><a id="next-open" class="btn ghost" href="#solutions">Открыть раздел</a><a id="next-lead" class="btn primary" href="#lead">Обсудить задачу</a></div><label for="next-question">Опишите задачу</label><textarea id="next-question" placeholder="Например: заявки теряются между сайтом и мессенджером"></textarea><button type="button" id="next-ask" class="btn ghost">Спросить Маэстро</button><div id="next-answer" class="next-answer" aria-live="polite"></div><small>Ответы основаны на материалах сайта. Голос включается отдельно.</small></aside></div>
   </div>
 </section>
 <section class="maestro-lab-intro" id="lab" aria-labelledby="maestro-lab-heading">
@@ -88,5 +88,5 @@ document.getElementById('leadForm').addEventListener('submit',async e=>{e.preven
 <script src="assets/maestro-leads.js?v=1" defer></script>
 <script src="assets/visual-fit.js?v=1" defer></script>
 <script src="assets/home-demo.js?v=1" defer></script>
-<script type="module" src="assets/maestro-next.js"></script>
+<script type="module" src="assets/maestro-next.js?v=loading-v2"></script>
 </body></html>
