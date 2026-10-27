@@ -33,7 +33,7 @@ if(root){
   });
   select(active);
   lead.addEventListener('click',()=>setFormInterest(active));
-  const fallback=(message)=>{document.getElementById('next-canvas').replaceChildren();document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.style.left='';button.style.top=''})};
+  const fallback=(message)=>{document.getElementById('next-canvas').replaceChildren();document.getElementById('next-model-status').hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.style.left='';button.style.top=''})};
   const start=async()=>{
     if(scene||loading)return loading;
     loading=import('./maestro-next-scene.js').then(module=>{

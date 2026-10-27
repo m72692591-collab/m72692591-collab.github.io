@@ -52,6 +52,7 @@ try {
   okay("NEXT uses the shared direction catalog", await page.locator("#next-classic-list a").count() === 11);
   await page.locator('[data-next-mode="live"]').click();
   okay("Live mode changes the whole homepage", await page.locator(".hero").isHidden());
+  okay("Live announces scene loading", await page.locator("#next-model-status").isVisible());
   await page.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
   okay("Desktop Architect GLB rendered", await page.locator("#next-canvas canvas").count() === 1);
   await page.locator('#next-lead').click();
@@ -70,6 +71,14 @@ try {
   okay("Strategy handoff keeps its catalog service", await page.locator("#interest").inputValue() === "Аудит");
   await page.locator('[data-next-mode="classic"]').click();
   okay("Classic site remains available", await page.locator(".hero").isVisible());
+
+  const fallbackPage = await desktop.newPage();
+  await fallbackPage.route('**/maestro-next-scene.js', route => route.abort());
+  await goto(fallbackPage, 'index.html');
+  await fallbackPage.locator('[data-next-mode="live"]').click();
+  await fallbackPage.locator('#next-fallback').waitFor({ state: 'visible' });
+  okay("2D fallback clears the loading indicator", await fallbackPage.locator('#next-model-status').isHidden() && await fallbackPage.locator('#next-orbit button').count() === 11);
+  await fallbackPage.close();
 
   const call = page.getByRole("button", { name: "Вызвать консультанта МАЭСТРО" });
   await page.locator('[data-next-mode="live"]').click();
