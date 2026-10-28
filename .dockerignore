@@ -1,0 +1,21 @@
+# Exclude repository history and local credentials from Docker build context.
+.git
+.github
+**/.env
+**/.env.*
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.jks
+**/*.keystore
+**/id_rsa
+**/id_ed25519
+**/node_modules
+**/__pycache__
+**/.pytest_cache
+**/test-artifacts
+**/coverage
+*.log
+# Do NOT ignore dist/maestro, infra/runtime or maestro/server:
+# the audited Dockerfiles need these paths.
