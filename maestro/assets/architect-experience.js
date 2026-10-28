@@ -62,7 +62,7 @@ if(root){
     if(!window.MAESTRO_GENIE)return;
     window.MAESTRO_GENIE.setLeadInterest(active.interest);
     window.MAESTRO_GENIE.open();
-    detail.scrollIntoView({behavior:reduce.matches?'instant':'smooth',block:'center'});
+    window.scrollTo({left:0,top:Math.max(0,window.scrollY+detail.getBoundingClientRect().top-100),behavior:reduce.matches?'instant':'smooth'});
   });
   const fallback=(message)=>{root.querySelector('button[data-presentation=model]').disabled=true;live.dataset.presentation='portrait';document.getElementById('architect-view-note').textContent='Портретный режим. 3D недоступно.';document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.hidden=false;button.style.left='';button.style.top=''})};
   const start=async()=>{

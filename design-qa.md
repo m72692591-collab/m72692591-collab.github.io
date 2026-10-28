@@ -21,10 +21,12 @@ Use the owner's middle blue Architect reference as the visual target, retain Cla
 - Narrowed mobile introduction to 116 px to keep it clear of the portrait hair.
 - Added the gold reference-inspired emblem and blue orb. The orb opens the existing consultant and carries the selected service.
 - Wide slides are hidden until their first 3D positions are ready, preventing an initial stack at the edge. The static fallback remains visible on failure.
+- Separated keyboard focus from pointer hover so leaving a focused card with the pointer does not restart motion.
+- Made the scene a clipping surface rather than a hidden scroll container. Opening the orb scrolls only the main viewport; returning from the consultant no longer shifts the composition sideways.
 
 ## Verification
 
-75 structural checks and 78 desktop/mobile browser assertions passed locally before the final cosmetic/orb changes. The final orb journey, visual recheck and CI result are recorded in PR #9 before merge. Core coverage includes both modes, both character views, all-direction selection, context into the form, pause/resume, reduced motion, module-failure fallback, legacy status compatibility, no horizontal overflow and no uncaught browser errors.
+75 structural checks and 84 desktop/mobile browser assertions passed locally, including the final orb handoff, keyboard-focus regression and mobile scene alignment. The final visual recheck and CI result are recorded in PR #9 before merge. Core coverage includes both modes, both character views, all-direction selection, context into the form, pause/resume, reduced motion, module-failure fallback, legacy status compatibility, no horizontal overflow and no uncaught browser errors. A CI run exposed an unreliable 350 ms movement observation; the test now waits for a real position change with a bounded 10-second timeout, while still requiring motion to occur.
 
 ## Fidelity and remaining dependencies
 

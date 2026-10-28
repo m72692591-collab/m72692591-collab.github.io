@@ -60,11 +60,11 @@ export function createScene(container,orbit,catalog,reduced,onSelect){
   const panelGroup=new THREE.Group();scene.add(panelGroup);
   const panels=catalog.map((item,i)=>{const mesh=new THREE.Mesh(new THREE.BoxGeometry(1.16,.3,.025),new THREE.MeshBasicMaterial({map:panelTexture(item.title),color:i===0?0xb4f0ff:0xffffff,transparent:true,opacity:.84,side:THREE.DoubleSide,depthWrite:false}));mesh.userData.index=i;panelGroup.add(mesh);return mesh});
   const touch=new THREE.Mesh(new THREE.SphereGeometry(.11,16,12),new THREE.MeshBasicMaterial({color:0xbaf2ff,transparent:true,opacity:.75}));scene.add(touch);
-  let chosen=0,phase=0,frame=0,visible=true,paused=false,drag=false,hovered=false,lastX=0,downX=0,rotation=0,lastLabels=0,gestureAt=0,focusSide=1,lastFrame=performance.now();
+  let chosen=0,phase=0,frame=0,visible=true,paused=false,drag=false,hovered=false,focused=false,lastX=0,downX=0,rotation=0,lastLabels=0,gestureAt=0,focusSide=1,lastFrame=performance.now();
   const buttons=[...orbit.querySelectorAll('button')];
   function resize(){const w=container.clientWidth,h=container.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.position.z=w<650?9.5:10;camera.updateProjectionMatrix();render()}
   function render(){if(!visible||paused||document.hidden)return;
-    const moving=motion&&!reduced.matches&&!drag&&!hovered;
+    const moving=motion&&!reduced.matches&&!drag&&!hovered&&!focused;
     const now=performance.now(),delta=Math.min((now-lastFrame)/1000,.06);lastFrame=now;
     if(moving)phase+=delta*.08;
     const gestureAmount=Math.max(0,1-(performance.now()-gestureAt)/2500);
@@ -123,7 +123,7 @@ export function createScene(container,orbit,catalog,reduced,onSelect){
   const stage=container.parentElement;
 
 
-  buttons.forEach(button=>{button.addEventListener('pointerenter',()=>{hovered=true;redraw()});button.addEventListener('pointerleave',()=>{hovered=false;redraw()});button.addEventListener('focus',()=>{hovered=true;redraw()});button.addEventListener('blur',()=>{hovered=false;redraw()})});
+  buttons.forEach(button=>{button.addEventListener('pointerenter',()=>{hovered=true;redraw()});button.addEventListener('pointerleave',()=>{hovered=false;redraw()});button.addEventListener('focus',()=>{focused=true;redraw()});button.addEventListener('blur',()=>{focused=false;redraw()})});
   resize();
   return {setPresentation(value){presentation=value;redraw()},setMotion(value){motion=value;redraw()},focus(index,animate=true){chosen=index;phase=-rotation*.35;focusSide=Math.sign(panels[index].position.x)||1;if(animate&&!reduced.matches)gestureAt=performance.now();redraw()},pause(){paused=true;cancelAnimationFrame(frame)},resume(){paused=false;redraw()},dispose(){disposed=true;cancelAnimationFrame(frame);observer.disconnect();sizeObserver.disconnect();reduced.removeEventListener?.('change',change);document.removeEventListener('visibilitychange',change);renderer.dispose();canvas.remove();modelStatus.remove()}};
 }
