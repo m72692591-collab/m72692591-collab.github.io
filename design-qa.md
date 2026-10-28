@@ -37,3 +37,39 @@ The portrait is a generated 2D backdrop and differs in face/pose/crop from the s
 Gemini visual review: `ROUTE_UNAVAILABLE` (`Debugger unattached` in the authorized browser route). Independent local code, copy and visual review were used; no Gemini contribution is claimed.
 
 HUMANITY_PASS: existing catalog/service copy retained; new view labels describe the actual portrait/GLB distinction, the consultant's source and the manual application. No invented outcomes or growth figures. Codex performed final editing after independent review.
+
+## Human-rig revision — 2026-10-28, draft / PARTIAL
+
+Acceptance requested: the exact illustrated Architect, chest-level wide carousel,
+real gestures, expression and speech. Technical acceptance passed; exact visual
+identity and lifelike performance remain unfulfilled. This revision is not deployed.
+
+Source: supplied central triptych panel, SHA-256
+952ba078a675cea37fa2253875934155d6e6aea7e9722692ea431222a2c6134b.
+The source is a single illustrated view, not an existing rigged model.
+
+Independent Gemini reference review was actually completed at
+https://gemini.google.com/app/45f310fc5a677316 : defined jaw/cheekbones, light
+stubble, swept wavy brown hair, opaque face/neck, blue translucent jacket,
+shoulder/head width around 2.7–3.0, clear face above the chest cards. These are
+visual guidance, not measured biometric reconstruction. The earlier unavailable
+Gemini route above is historical and does not describe this run.
+
+Implemented: CC0-based MPFB human, 52 joints including fingers, 67 facial targets,
+separate detailed face texture, arm IK, timed selection/contact, genuine browser
+speech callbacks, chest orbit, smaller mobile GLB. Corrected eye alpha, cloth
+intersections and a shoulder cut identified in the prototype renders.
+
+76 structural / 90 browser assertions, 9 rig tests and speech lifecycle tests
+passed locally. Browser coverage now also tests failed GLB and lost WebGL context.
+Desktop/mobile final screenshots are produced in test-artifacts/maestro and CI.
+No uncaught page errors or horizontal overflow were observed. The source GLB
+read-back confirms real morph deformation; it does not certify natural movement.
+
+HUMANITY_PASS: retained catalog and owner copy; new controls/statuses independently
+reviewed and corrected so failed speech does not claim an active fallback, and
+model failure describes the automatic portrait switch. Senior edit: Codex.
+
+Open visual gap: another face/hairstyle, procedural motion, approximate mouth
+poses. The head texture improves detail without establishing exact identity.
+This gap blocks a claim of 100% match and blocks automatic production replacement.

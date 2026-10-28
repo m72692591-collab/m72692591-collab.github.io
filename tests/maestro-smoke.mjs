@@ -40,7 +40,7 @@ for (const [name, html] of [["index.html", index], ["maestro-lab.html", lab], ["
 check("Lead form kept", index.includes('id="leadForm"') && index.includes('id="agree"'));
 check("API disabled until configured", index.includes('meta name="maestro-lead-endpoint" content=""'));
 check("API capture prevents double submit", leads.includes("event.stopImmediatePropagation()"));
-check("Genie script included", index.includes("assets/maestro-genie.js?v=1"));
+check("Genie script included", index.includes("assets/maestro-genie.js?v="));
 check("Lab script included", index.includes("maestro-lab.html"));
 check("Builder linked from site", index.includes('href="brief-builder.html"'));
 check("Session-only builder transfer matches", builder.includes("maestro_spec_handoff_v1") && index.includes("maestro_spec_handoff_v1"));

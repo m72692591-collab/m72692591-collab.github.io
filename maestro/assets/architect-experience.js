@@ -13,16 +13,16 @@ if(root){
   question.maxLength=350;
   const answer=document.getElementById('next-answer');
   const detail=root.querySelector('.next-detail');
-  let active=catalog[0],scene=null,loading=null,presentation='portrait',orbitPaused=false;
+  let active=catalog[0],scene=null,loading=null,presentation='model',orbitPaused=false;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   const setFormInterest=(item)=>{const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest};
   const select=(item,userSelected=false)=>{
     active=item;document.getElementById('architect-select').value=item.id;title.textContent=item.title;description.textContent=item.description;open.href=item.href;
     lead.href='#lead';orbit.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
-    answer.textContent='';scene?.focus(catalog.indexOf(item));
+    answer.textContent='';scene?.focus(catalog.indexOf(item),userSelected);
     document.getElementById('architect-counter').textContent=`${String(catalog.indexOf(item)+1).padStart(2,'0')} / ${catalog.length}`;
     document.querySelectorAll('.architect-directory button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
-    if(userSelected)setFormInterest(item);
+    if(userSelected){setFormInterest(item);window.MAESTRO_GENIE?.speak?.(`${item.title}. ${item.description}`)}
   };
   const classicList=document.getElementById('next-classic-list');
   const slideIcons={strategy:'strategy',sites:'view',marketing:'marketing',sales:'finance',automation:'automation',ai:'chat',team:'team',analytics:'strategy',cases:'view',pricing:'finance',documents:'view'};
@@ -51,6 +51,15 @@ if(root){
   document.getElementById('architect-prev').addEventListener('click',()=>advance(-1));
   document.getElementById('architect-next').addEventListener('click',()=>advance(1));
   document.getElementById('architect-pause').addEventListener('click',event=>{orbitPaused=!orbitPaused;event.currentTarget.setAttribute('aria-pressed',String(orbitPaused));event.currentTarget.textContent=orbitPaused?'Вращать':'Пауза';scene?.setMotion(!orbitPaused)});
+  const voiceButton=document.createElement('button');voiceButton.type='button';voiceButton.id='architect-voice';voiceButton.textContent='Включить голос';voiceButton.setAttribute('aria-pressed','false');
+  root.querySelector('.architect-view').insertBefore(voiceButton,document.getElementById('architect-view-note'));
+  voiceButton.addEventListener('click',()=>{
+    if(!window.MAESTRO_GENIE)return;
+    const enabled=!window.MAESTRO_GENIE.voiceEnabled;window.MAESTRO_GENIE.setVoiceEnabled(enabled);
+    voiceButton.setAttribute('aria-pressed',String(enabled));voiceButton.textContent=enabled?'Выключить голос':'Включить голос';
+    if(enabled)window.MAESTRO_GENIE.speak(`${active.title}. ${active.description}`);
+  });
+  window.addEventListener('maestro:voice',event=>{voiceButton.setAttribute('aria-pressed',String(event.detail.enabled));voiceButton.textContent=event.detail.enabled?'Выключить голос':'Включить голос'});
   root.querySelectorAll('button[data-presentation]').forEach(button=>button.addEventListener('click',()=>{
     presentation=button.dataset.presentation;live.dataset.presentation=presentation;
     root.querySelectorAll('button[data-presentation]').forEach(control=>control.setAttribute('aria-pressed',String(control.dataset.presentation===presentation)));
@@ -64,12 +73,19 @@ if(root){
     window.MAESTRO_GENIE.open();
     window.scrollTo({left:0,top:Math.max(0,window.scrollY+detail.getBoundingClientRect().top-100),behavior:reduce.matches?'instant':'smooth'});
   });
-  const fallback=(message)=>{root.querySelector('button[data-presentation=model]').disabled=true;live.dataset.presentation='portrait';document.getElementById('architect-view-note').textContent='Портретный режим. 3D недоступно.';document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.hidden=false;button.style.left='';button.style.top=''})};
+  const fallback=(message)=>{scene?.dispose();scene=null;root.querySelector('button[data-presentation=model]').disabled=true;presentation='portrait';live.dataset.presentation='portrait';root.querySelectorAll('button[data-presentation]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.presentation==='portrait')));document.getElementById('architect-view-note').textContent='Портретный режим. 3D недоступно.';document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.hidden=false;button.removeAttribute('style')})};
+  live.addEventListener('architect:context-lost',()=>fallback('3D-сцена отключилась. Выберите направление на слайдах ниже.'));
+  live.addEventListener('architect:model-error',()=>{
+    presentation='portrait';live.dataset.presentation='portrait';scene?.setPresentation('portrait');
+    root.querySelectorAll('button[data-presentation]').forEach(button=>{button.setAttribute('aria-pressed',String(button.dataset.presentation==='portrait'));if(button.dataset.presentation==='model')button.disabled=true});
+    document.getElementById('architect-view-note').textContent='Модель недоступна. Портрет и карусель доступны.';
+  });
   const start=async()=>{
     if(scene||loading)return loading;
-    loading=import('./architect-scene.js?v=1').then(module=>{
+    loading=import('./architect-scene.js?v=gesture-2').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.setPresentation(presentation);scene.setMotion(!orbitPaused);scene.focus(catalog.indexOf(active),false);
+      if(!document.body.classList.contains('next-mode-live'))scene.pause();
       orbit.classList.add('architect-ready');
     }).catch(()=>fallback('3D-сцена недоступна. Направления и форма остаются доступны.'));
     return loading;
@@ -81,7 +97,7 @@ if(root){
     const headerToggle=document.getElementById('next-header-toggle');
     if(headerToggle)headerToggle.textContent=isLive?'Классический':'Живой 3D';
     try{sessionStorage.setItem('maestro_next_mode',mode)}catch{}
-    if(isLive){if(scene)scene.resume();else start()}else{scene?.pause();window.MAESTRO_GENIE?.setLeadInterest?.(null)}
+    if(isLive){if(scene)scene.resume();else start()}else{scene?.pause();window.MAESTRO_GENIE?.stopVoice?.();window.MAESTRO_GENIE?.setLeadInterest?.(null)}
     const genieRoot=document.getElementById('maestro-genie-root');
     if(genieRoot)(isLive?detail:document.body).append(genieRoot);
     if(scroll)window.scrollTo(0,0);
@@ -102,6 +118,6 @@ if(root){
   const requestedMode=new URLSearchParams(location.search).get('mode');
   try{if(requestedMode==='live'||(requestedMode!=='classic'&&sessionStorage.getItem('maestro_next_mode')==='live'))setMode('live')}catch{if(requestedMode==='live')setMode('live')}
   addEventListener('DOMContentLoaded',()=>{if(document.body.classList.contains('next-mode-live')){const genieRoot=document.getElementById('maestro-genie-root');if(genieRoot)detail.append(genieRoot)}});
-  addEventListener('pagehide',event=>{if(event.persisted)scene?.pause();else{scene?.dispose();scene=null;loading=null}});
+  addEventListener('pagehide',event=>{window.MAESTRO_GENIE?.stopVoice?.();if(event.persisted)scene?.pause();else{scene?.dispose();scene=null;loading=null}});
   addEventListener('pageshow',()=>{if(document.body.classList.contains('next-mode-live')){if(scene)scene.resume();else start()}});
 }

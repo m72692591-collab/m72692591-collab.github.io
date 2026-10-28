@@ -48,8 +48,8 @@ async function carouselClearsConsultation(page) {
 }
 try {
   await ready();
-  okay("Desktop Architect GLB stays under 4 MB", fs.statSync("maestro/assets/models/architect-rigged.glb").size < 4_000_000);
-  okay("Mobile Architect GLB stays under 1.5 MB", fs.statSync("maestro/assets/models/architect-mobile.glb").size < 1_500_000);
+  okay("Desktop rigged human with detailed skin stays under 3.2 MB", fs.statSync("maestro/assets/models/architect-human.glb").size < 3_200_000);
+  okay("Mobile rigged human stays under 1.8 MB", fs.statSync("maestro/assets/models/architect-human-mobile.glb").size < 1_800_000);
   browser = await chromium.launch({ headless: true, args: ["--enable-webgl", "--use-gl=angle", "--use-angle=swiftshader"], ...(process.env.CI ? {} : { channel: "chrome" }) });
   const desktop = await browser.newContext({ viewport: { width: 1400, height: 900 }, acceptDownloads: true });
   const page = await desktop.newPage();
@@ -71,7 +71,7 @@ try {
     const image = document.querySelector(".architect-art");
     return image?.complete && image.naturalWidth > 500;
   });
-  okay("Reference portrait is loaded and identified separately from the model", await page.locator("#next-live").getAttribute("data-presentation") === "portrait" && (await page.locator("#architect-view-note").innerText()).includes("Портрет"));
+  okay("Live opens the actual rigged human with face controls", await page.locator("#next-live").getAttribute("data-presentation") === "model" && await page.locator('#next-canvas').getAttribute('data-body-rig') === 'true' && await page.locator('#next-canvas').getAttribute('data-face-rig') === 'true');
   await page.locator('button[data-presentation="model"]').click();
   okay("Visitor can select the actual 3D model", await page.locator("#next-live").getAttribute("data-presentation") === "model" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "true");
   await page.screenshot({ path: artifacts + "/architect-model-desktop.png", fullPage: false });
@@ -142,6 +142,24 @@ try {
   await compatPage.waitForFunction(() => document.querySelector('#next-model-status')?.textContent.includes('загружена'), null, { timeout: 30000 });
   okay("Older cached markup can still load the Architect scene", await compatPage.locator('#next-canvas canvas').count() === 1 && await compatPage.locator('#next-model-status').count() === 1 && compatErrors.length === 0);
   await compatPage.close();
+
+  const failedModel = await desktop.newPage();
+  await failedModel.route('**/architect-human.glb*', route => route.abort());
+  await goto(failedModel, 'index.html?mode=live');
+  await failedModel.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.modelState === 'failed');
+  okay('A failed human model switches to an explicitly selected portrait', await failedModel.locator('#next-live').getAttribute('data-presentation') === 'portrait' && await failedModel.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true' && !await failedModel.locator('button[data-presentation=model]').isEnabled());
+  await failedModel.locator('#architect-select').selectOption('automation');
+  okay('Model failure preserves service and lead context', await failedModel.locator('#interest').inputValue() === 'Автоматизация');
+  await failedModel.close();
+
+  const lostContext = await desktop.newPage();
+  await goto(lostContext, 'index.html?mode=live');
+  await lostContext.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.modelState === 'loaded');
+  await lostContext.locator('#next-canvas canvas').evaluate(canvas => canvas.getContext('webgl2').getExtension('WEBGL_lose_context').loseContext());
+  await lostContext.locator('#next-fallback').waitFor({ state: 'visible' });
+  okay('Context loss disposes the renderer and reveals all eleven static slides', await lostContext.locator('#next-canvas canvas').count() === 0 && await lostContext.locator('#next-orbit button:not([hidden])').count() === 11);
+  okay('Context loss clears the selected model state', await lostContext.locator('button[data-presentation=model]').getAttribute('aria-pressed') === 'false' && await lostContext.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true');
+  await lostContext.close();
 
   const call = page.getByRole("button", { name: "Вызвать консультанта МАЭСТРО" });
   await page.locator('[data-next-mode="live"]').click();
@@ -288,7 +306,7 @@ try {
   await goto(m, "brief-builder.html");
   okay("Mobile builder visible", await m.locator("#download").isVisible());
   await m.screenshot({ path: artifacts + "/brief-mobile.png", fullPage: true });
-  const mobileModel = m.waitForResponse(response => new URL(response.url()).pathname.endsWith("architect-mobile.glb") && response.status() === 200);
+  const mobileModel = m.waitForResponse(response => new URL(response.url()).pathname.endsWith("architect-human-mobile.glb") && response.status() === 200);
   await goto(m, "index.html?mode=live");
   await mobileModel;
   await m.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
@@ -297,7 +315,8 @@ try {
     const image = document.querySelector(".architect-art");
     return image?.complete && image.naturalWidth > 500;
   });
-  okay("Mobile portrait is loaded", await m.locator("#next-live").getAttribute("data-presentation") === "portrait");
+  okay("Mobile opens a human with both body and facial rig", await m.locator("#next-live").getAttribute("data-presentation") === "model" && await m.locator('#next-canvas').getAttribute('data-body-rig') === 'true' && await m.locator('#next-canvas').getAttribute('data-face-rig') === 'true');
+  await m.screenshot({ path: artifacts + '/architect-human-mobile.png', fullPage: true });
   await m.locator("#architect-next").click();
   okay("Mobile carousel updates the selected service", await m.locator("#next-title").innerText() === "Сайты и дизайн" && await m.locator("#interest").inputValue() === "Сайт");
   await m.locator('button[data-presentation="model"]').click();

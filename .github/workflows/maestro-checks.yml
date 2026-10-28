@@ -6,6 +6,8 @@ on:
       - 'tests/maestro-smoke.mjs'
       - 'tests/maestro-browser.mjs'
       - 'tests/maestro-leads-api.mjs'
+      - 'tests/maestro-speech.mjs'
+      - 'tests/architect-rig.mjs'
       - '.github/workflows/maestro-checks.yml'
   push:
     branches:
@@ -15,6 +17,8 @@ on:
       - 'tests/maestro-smoke.mjs'
       - 'tests/maestro-browser.mjs'
       - 'tests/maestro-leads-api.mjs'
+      - 'tests/maestro-speech.mjs'
+      - 'tests/architect-rig.mjs'
       - '.github/workflows/maestro-checks.yml'
   workflow_dispatch:
 permissions:
@@ -32,6 +36,10 @@ jobs:
           node-version: '22'
       - name: Verify JavaScript syntax, static links and integration invariants
         run: node tests/maestro-smoke.mjs
+      - name: Verify speech cancellation, facial rig and hand motion
+        run: |
+          node tests/maestro-speech.mjs
+          node tests/architect-rig.mjs
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'

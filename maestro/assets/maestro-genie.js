@@ -1,6 +1,8 @@
 /* MAESTRO GENIE ENGINE v0.1 — progressive enhancement on a static site.
  * No tokens, cookies, trackers, paid services or server-side AI claims.
- * Optional future private TTS adapter: window.MAESTRO_GENIE_VOICE = { speak(text): Promise<void>, stop(): void }.
+ * Optional future private TTS adapter: window.MAESTRO_GENIE_VOICE = { speak(text, hooks): Promise<void>, stop(): void }.
+ * hooks.onStart/onBoundary/onEnd may report actual playback timing. An adapter without hooks still plays,
+ * but does not claim timed speech events for the 3D scene.
  * The voice adapter must be implemented on a trusted server, never put API keys or consent recordings in the public repo.
  */
 (function () {
@@ -61,6 +63,7 @@
   const voiceButton = root.querySelector('[data-mg="voice"]');
   const micButton = root.querySelector('[data-mg="mic"]');
   const state = { voice: false, topic: 'general', lastQuestion: '', leadInterest: null, recognition: null, speaking: false, wizard: null };
+  let activeSpeech = null;
 
   const knowledge = {
     general: 'Здравствуйте! Я МАЭСТРО. Помогаю выбрать подходящее направление: сайты, боты, ИИ-операторы, CRM, маркетинг, команда и аналитика. Расскажите, что вы хотите улучшить. Я могу помочь сформулировать заявку.',
@@ -97,35 +100,107 @@
     for (const entry of intentChecks) if (entry[1].some(word => q.includes(word))) return entry[0];
     return 'general';
   }
+  function speechEvent(run, phase, charIndex = 0, charLength = 0) {
+    try { window.dispatchEvent(new CustomEvent('maestro:speech', {
+      detail: { phase, text: run.text, charIndex, charLength }
+    })); } catch (_) { /* A scene listener must never break the consultant. */ }
+  }
+  function beginSpeech(run) {
+    if (activeSpeech !== run || run.ended || run.started) return;
+    run.started = true;
+    state.speaking = true;
+    panel.classList.add('is-talking');
+    setStatus(run.voiceUnverified ? 'МАЭСТРО говорит. Браузер выбирает голос.' : 'МАЭСТРО говорит');
+    speechEvent(run, 'start');
+  }
+  function boundarySpeech(run, charIndex, charLength) {
+    if (activeSpeech !== run || run.ended) return;
+    beginSpeech(run);
+    const index = Number.isFinite(charIndex) ? Math.max(0, Math.min(run.text.length, charIndex)) : 0;
+    const length = Number.isFinite(charLength) ? Math.max(0, Math.min(run.text.length - index, charLength)) : 0;
+    run.lastIndex = index;
+    speechEvent(run, 'boundary', index, length);
+  }
+  function endSpeech(run) {
+    if (activeSpeech !== run || run.ended) return;
+    run.ended = true;
+    activeSpeech = null;
+    state.speaking = false;
+    panel.classList.remove('is-talking');
+    setStatus('Готов к вашему вопросу');
+    speechEvent(run, 'end', run.lastIndex || 0);
+  }
   function cancelSpeech() {
+    if (activeSpeech) endSpeech(activeSpeech);
     try { window.speechSynthesis?.cancel(); } catch (_) {}
     try { window.MAESTRO_GENIE_VOICE?.stop?.(); } catch (_) {}
     panel.classList.remove('is-talking');
     state.speaking = false;
   }
+  function browserSpeech(run) {
+    if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance !== 'function') {
+      endSpeech(run); setStatus('В этом браузере нет синтеза речи'); return;
+    }
+    try {
+      const u = new SpeechSynthesisUtterance(run.text);
+      u.lang = 'ru-RU'; u.rate = 0.98; u.pitch = 0.96;
+      const voices = window.speechSynthesis.getVoices();
+      const russian = voices.filter(v => /^ru(?:-|$)/i.test(v.lang || ''));
+      const local = russian.filter(v => v.localService === true);
+      const pavel = v => /(?:^|\W)(?:павел|pavel)(?:$|\W)/i.test(v.name || '');
+      const voice = local.find(pavel) || local[0] || russian.find(pavel) || russian[0];
+      if (voice) u.voice = voice;
+      else if (voices.length) { endSpeech(run); setStatus('Русский голос недоступен в этом браузере'); return; }
+      else run.voiceUnverified = true; // Empty getVoices() is common before the browser initializes voices.
+      u.onstart = () => beginSpeech(run);
+      u.onboundary = event => boundarySpeech(run, event.charIndex, event.charLength);
+      u.onend = u.onerror = () => endSpeech(run);
+      window.speechSynthesis.speak(u);
+    } catch (_) { endSpeech(run); setStatus('Не удалось включить озвучивание'); }
+  }
   async function say(text) {
     if (!state.voice) return;
     cancelSpeech();
+    const run = { text: String(text), started: false, ended: false, lastIndex: 0 };
+    activeSpeech = run;
     const custom = window.MAESTRO_GENIE_VOICE;
     if (custom && typeof custom.speak === 'function') {
+      const startFallback = () => {
+        if (activeSpeech !== run || !state.voice) return;
+        endSpeech(run);
+        setStatus('Персональный голос недоступен. Пробуем голос браузера.');
+        const fallbackRun = { text: run.text, started: false, ended: false, lastIndex: 0 };
+        activeSpeech = fallbackRun;
+        browserSpeech(fallbackRun);
+      };
       try {
-        panel.classList.add('is-talking');
-        state.speaking = true;
-        await custom.speak(text);
-        panel.classList.remove('is-talking');
-        state.speaking = false;
+        await custom.speak(run.text, {
+          onStart: () => beginSpeech(run),
+          onBoundary: (charIndex, charLength) => boundarySpeech(run, charIndex, charLength),
+          onEnd: () => endSpeech(run),
+          onError: startFallback
+        });
+        if (activeSpeech === run) endSpeech(run);
         return;
-      } catch (_) { setStatus('Персональный голос недоступен — включён резервный'); }
+      } catch (_) {
+        startFallback(); // A canceled or superseded custom response cannot start fallback speech.
+        return;
+      }
     }
-    if (!('speechSynthesis' in window)) { setStatus('В этом браузере нет синтеза речи'); return; }
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'ru-RU'; u.rate = 0.98; u.pitch = 0.96;
-    const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find(v => v.lang?.toLowerCase() === 'ru-ru') || voices.find(v => v.lang?.toLowerCase().startsWith('ru'));
-    if (voice) u.voice = voice;
-    u.onstart = () => { state.speaking = true; panel.classList.add('is-talking'); setStatus('МАЭСТРО говорит'); };
-    u.onend = u.onerror = () => { state.speaking = false; panel.classList.remove('is-talking'); setStatus('Готов к вашему вопросу'); };
-    window.speechSynthesis.speak(u);
+    browserSpeech(run);
+  }
+  function setVoiceEnabled(enabled) {
+    const next = Boolean(enabled), changed = state.voice !== next;
+    state.voice = next;
+    voiceButton.setAttribute('aria-pressed', String(state.voice));
+    voiceButton.title = state.voice ? 'Отключить голос' : 'Включить голос';
+    voiceButton.setAttribute('aria-label', voiceButton.title);
+    if (!state.voice) cancelSpeech();
+    setStatus(state.voice ? 'Озвучивание включено' : 'Озвучивание выключено');
+    if (changed) {
+      try { window.dispatchEvent(new CustomEvent('maestro:voice', { detail: { enabled: state.voice } })); }
+      catch (_) { /* The scene must not break the consultant's voice control. */ }
+    }
   }
   const wizardPrompts = [
     'Какую услугу или систему хотите получить? Например: бот для сайта, CRM или автоматизация обработки заявок.',
@@ -245,14 +320,7 @@
   root.querySelector('[data-mg="lead"]').addEventListener('click', fillLead);
   root.querySelector('[data-mg="brief-start"]').addEventListener('click', startWizard);
   root.querySelector('[data-mg="brief-go"]').addEventListener('click', () => { window.location.href = 'brief-builder.html'; });
-  voiceButton.addEventListener('click', () => {
-    state.voice = !state.voice;
-    voiceButton.setAttribute('aria-pressed', String(state.voice));
-    voiceButton.title = state.voice ? 'Отключить голос' : 'Включить голос';
-    voiceButton.setAttribute('aria-label', voiceButton.title);
-    if (!state.voice) cancelSpeech();
-    setStatus(state.voice ? 'Озвучивание включено' : 'Озвучивание выключено');
-  });
+  voiceButton.addEventListener('click', () => setVoiceEnabled(!state.voice));
   micButton.addEventListener('click', dictate);
   root.querySelectorAll('[data-mg-question]').forEach(button => button.addEventListener('click', () => ask(button.getAttribute('data-mg-question'))));
   root.querySelector('.maestro-genie-form').addEventListener('submit', event => {
@@ -275,5 +343,6 @@
     });
     nav.append(navButton);
   }
-  window.MAESTRO_GENIE = Object.freeze({ open, close, ask, setLeadInterest, stopVoice: cancelSpeech });
+  window.MAESTRO_GENIE = Object.freeze({ open, close, ask, speak: say, setVoiceEnabled,
+    get voiceEnabled() { return state.voice; }, setLeadInterest, stopVoice: cancelSpeech });
 })();

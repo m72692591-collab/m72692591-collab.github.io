@@ -1,4 +1,5 @@
 /* The selected middle Architect composition. Portrait artwork and actual GLB are distinct views. */
+/* GLB view uses the same service slides and retains the supplied portrait as an explicit fallback. */
 body.next-mode-live{background:#07121c;color:#f5f7fa;font-family:Arial,Helvetica,sans-serif}
 body.next-mode-live header{background:rgba(4,12,18,.88);border-color:#a6c6e02b;backdrop-filter:blur(18px)}
 body.next-mode-live .nav{height:72px;width:calc(100% - 64px);max-width:1600px}
@@ -99,6 +100,10 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 
 
 .architect-slide-icon{position:absolute;right:18px;top:16px;width:23px;height:23px;filter:invert(1);opacity:.8}
+
+.next-live .next-orbit button{background:linear-gradient(125deg,#163249be,#0a1d30b8);backdrop-filter:blur(9px);border-color:#9bceee80}
+.next-live .next-orbit button[aria-pressed=true]{background:linear-gradient(125deg,#244d68d4,#102a40c9);box-shadow:0 0 24px #76caff1a,0 16px 38px #00152266}
+@media(max-width:700px){.next-live[data-presentation=model] .next-canvas{mask-image:linear-gradient(to bottom,#000 58%,transparent 78%)}}
 
 
 @media(max-width:700px){.next-live:before{content:"";position:absolute;inset:0 0 auto;height:850px;background:url("architect/architect-office.webp") left top / auto 800px no-repeat;opacity:.35;z-index:-3;pointer-events:none}}

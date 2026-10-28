@@ -1,36 +1,57 @@
-# MAESTRO NEXT 3D — status
+# MAESTRO NEXT 3D — current status
 
-The new experience is additive to the current homepage and defaults to Classic. Live mode changes the whole homepage presentation while retaining the existing lead form.
+## 2026-10-28 revision: PARTIAL, draft branch
 
-## Implemented
+The public site remains at main/PR #9 (`452d6c3e9915630a58462e6317ae21b28268e699`).
+This revision is on `feat/architect-gesture-scene`; it is not a production release.
+The home page still defaults to Classic. Choosing Live now opens the genuine
+rigged human; the portrait is an explicitly separate fallback/view.
 
-- Shared catalog of eleven real site directions for Classic and Live views.
-- Live mode now opens the selected Architect composition: a generated portrait backdrop matching the supplied central panel, overlaid with the real Three.js carousel. The interface explicitly identifies this as portrait + 3D carousel. The separate 3D-model control shows the genuine rigged GLB, blue material, drag rotation and programmed arm gesture.
-- Clicking a 3D panel or its accessible text control opens that direction beside the scene. Questions open the site's existing MAESTRO text consultant with the selected direction, and the existing lead form receives the same direction.
-- Mobile uses a separate 1.30 MB GLB, smaller render scale and simpler orbit layout. A 2D direction list is available when WebGL fails; reduced motion is respected.
-- Three.js 0.180.0 and its GLTFLoader are vendored under the MIT license in `assets/vendor/`.
+Implemented in the draft:
+- A newly built MPFB human with a 52-joint body/finger skeleton, 67 facial shapes,
+  detailed skin and a translucent blue suit. Real GLB: 3.03 MB desktop / 1.58 MB mobile.
+- Broad slides orbit at chest height. Selection interpolates through one timed
+  hand sweep, carousel turn and light contact. Drag turns the model and carousel.
+- Arm reach uses shoulder/elbow/wrist IK. Idle includes subtle breathing, gaze,
+  blinking and a left-hand presentation pose; finger bones participate in gestures.
+- Opt-in browser speech connects real start/boundary/end/cancel callbacks to the
+  face. Mouth movement is approximate because browser boundaries are words,
+  not phonemes. There is no paid speech API or connected generative AI backend.
+- Shared eleven-direction catalog and shared lead/consultant context are retained.
+- Mobile has a reduced face-shape set, smaller textures and pixel ratio. Pause,
+  reduced motion, tab visibility and Classic mode suspend movement appropriately.
+- GLB failure falls back to the portrait; WebGL failure/loss exposes all eleven
+  static slides. No primitive mannequin is substituted for the requested man.
 
-## Model provenance
+## Evidence
 
-- Source: `https://grab3d.com/models/characters/businessman/`
-- Download: `https://grab3d.com/dl/businessman-rigged/businessman-rigged.glb`
-- License: CC0 1.0, preserved in `assets/models/LICENSE.txt`. The source discloses AI-assisted creation.
-- Imported file: `assets/models/architect-rigged.glb`, 3.17 MB, SHA-256 `16E0EDAC8E6E4AFC6F2863ED9795B628656E4BDFDAB2554A0E5F0937219401B4`.
-- Mobile file: `assets/models/architect-mobile.glb`, 1.30 MB, SHA-256 `FD9758C9647F19EBD9B7944F849BBC12366DFBF895139C5E90F0CB3C98D906D2`.
-- Both are locally optimized derivatives of the CC0 source with glTF Transform 4.5.1: `quantize` followed by `simplify --ratio 0.25 --error 0.003`. The desktop skin and arm bones remain present. Both derivatives passed glTF validation with zero errors and loaded in Chrome through the current Three.js scene; the desktop rig preserved its programmed gesture. The `NODE_SKINNED_MESH_NON_ROOT` warning was already present in the source GLB.
+- 76 structural checks and 90 Chrome desktop/mobile assertions passed locally.
+- Nine real-Three.js rig/motion regression tests passed, including cancelled speech
+  while paused, transformed-parent arm IK and shortest carousel turns.
+- Speech bridge tests passed: 21 synthetic lifecycle events / six utterances.
+  This is event handling evidence, not a claim of perfect audible lip sync.
+- Raw GLB re-import verified facial deformation and both arm presentation clips.
+  Compressed variants were decoded and rendered in the browser.
+- Independent code review found and resolved RAF completion, late model/speech,
+  pause-mouth reset and fallback selection defects. Independent visual review
+  found and corrected eye alpha, shirt intersection and the cut jacket shoulder.
+- Gemini reviewed the supplied central reference through the authorized web route:
+  https://gemini.google.com/app/45f310fc5a677316 . Its contribution was visual
+  analysis of face, proportions, materials and placement, not model generation.
+- HUMANITY_PASS after independent review and final editing: view/status/voice copy
+  states the actual behavior and does not claim live AI or exact likeness.
 
-## Remaining limitations
+## Unfinished acceptance criteria
 
-The portrait artwork is static and does not have facial animation. The separate source GLB model is stylized and its programmed gesture is a prototype. This full-body model is a simpler interpretation of the approved blue translucent, photoreal, waist-up Architect in the triptych. The lighter mobile model has no arm rig. There is no lip sync or connected AI consultant; the existing scripted text consultant can optionally use browser speech synthesis. The current lead form prepares a copyable application for the visitor to send manually; its server endpoint is not configured.
+The model is still a different, parameterized face. The exact identity, wavy
+side-part hairstyle, photoreal quality and natural human performance requested
+by the owner are **not achieved**. A reference-matched sculpt, hair asset and
+performance/phoneme animation remain required; there is no verified free
+one-image-to-exact-rigged-human dependency available in this environment.
 
-## Verification
-
-The reference composition adds broad content slides (300 px desktop / 260 px mobile), a consultant orb, a gold emblem and an explicitly labelled portrait view. `design-qa.md` records the reference comparison and remaining fidelity gap. The implementation is not claimed to be a pixel-identical or fully animated reproduction.
-
-The repository Playwright suite covered desktop/mobile GLB loading, the initial Strategy lead action, Automation/Strategy consultant-to-form handoffs and isolation of a later Classic consultation. Separate local Chrome runs at 1440x900 and 390x844 selected a 3D panel and a text control, retained `?interest=Бот` until explicit selection, switched entire page modes, and had no page errors or horizontal overflow. The reduced-motion path and the 2D fallback were also exercised. Desktop and mobile screenshots and a gesture frame were inspected.
-
-## Live release — 2026-10-28
-
-- Main commit `63dff496d33d1464c728d8d34be2de4031e151bd` includes PRs #3, #6 and #7. The repository suite passed 70 structural checks and 64 Chrome browser assertions; all three CI jobs passed on the final model PR.
-- `https://m72692591-collab.github.io/maestro/` opens Classic by default; `https://m72692591-collab.github.io/maestro/?mode=live` opens Live 3D. Live desktop and mobile Chrome checks loaded the optimized GLBs (3,168,856 and 1,299,128 bytes), exercised the panels, form context and mode switch, and found no page errors or horizontal overflow. These observations establish publication, not a server-side lead receipt.
-- Independent Russian-copy review corrected three misleading/awkward phrases. Gemini multimodal review is `ROUTE_UNAVAILABLE` for this run: its Chrome tab did not attach to browser automation (`Debugger unattached`), so no Gemini output is claimed or used.
+The consultant still answers from site rules/materials. The application form
+prepares text for manual sending; its production receiver is not configured.
+No money was spent, no Yandex/Amvera service was used, and this draft has not
+replaced production. See `assets/models/ARCHITECT-HUMAN.md` for source/license
+information, exact hashes and the distinction between CC0 assets and generated
+head texture.

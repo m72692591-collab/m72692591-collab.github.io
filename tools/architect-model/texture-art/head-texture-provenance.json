@@ -1,0 +1,29 @@
+{
+  "status": "CANDIDATE_REQUIRES_MESH_QA",
+  "created": "2026-10-28",
+  "generator": "built-in image_gen",
+  "purpose": "Non-nude head-only UV albedo detail and stubble for genuine 3D mesh",
+  "source": "architect-head-uv-source.png",
+  "source_sha256": "55B4D8BB1F364608F7C6C698FBCBB6389AE485509B9641D97298B48E4EDE98D0",
+  "reference": "User supplied triptych, center Architect only",
+  "output": "architect-head-uv-candidate.png",
+  "output_sha256": "EC098FCE35597A6828848A4AD7CC9F22C1E82A8E52F1EAAE4A1B8BB01FADFBBA",
+  "original_generated": "architect-head-uv-generated-original.png",
+  "canvas": [
+    768,
+    1440
+  ],
+  "atlas_rectangle": [
+    1280,
+    320,
+    2048,
+    1760
+  ],
+  "operations": [
+    "ImageGen precise head-only texture edit",
+    "Whole-image resizing to source panel dimensions"
+  ],
+  "visual_check": "Combined source/candidate inspection: UV outline and eye placement largely retained, stubble added; lips and ears slightly changed, exact fidelity not confirmed",
+  "required_next": "Apply only under supplied head polygon mask, render on model and reject if eye/lip/seam alignment fails",
+  "production_accepted": false
+}

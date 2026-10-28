@@ -1,129 +1,217 @@
 import * as THREE from './vendor/three.module.min.js';
-import {GLTFLoader} from './vendor/GLTFLoader.js';
+import { GLTFLoader } from './vendor/GLTFLoader.js';
+import { MeshoptDecoder } from './vendor/meshopt_decoder.mjs';
+import { createRig } from './architect-rig.js';
+import { TAU, gestureFrame, nearestAngle } from './architect-motion.js';
 
-export function createScene(container,orbit,catalog,reduced,onSelect){
-  const count=catalog.length;
-  let presentation='portrait',motion=true,modelLoaded=false,modelFailed=false;
-  const canvas=document.createElement('canvas');container.append(canvas);
-  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true,powerPreference:'low-power'});
-  renderer.setPixelRatio(Math.min(devicePixelRatio||1,matchMedia('(max-width:640px)').matches?1.25:1.75));
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(40,1,.1,100);camera.position.set(0,1.2,10);camera.lookAt(0,.3,0);
-  scene.add(new THREE.AmbientLight(0x77c9ff,1.5));
-  const key=new THREE.PointLight(0xb6ecff,110);key.position.set(-3,4,4);scene.add(key);
-  const rim=new THREE.PointLight(0x279dff,115);rim.position.set(3,1,-3);scene.add(rim);
-  const human=new THREE.Group();human.visible=false;scene.add(human);
-  const shell=new THREE.MeshPhysicalMaterial({color:0x58bfff,transparent:true,opacity:.38,metalness:.48,roughness:.2,side:THREE.DoubleSide,depthWrite:false});
-  const wire=new THREE.MeshBasicMaterial({color:0x91eaff,wireframe:true,transparent:true,opacity:.22,depthWrite:false});
-  const head=new THREE.Mesh(new THREE.SphereGeometry(.42,24,18),shell);head.scale.set(.8,1.16,.86);head.position.y=1.45;human.add(head);
-  const torso=new THREE.Mesh(new THREE.CylinderGeometry(.55,.78,1.45,12,1),shell);torso.position.y=.34;human.add(torso);
-  const torsoWire=torso.clone();torsoWire.material=wire;human.add(torsoWire);
-  const neck=new THREE.Mesh(new THREE.CylinderGeometry(.16,.18,.26,12),shell);neck.position.y=1.04;human.add(neck);
-  const armMaterial=shell.clone();armMaterial.opacity=.48;
-  function arm(x){const group=new THREE.Group();group.position.set(x,.82,0);const upper=new THREE.Mesh(new THREE.CylinderGeometry(.16,.13,.95,12),armMaterial);upper.position.set(x>0?.21:-.21,-.42,0);upper.rotation.z=x>0?-.4:.4;group.add(upper);const lower=new THREE.Mesh(new THREE.CylinderGeometry(.12,.09,.84,12),armMaterial);lower.position.set(x>0?.48:-.48,-1.12,.25);lower.rotation.z=x>0?-.25:.25;group.add(lower);human.add(group);return group}
-  arm(-.58);const gesture=arm(.58);
-  let character=human,armBone=null,armRest=null,leftArmBone=null,leftArmRest=null,disposed=false;
-  let modelStatus=container.parentElement.querySelector('#next-model-status');
-  if(!modelStatus){modelStatus=document.createElement('div');modelStatus.id='next-model-status';modelStatus.className='next-loading';modelStatus.setAttribute('aria-live','polite');container.parentElement.append(modelStatus)}
-  modelStatus.hidden=false;modelStatus.textContent='Загружаем объёмную модель…';
-  const modelSource=matchMedia('(max-width:650px)').matches?'./assets/models/architect-mobile.glb?v=model-q1':'./assets/models/architect-rigged.glb?v=model-q1';
-  new GLTFLoader().load(modelSource,gltf=>{
-    if(disposed)return;
-    const model=gltf.scene;
-    const bounds=new THREE.Box3().setFromObject(model),size=bounds.getSize(new THREE.Vector3());
-    if(!Number.isFinite(size.y)||size.y<=0)throw new Error('Invalid character dimensions');
-    model.scale.setScalar(6.4/size.y);
-    model.updateMatrixWorld(true);
-    const fitted=new THREE.Box3().setFromObject(model),center=fitted.getCenter(new THREE.Vector3());
-    model.position.x-=center.x;model.position.y+=-2.6-fitted.min.y;model.position.z-=center.z;model.userData.baseY=model.position.y;
-    model.traverse(node=>{
-      if(node.isMesh){
-        const old=Array.isArray(node.material)?node.material[0]:node.material;
-        node.material=new THREE.MeshPhysicalMaterial({map:old?.map||null,normalMap:old?.normalMap||null,color:0xb9e9ff,emissive:0x1675ae,emissiveIntensity:.75,transparent:true,opacity:.84,metalness:.26,roughness:.36,side:THREE.DoubleSide,depthWrite:false});
-      }
+export function createScene(container, orbit, catalog, reduced, onSelect) {
+  const stage = container.parentElement, buttons = [...orbit.querySelectorAll('button')];
+  const canvas = document.createElement('canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+  container.append(canvas);
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, matchMedia('(max-width:700px)').matches ? 1.25 : 1.75));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(38, 1, .1, 60);
+  scene.add(new THREE.HemisphereLight(0xc5e9ff, 0x182535, 1.5));
+  const key = new THREE.DirectionalLight(0xffede0, 2.6); key.position.set(-3, 5, 7); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x44baff, 4); rim.position.set(4, 2, -3); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0x81c9ff, 1.3); fill.position.set(0, 0, 5); scene.add(fill);
+  const actor = new THREE.Group(); scene.add(actor);
+  const meshes = catalog.map((item, index) => {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(2.1, .8, .025), new THREE.MeshBasicMaterial({ color: 0x3e96c9, transparent: true, opacity: .045, depthWrite: false }));
+    mesh.userData.index = index; scene.add(mesh); return mesh;
+  });
+  const arc = new THREE.Mesh(new THREE.TorusGeometry(1, .0025, 4, 128), new THREE.MeshBasicMaterial({ color: 0x8bdcff, transparent: true, opacity: .17, depthWrite: false }));
+  arc.rotation.x = Math.PI / 2; scene.add(arc);
+  const touch = new THREE.Group();
+  for (const radius of [.075, .13, .22]) touch.add(new THREE.Mesh(new THREE.RingGeometry(radius, radius + .012, 36), new THREE.MeshBasicMaterial({ color: 0xbfeeff, transparent: true, opacity: .8, side: THREE.DoubleSide, depthWrite: false })));
+  scene.add(touch);
+  let presentation = 'model', motion = true, loaded = false, disposed = false, paused = false, visible = true;
+  let hovered = false, focused = false, dragging = false, pointerId = null, downX = 0, lastX = 0;
+  let chosen = 0, angle = 0, actorYaw = -.14, time = 0, action = null, rig = null, frame = 0, previousTime = performance.now();
+  let speechActive = false, speechState = null, statusTimer;
+  let status = stage.querySelector('#next-model-status');
+  if (!status) { status = document.createElement('div'); status.id = 'next-model-status'; status.className = 'next-loading'; status.setAttribute('aria-live', 'polite'); stage.append(status); }
+  status.hidden = false; status.textContent = 'Загружаем объёмную модель…';
+  const modelSource = container.dataset.model || (matchMedia('(max-width:700px)').matches ? './assets/models/architect-human-mobile.glb?v=human-1' : './assets/models/architect-human.glb?v=human-1');
+  const cleanupObject = object => object.traverse(node => {
+    node.geometry?.dispose();
+    const materials = Array.isArray(node.material) ? node.material : [node.material];
+    materials.filter(Boolean).forEach(material => {
+      for (const value of Object.values(material)) if (value?.isTexture) value.dispose();
+      material.dispose();
     });
-    armBone=model.getObjectByName('RightArm');armRest=armBone?.quaternion.clone()||null;
-    leftArmBone=model.getObjectByName('LeftArm');leftArmRest=leftArmBone?.quaternion.clone()||null;
-    human.visible=false;scene.add(model);character=model;modelLoaded=true;model.visible=presentation==='model';
-    modelStatus.textContent='Объёмная модель загружена';setTimeout(()=>{modelStatus.hidden=true},1400);
+  });
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(modelSource, gltf => {
+    if (disposed) { cleanupObject(gltf.scene); return; }
+    const model = gltf.scene;
+    const bounds = new THREE.Box3().setFromObject(model), size = bounds.getSize(new THREE.Vector3());
+    if (!Number.isFinite(size.y) || size.y <= 0) { cleanupObject(model); failModel(); return; }
+    model.scale.setScalar(7.6 / size.y); model.updateMatrixWorld(true);
+    const fit = new THREE.Box3().setFromObject(model), center = fit.getCenter(new THREE.Vector3());
+    model.position.set(-center.x, -4.3 - fit.min.y, -center.z);
+    model.traverse(node => {
+      if (!node.isMesh) return;
+      node.frustumCulled = false;
+      const old = Array.isArray(node.material) ? node.material : [node.material];
+      node.material = old.map(material => {
+        const name = `${node.name} ${material.name}`.toLowerCase();
+        if (/wire|grid/.test(material.name.toLowerCase())) {
+          material.dispose(); return new THREE.MeshBasicMaterial({ color: 0x62c6ff, transparent: true, opacity: .17, depthWrite: false });
+        }
+        const isSuit = !/openneckshirt/.test(name) && /suit|jacket|shirt|pants|trouser|cloth|blazer/.test(name);
+        const result = new THREE.MeshPhysicalMaterial({
+          name: material.name, map: material.map, normalMap: material.normalMap,
+          color: isSuit ? 0x61b5f3 : material.color, roughness: isSuit ? .23 : .58,
+          metalness: isSuit ? .28 : 0, transparent: isSuit || material.transparent,
+          opacity: isSuit ? .64 : material.opacity, side: THREE.DoubleSide,
+          emissive: isSuit ? 0x137dd3 : 0x000000, emissiveIntensity: isSuit ? .38 : 0,
+          depthWrite: !isSuit, alphaTest: material.alphaTest || 0
+        });
+        if (isSuit) {
+          result.onBeforeCompile = shader => {
+            shader.fragmentShader = shader.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\nfloat hologramRim = pow(1.0 - abs(dot(normal, normalize(vViewPosition))), 3.0);\ntotalEmissiveRadiance += vec3(.12,.55,1.0) * hologramRim * 1.4;');
+          };
+          result.customProgramCacheKey = () => 'architect-suit-rim-2';
+        }
+        material.dispose(); return result;
+      });
+      if (node.material.length === 1) node.material = node.material[0];
+    });
+    actor.add(model); actor.updateMatrixWorld(true); rig = createRig(model); loaded = true;
+    if (speechActive && speechState) { rig.speech({ ...speechState, phase: 'start' }, time); rig.speech({ ...speechState, phase: 'boundary' }, time); }
+    container.dataset.modelState = 'loaded';
+    container.dataset.bodyRig = String(rig.capabilities.body); container.dataset.faceRig = String(rig.capabilities.face);
+    status.textContent = 'Объёмная модель загружена'; statusTimer = setTimeout(() => { status.hidden = true; }, 1400);
     redraw();
-  },undefined,()=>{modelFailed=true;human.visible=presentation==='model';modelStatus.textContent='3D-модель не загрузилась. Портретная сцена доступна.';setTimeout(()=>{modelStatus.hidden=true},5000);redraw()});
-  const base=new THREE.Mesh(new THREE.CylinderGeometry(1.35,1.55,.12,64),new THREE.MeshStandardMaterial({color:0x06243b,metalness:.8,roughness:.25}));base.position.y=-1.42;scene.add(base);
-  const rings=[];for(const radius of [1.43,2.48]){const ring=new THREE.Mesh(new THREE.TorusGeometry(radius,.014,5,96),new THREE.MeshBasicMaterial({color:0x53d8ff,transparent:true,opacity:.55}));ring.rotation.x=Math.PI/2;ring.position.y=-1.31;scene.add(ring);rings.push(ring)}
-  function panelTexture(label){
-    const surface=document.createElement('canvas');surface.width=512;surface.height=128;
-    const ctx=surface.getContext('2d');ctx.fillStyle='rgba(5,32,54,.92)';ctx.fillRect(0,0,512,128);
-    ctx.strokeStyle='#7be2ff';ctx.lineWidth=5;ctx.strokeRect(4,4,504,120);
-    ctx.fillStyle='#e8faff';ctx.font='bold 30px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,256,64,475);
-    const texture=new THREE.CanvasTexture(surface);texture.colorSpace=THREE.SRGBColorSpace;return texture;
+  }, undefined, failModel);
+  function failModel() {
+    if (disposed) return;
+    container.dataset.modelState = 'failed'; status.textContent = 'Модель не загрузилась. Показываем портрет.';
+    stage.dispatchEvent(new CustomEvent('architect:model-error', { bubbles: true })); redraw();
   }
-  const panelGroup=new THREE.Group();scene.add(panelGroup);
-  const panels=catalog.map((item,i)=>{const mesh=new THREE.Mesh(new THREE.BoxGeometry(1.16,.3,.025),new THREE.MeshBasicMaterial({map:panelTexture(item.title),color:i===0?0xb4f0ff:0xffffff,transparent:true,opacity:.84,side:THREE.DoubleSide,depthWrite:false}));mesh.userData.index=i;panelGroup.add(mesh);return mesh});
-  const touch=new THREE.Mesh(new THREE.SphereGeometry(.11,16,12),new THREE.MeshBasicMaterial({color:0xbaf2ff,transparent:true,opacity:.75}));scene.add(touch);
-  let chosen=0,phase=0,frame=0,visible=true,paused=false,drag=false,hovered=false,focused=false,lastX=0,downX=0,rotation=0,lastLabels=0,gestureAt=0,focusSide=1,lastFrame=performance.now();
-  const buttons=[...orbit.querySelectorAll('button')];
-  function resize(){const w=container.clientWidth,h=container.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.position.z=w<650?9.5:10;camera.updateProjectionMatrix();render()}
-  function render(){if(!visible||paused||document.hidden)return;
-    const moving=motion&&!reduced.matches&&!drag&&!hovered&&!focused;
-    const now=performance.now(),delta=Math.min((now-lastFrame)/1000,.06);lastFrame=now;
-    if(moving)phase+=delta*.08;
-    const gestureAmount=Math.max(0,1-(performance.now()-gestureAt)/2500);
-    const chosenSide=Math.sign(panels[chosen].position.x)||1;
-    character.visible=presentation==='model'&&(modelLoaded||modelFailed);
-    base.visible=presentation==='model';rings.forEach(ring=>ring.visible=presentation==='model');
-    character.rotation.y=rotation+Math.sin(phase*.8)*.22+gestureAmount*chosenSide*.18;
-    character.position.y=(character.userData.baseY||0)+(moving?Math.sin(phase*1.7)*.025:0);
-    gesture.rotation.z=-.42-gestureAmount*.36;
-    if(armBone&&armRest)armBone.quaternion.copy(armRest);
-    if(leftArmBone&&leftArmRest)leftArmBone.quaternion.copy(leftArmRest);
-    const selectedArm=chosenSide<0?armBone:leftArmBone;
-    if(selectedArm&&gestureAmount)selectedArm.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(gestureAmount*1.5,0,-chosenSide*gestureAmount*1.75)));
-    const updateLabels=true;
-    panels.forEach((mesh,i)=>{
-      const angle=(i-chosen)*Math.PI*2/count+phase+rotation*.35;
-      const mobile=container.clientWidth<700;
-      mesh.position.set(Math.sin(angle)*(mobile?1.8:5),-1.0+Math.cos(angle)*.26,Math.cos(angle)*1.1);
-      mesh.rotation.y=-angle*.1;mesh.scale.setScalar(i===chosen?1.15:.8);
-      mesh.material.map=null;mesh.material.color.setHex(0x6bb9e8);mesh.material.opacity=.12;
-      if(updateLabels){
-        const button=buttons[i],front=(Math.cos(angle)+1)/2;
-        const distance=Math.min((i-chosen+count)%count,(chosen-i+count)%count);
-        button.hidden=mobile&&front<.82;
-        const projected=mesh.position.clone().project(camera); const x=(projected.x*.5+.5)*100;
-        const y=(-projected.y*.5+.5)*100;
-        button.style.left=`${x}%`;button.style.top=`${y}%`;
-        button.style.opacity=String(.25+front*.75);
-        button.style.transform=`translate(-50%,-50%) scale(${.65+front*.35})`;
-        button.style.zIndex=String(i===chosen?30:Math.round(front*20));
-      }
-    });
-    touch.visible=gestureAmount>.01&&!reduced.matches;
-    if(touch.visible){
-      const target=panels[chosen].position.clone();target.z+=.08;
-      const hand=character.getObjectByName(focusSide<0?'RightHand':'LeftHand');
-      if(hand){character.updateMatrixWorld(true);hand.getWorldPosition(touch.position);touch.position.lerp(target,Math.min(1,(now-gestureAt)/900))}
-      else touch.position.copy(target);
-      touch.scale.setScalar(.6+gestureAmount*1.1);touch.material.opacity=gestureAmount*.75;
+  function mobile() { return container.clientWidth < 700; }
+  function resize() {
+    if (disposed) return;
+    const width = container.clientWidth, height = container.clientHeight;
+    if (!width || !height) return;
+    renderer.setSize(width, height, false); camera.aspect = width / height;
+    camera.position.set(0, mobile() ? 1.15 : 1.5, mobile() ? 11.4 : 8.2);
+    camera.lookAt(0, camera.position.y, 0); camera.updateProjectionMatrix();
+    actor.position.x = mobile() ? .35 : .65; redraw();
+  }
+  function render(now = performance.now()) {
+    frame = 0;
+    if (disposed || !visible || paused || document.hidden) return;
+    const dt = Math.min((now - previousTime) / 1000, .05); previousTime = now;
+    const animate = motion && !reduced.matches;
+    if (animate) time += dt;
+    const idle = animate && !hovered && !focused && !dragging && !action;
+    const sweep = action ? gestureFrame(time - action.started) : { reach: 0, contact: 0, progress: 0 };
+    if (action) {
+      angle = THREE.MathUtils.lerp(action.from, action.to, sweep.progress);
+      if (sweep.done) { angle = action.to; action = null; }
+    } else if (idle) {
+      const cycle = time % 8, wave = cycle < 3 ? Math.sin(Math.PI * cycle / 3) ** 2 : 0;
+      angle += dt * .14 * wave; sweep.reach = wave * .45;
     }
-    if(updateLabels)lastLabels=performance.now();
-    renderer.render(scene,camera);
-    if(moving||gestureAmount>0)frame=requestAnimationFrame(render);
+    actor.visible = presentation === 'model' && loaded;
+    if (animate) { actor.rotation.y = actorYaw + Math.sin(time * .24) * .045; actor.position.y = Math.sin(time * 1.5) * .012; }
+    else if (dragging) actor.rotation.y = actorYaw;
+    actor.updateMatrixWorld(true);
+    const modelChest = rig?.chestPosition();
+    const chest = presentation === 'model' ? (modelChest?.y ?? 2.2) - .55 : (mobile() ? .5 : .8);
+    const centerX = mobile() ? .15 : .65;
+    const radius = mobile() ? 2.8 : Math.min(4.8, container.clientWidth / container.clientHeight * 2.05);
+    meshes.forEach((mesh, index) => {
+      const a = index * TAU / catalog.length + angle, front = (Math.cos(a) + 1) / 2;
+      mesh.position.set(centerX + Math.sin(a) * radius, chest + Math.cos(a) * .12, Math.cos(a) * .8);
+      mesh.rotation.y = -Math.sin(a) * .18;
+      const projected = mesh.position.clone().project(camera), button = buttons[index];
+      button.hidden = front < (mobile() ? .76 : .82) && index !== chosen;
+      button.style.left = `${(projected.x * .5 + .5) * 100}%`;
+      button.style.top = `${(-projected.y * .5 + .5) * 100}%`;
+      button.style.opacity = String(.12 + front * .88);
+      button.style.transform = `translate(-50%,-50%) scale(${.62 + front * .38})`;
+      button.style.zIndex = String(Math.round(front * 24));
+      button.style.pointerEvents = front < .35 ? 'none' : '';
+      button.dataset.depth = front.toFixed(3);
+      mesh.visible = !button.hidden; mesh.material.opacity = .025 + front * .025;
+    });
+    arc.position.set(centerX, chest, 0); arc.scale.set(radius, .8, 1);
+    const side = action?.side || 1, target = meshes[chosen].position.clone();
+    target.x += side * .7; target.z += .45;
+    rig?.update({ time, animate, reachAmount: sweep.reach, side, target, gaze: (target.x - actor.position.x) * .12 });
+    touch.visible = animate && sweep.contact > .01;
+    if (touch.visible) {
+      const hand = rig?.handPosition(side);
+      touch.position.copy(presentation === 'model' && hand ? hand : target);
+      touch.lookAt(camera.position); touch.scale.setScalar(.65 + (1 - sweep.contact) * .7);
+      touch.children.forEach(ring => { ring.material.opacity = sweep.contact * .8; });
+    }
+    container.dataset.motionState = dragging ? 'drag' : action ? 'gesture' : idle ? 'idle' : 'still';
+    renderer.render(scene, camera);
+    if (animate && ((!hovered && !focused && !dragging) || action || actor.visible || speechActive)) frame = requestAnimationFrame(render);
   }
-  function redraw(){cancelAnimationFrame(frame);render()}
-  const observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)redraw();else cancelAnimationFrame(frame)});observer.observe(container);
-  const sizeObserver=new ResizeObserver(resize);sizeObserver.observe(container);
-  const down=e=>{drag=true;lastX=downX=e.clientX;canvas.setPointerCapture(e.pointerId);cancelAnimationFrame(frame)};
-  const move=e=>{if(!drag)return;rotation+=(e.clientX-lastX)*.006;lastX=e.clientX;render()};
-  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();
-  const up=e=>{const click=drag&&Math.abs(e.clientX-downX)<7;drag=false;
-    if(click){const rect=canvas.getBoundingClientRect();pointer.set(((e.clientX-rect.left)/rect.width)*2-1,-((e.clientY-rect.top)/rect.height)*2+1);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(panels)[0];if(hit)onSelect(hit.object.userData.index)}
-    redraw()};
-  canvas.addEventListener('pointerdown',down);canvas.addEventListener('pointermove',move);canvas.addEventListener('pointerup',up);canvas.addEventListener('pointercancel',up);
-  const change=()=>redraw();reduced.addEventListener?.('change',change);document.addEventListener('visibilitychange',change);
-  const stage=container.parentElement;
-
-
-  buttons.forEach(button=>{button.addEventListener('pointerenter',()=>{hovered=true;redraw()});button.addEventListener('pointerleave',()=>{hovered=false;redraw()});button.addEventListener('focus',()=>{focused=true;redraw()});button.addEventListener('blur',()=>{focused=false;redraw()})});
+  function redraw() { cancelAnimationFrame(frame); previousTime = performance.now(); render(); }
+  const intersection = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; if (visible) redraw(); else cancelAnimationFrame(frame); });
+  intersection.observe(container);
+  const sizing = new ResizeObserver(resize); sizing.observe(container);
+  const down = event => {
+    if (event.button !== 0) return;
+    dragging = true; pointerId = event.pointerId; downX = lastX = event.clientX; action = null;
+    canvas.setPointerCapture(pointerId); redraw();
+  };
+  const move = event => { if (!dragging) return; const dx = event.clientX - lastX; angle += dx * .006; actorYaw += dx * .004; lastX = event.clientX; redraw(); };
+  const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
+  const up = event => {
+    if (!dragging) return;
+    const click = event.type === 'pointerup' && Math.abs(event.clientX - downX) < 7;
+    dragging = false;
+    if (canvas.hasPointerCapture(pointerId)) canvas.releasePointerCapture(pointerId);
+    pointerId = null;
+    if (click) {
+      const rect = canvas.getBoundingClientRect();
+      pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
+      raycaster.setFromCamera(pointer, camera); const hit = raycaster.intersectObjects(meshes.filter(mesh => mesh.visible))[0];
+      if (hit) onSelect(hit.object.userData.index);
+    }
+    redraw();
+  };
+  const speech = event => { speechActive = event.detail.phase !== 'end'; speechState = speechActive ? { ...speechState, ...event.detail } : null; rig?.speech(event.detail, time); redraw(); };
+  const reduceChange = () => { if (reduced.matches && action) { angle = action.to; action = null; } redraw(); };
+  const visibilityChange = () => { if (document.hidden) cancelAnimationFrame(frame); else redraw(); };
+  const contextLost = event => { event.preventDefault(); cancelAnimationFrame(frame); stage.dispatchEvent(new CustomEvent('architect:context-lost', { bubbles: true })); };
+  const listeners = [];
+  function listen(target, event, callback) { target.addEventListener(event, callback); listeners.push([target, event, callback]); }
+  listen(canvas, 'pointerdown', down); listen(canvas, 'pointermove', move); listen(canvas, 'pointerup', up); listen(canvas, 'pointercancel', up); listen(canvas, 'lostpointercapture', up);
+  listen(canvas, 'webglcontextlost', contextLost); listen(window, 'maestro:speech', speech);
+  listen(document, 'visibilitychange', visibilityChange); listen(reduced, 'change', reduceChange);
+  buttons.forEach(button => {
+    listen(button, 'pointerenter', () => { hovered = true; redraw(); });
+    listen(button, 'pointerleave', () => { hovered = false; redraw(); });
+    listen(button, 'focus', () => { focused = true; redraw(); });
+    listen(button, 'blur', () => { focused = false; redraw(); });
+  });
   resize();
-  return {setPresentation(value){presentation=value;redraw()},setMotion(value){motion=value;redraw()},focus(index,animate=true){chosen=index;phase=-rotation*.35;focusSide=Math.sign(panels[index].position.x)||1;if(animate&&!reduced.matches)gestureAt=performance.now();redraw()},pause(){paused=true;cancelAnimationFrame(frame)},resume(){paused=false;redraw()},dispose(){disposed=true;cancelAnimationFrame(frame);observer.disconnect();sizeObserver.disconnect();reduced.removeEventListener?.('change',change);document.removeEventListener('visibilitychange',change);renderer.dispose();canvas.remove();modelStatus.remove()}};
+  return {
+    setPresentation(value) { presentation = value; redraw(); },
+    setMotion(value) { motion = value; if (!motion) action = null; redraw(); },
+    focus(index, animate = true) {
+      const direction = index === (chosen + 1) % catalog.length ? -1 : index === (chosen - 1 + catalog.length) % catalog.length ? 1 : 0;
+      chosen = index; const target = nearestAngle(-index * TAU / catalog.length, angle);
+      if (animate && motion && !reduced.matches) action = { from: angle, to: target, started: time, side: direction || Math.sign(target - angle) || 1 };
+      else { angle = target; action = null; }
+      redraw();
+    },
+    pause() { paused = true; cancelAnimationFrame(frame); },
+    resume() { paused = false; redraw(); },
+    dispose() {
+      disposed = true; cancelAnimationFrame(frame); clearTimeout(statusTimer);
+      intersection.disconnect(); sizing.disconnect(); listeners.forEach(([target, event, callback]) => target.removeEventListener(event, callback));
+      cleanupObject(scene); renderer.dispose(); canvas.remove();
+    }
+  };
 }

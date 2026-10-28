@@ -6,6 +6,7 @@
 <title>Maestro Business — решения для роста и управления бизнесом</title>
 <meta name="description" content="Maestro Business: стратегия, маркетинг, сайты, продажи, CRM, автоматизация, аналитика, документы и работа с командой. ИП Григоров Михаил Владимирович.">
 <meta name="theme-color" content="#050b15">
+<link rel="icon" type="image/webp" href="assets/architect/architect-mark.webp">
 <link rel="stylesheet" href="assets/maestro-next.css?v=loading-v2">
 <!-- Activate only after RF-hosted receiver, HTTPS, security and legal verification. -->
 <meta name="maestro-lead-endpoint" content="">
@@ -28,7 +29,7 @@ body{background:#fffaf4;color:var(--text)}.hero{background:radial-gradient(circl
 <link rel="stylesheet" href="assets/maestro-v2.css?v=proportions-v6">
 <link rel="stylesheet" href="assets/maestro-genie.css?v=1">
 <link rel="stylesheet" href="assets/maestro-lab-teaser.css?v=1">
-<link rel="stylesheet" href="assets/architect-reference.css?v=ref-v2">
+<link rel="stylesheet" href="assets/architect-reference.css?v=gesture-2">
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="#top"><span class="mark">М</span><img class="architect-logo" src="assets/architect/architect-mark.webp" alt="" width="42" height="42"><span class="brand-name">МАЭСТРО<small>BUSINESS</small></span></a><nav class="links" id="links"><a href="#solutions">Решения</a><a href="maestro-lab.html">Лаборатория</a><a href="brief-builder.html">Создать ТЗ</a><a href="#products">Можно отдельно</a><a href="#process">Как работаем</a><a href="#pricing">Тарифы</a><a href="agency.html">Агентство</a><button type="button" id="next-header-toggle">Живой 3D</button><a href="#portfolio">Портфолио</a><a href="#documents">Документы</a><a href="#lead">Связаться</a></nav><button type="button" id="architect-orb" aria-label="Открыть консультанта Маэстро" aria-controls="maestro-genie-panel"><img src="assets/architect/architect-orb.webp" alt="" width="56" height="56"></button><button class="menu" id="menu">☰</button></div></header>
@@ -38,10 +39,10 @@ body{background:#fffaf4;color:var(--text)}.hero{background:radial-gradient(circl
   <div class="wrap">
     <div class="next-heading"><div><span class="eyebrow">МАЭСТРО NEXT</span><h2 id="next-heading">С чего начнём?</h2><p>Выберите направление в привычном списке или в объёмной сцене. Подготовить заявку можно в любом режиме.</p></div><div class="next-switch" role="group" aria-label="Режим сайта"><button type="button" data-next-mode="classic" aria-pressed="true">Классический</button><button type="button" data-next-mode="live" aria-pressed="false">Живой 3D</button></div></div>
     <div id="next-classic" class="next-classic"><div id="next-classic-list" class="next-classic-list"></div></div>
-    <div id="next-live" class="next-live" data-presentation="portrait" hidden>
+    <div id="next-live" class="next-live" data-presentation="model" hidden>
       <img class="architect-art" src="assets/architect/architect-office.webp" width="1536" height="1024" alt="Архитектор в полупрозрачном голубом костюме в стеклянном офисе" loading="lazy" decoding="async">
       <div class="architect-intro"><span class="architect-number">02</span><h2>АРХИТЕКТОР</h2><p class="architect-motto">Анализирует. Структурирует.<br>Проектирует рост.</p><p class="architect-about">Ваша задача, возможности бизнеса<br>и следующий шаг — в одной сцене.</p></div>
-      <div class="architect-view" role="group" aria-label="Вид персонажа"><button type="button" data-presentation="portrait" aria-pressed="true">Образ</button><button type="button" data-presentation="model" aria-pressed="false">3D-модель</button><span id="architect-view-note">Портрет и объёмная карусель</span></div>
+      <div class="architect-view" role="group" aria-label="Вид персонажа"><button type="button" data-presentation="portrait" aria-pressed="false">Образ</button><button type="button" data-presentation="model" aria-pressed="true">3D-модель</button><span id="architect-view-note">Потяните сцену, чтобы повернуть модель</span></div>
       <div class="next-stage"><div id="next-canvas" class="next-canvas" aria-label="Объёмная карусель направлений. Потяните, чтобы повернуть."></div><div id="next-model-status" class="next-loading" aria-live="polite">Загружаем 3D-сцену…</div><div id="next-orbit" class="next-orbit" role="group" aria-label="Карусель направлений"></div><div id="next-fallback" class="next-fallback" hidden>3D-сцена недоступна. Направления можно выбрать кнопками.</div></div>
       <div class="architect-directory" aria-label="Быстрый выбор направления"></div>
       <aside class="next-detail" aria-live="polite"><span class="next-kicker">Давайте начнём с вашей задачи</span><h3 id="next-title"></h3><p id="next-description"></p><div class="next-detail-actions"><a id="next-open" class="btn ghost" href="#solutions">Открыть раздел</a><a id="next-lead" class="btn primary" href="#lead">Разобрать вашу ситуацию</a></div><details class="architect-question"><summary>Задать вопрос Маэстро</summary><label for="next-question">О чём хотите спросить?</label><textarea id="next-question" placeholder="Напишите вашу задачу…"></textarea><button type="button" id="next-ask" class="btn ghost">Спросить Маэстро</button><div id="next-answer" class="next-answer" aria-live="polite"></div></details><small>Консультант отвечает по материалам сайта.</small></aside>
@@ -94,9 +95,9 @@ async function cp(t){try{await navigator.clipboard.writeText(t);return true}catc
 document.getElementById('leadForm').addEventListener('submit',async e=>{e.preventDefault();if(!document.getElementById('agree').checked)return;const value=id=>document.getElementById(id).value.trim();const text=`Заявка — Maestro Business\nИмя: ${value('name')}\nКонтакт: ${value('contact')}\nИнтерес: ${value('interest')}\nБизнес: ${value('business')}\nЧто уже есть / откуда заявки: ${value('channels')}`;const ok=await cp(text);const r=document.getElementById('result');r.textContent=(ok?'Заявка скопирована. ':'Скопируйте заявку вручную. ')+'Отправьте её в переписку, из которой получили ссылку.\n\n'+text;r.classList.add('show');});
 </script>
 <script src="assets/scene3d.js?v=solid-v2" defer></script>
-<script src="assets/maestro-genie.js?v=1" defer></script>
+<script src="assets/maestro-genie.js?v=gesture-2" defer></script>
 <script src="assets/maestro-leads.js?v=1" defer></script>
 <script src="assets/visual-fit.js?v=1" defer></script>
 <script src="assets/home-demo.js?v=1" defer></script>
-<script type="module" src="assets/architect-experience.js?v=1"></script>
+<script type="module" src="assets/architect-experience.js?v=gesture-2"></script>
 </body></html>

@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "source": "GLB re-import",
+  "bones": 52,
+  "glb_sha256": "a821c5aca4a36ec798aa1ff386057ef29def226333130103908dbfaed7e73ef8",
+  "body_morph_count": 67,
+  "morph_checks": {
+    "jawOpen": {
+      "max_local_displacement_m": 0.03873834203696009,
+      "pass": true
+    },
+    "eyeBlinkLeft": {
+      "max_local_displacement_m": 0.012613429752137051,
+      "pass": true
+    },
+    "mouthSmileRight": {
+      "max_local_displacement_m": 0.01806043462956525,
+      "pass": true
+    },
+    "viseme_aa": {
+      "max_local_displacement_m": 0.01815569324339907,
+      "pass": true
+    },
+    "viseme_PP": {
+      "max_local_displacement_m": 0.00724019227894048,
+      "pass": true
+    }
+  },
+  "animation_checks": {
+    "Idle": {
+      "hand_displacement_m": 0.001220029278470462,
+      "duration_frames": [
+        1.0,
+        96.0
+      ]
+    },
+    "PresentLeft": {
+      "hand_displacement_m": 0.49003024429712894,
+      "duration_frames": [
+        1.0,
+        64.0
+      ]
+    },
+    "PresentRight": {
+      "hand_displacement_m": 0.4900299231055933,
+      "duration_frames": [
+        1.0,
+        64.0
+      ]
+    }
+  },
+  "limitation": "Structure and movement checks do not establish lifelike motion or exact identity."
+}
