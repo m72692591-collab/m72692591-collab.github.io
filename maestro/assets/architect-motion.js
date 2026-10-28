@@ -14,6 +14,25 @@ export function gestureFrame(elapsed, duration = 1.8) {
   };
 }
 
+// Portrait presentation sequence. All values are pure, normalized weights; the caller
+// anchors the selected card and right-hand pose when a new presentation starts.
+// Phases: reach -> attach -> carry left -> expand -> reveal -> release/return.
+export function presentationFrame(elapsed, duration = 3) {
+  const span = Number.isFinite(duration) && duration > 0 ? duration : 3;
+  const t = clamp((Number.isFinite(elapsed) ? elapsed : 0) / span);
+  const ramp = (from, to) => smooth((t - from) / (to - from));
+  const release = ramp(.86, 1);
+  return {
+    reach: ramp(0, .16) * (1 - release),
+    attach: ramp(.16, .25) * (1 - ramp(.86, .95)),
+    carry: ramp(.25, .58),
+    expand: ramp(.58, .75),
+    reveal: ramp(.75, .86),
+    release,
+    done: t >= 1
+  };
+}
+
 // Browser speech boundaries provide words, not phonemes. This is a bounded,
 // approximate mouth pose, deliberately not advertised as audio-perfect lip sync.
 export function mouthPose(text, charIndex = 0) {

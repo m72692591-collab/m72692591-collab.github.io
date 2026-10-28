@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import * as THREE from '../maestro/assets/vendor/three.module.min.js';
 import {createRig} from '../maestro/assets/architect-rig.js';
-import {TAU, gestureFrame, nearestAngle} from '../maestro/assets/architect-motion.js';
+import {TAU, gestureFrame, nearestAngle, presentationFrame} from '../maestro/assets/architect-motion.js';
 
 const EPSILON = 1e-6;
 const close = (actual, expected, message, tolerance = EPSILON) =>
@@ -167,4 +167,57 @@ test('the hand reaches before the carousel moves and contact ends with the gestu
     assert.ok(value.progress >= previous, 'carousel does not reverse inside one gesture');
     previous = value.progress;
   }
+});
+
+test('portrait presentation completes each physical phase in order', () => {
+  const start = {reach: 0, attach: 0, carry: 0, expand: 0, reveal: 0, release: 0, done: false};
+  const end = {reach: 0, attach: 0, carry: 1, expand: 1, reveal: 1, release: 1, done: true};
+  assert.deepEqual(presentationFrame(-1), start, 'negative elapsed time is the resting state');
+  assert.deepEqual(presentationFrame(0), start);
+
+  const approaching = presentationFrame(.3);
+  assert.ok(approaching.reach > 0 && approaching.attach === 0 && approaching.carry === 0, 'hand moves first');
+  const grasping = presentationFrame(.7);
+  assert.ok(grasping.reach === 1 && grasping.attach > 0 && grasping.carry === 0, 'light contact precedes card movement');
+  const carrying = presentationFrame(1.2);
+  assert.ok(carrying.reach === 1 && carrying.attach === 1 && carrying.carry > 0 && carrying.expand === 0, 'attached card moves left before growing');
+  const enlarging = presentationFrame(2);
+  assert.ok(enlarging.carry === 1 && enlarging.expand > 0 && enlarging.reveal === 0, 'card reaches its dock before expansion');
+  const opening = presentationFrame(2.45);
+  assert.ok(opening.expand === 1 && opening.reveal > 0 && opening.release === 0, 'panel opens after expansion');
+  const returning = presentationFrame(2.8);
+  assert.ok(returning.reveal === 1 && returning.release > 0 && returning.reach < 1 && returning.attach < 1, 'hand returns only after panel is open');
+  assert.deepEqual(presentationFrame(3), end);
+  assert.deepEqual(presentationFrame(30), end, 'completed card and panel stay open');
+});
+
+test('portrait presentation weights are bounded and one-way transitions never reverse', () => {
+  const oneWay = ['carry', 'expand', 'reveal', 'release'];
+  let previous = presentationFrame(0);
+  for (let step = 1; step <= 300; step++) {
+    const frame = presentationFrame(step / 100);
+    for (const key of ['reach', 'attach', ...oneWay]) {
+      assert.ok(Number.isFinite(frame[key]) && frame[key] >= 0 && frame[key] <= 1, `${key} remains a usable normalized weight`);
+    }
+    for (const key of oneWay) assert.ok(frame[key] + EPSILON >= previous[key], `${key} never reverses`);
+    if (frame.carry > EPSILON && frame.expand === 0) assert.ok(frame.attach > 1 - EPSILON && frame.reach > 1 - EPSILON, 'the hand holds the traveling card');
+    if (frame.expand > EPSILON) assert.ok(frame.carry > 1 - EPSILON, 'expansion waits for arrival');
+    if (frame.reveal > EPSILON) assert.ok(frame.expand > 1 - EPSILON, 'reveal waits for expansion');
+    if (frame.release > EPSILON) assert.ok(frame.reveal > 1 - EPSILON, 'return waits for panel reveal');
+    previous = frame;
+  }
+});
+
+test('portrait presentation restarts cleanly after an interrupted selection', () => {
+  const interrupted = presentationFrame(1.6);
+  assert.ok(interrupted.carry > 0 && interrupted.carry < 1);
+  const restart = presentationFrame(0);
+  assert.deepEqual(restart, {reach: 0, attach: 0, carry: 0, expand: 0, reveal: 0, release: 0, done: false});
+  assert.deepEqual(presentationFrame(1.6), interrupted, 'earlier call does not alter a restarted timeline');
+  const late = presentationFrame(2.8);
+  presentationFrame(.2);
+  assert.deepEqual(presentationFrame(2.8), late, 'out-of-order sampling has no mutable state');
+  assert.deepEqual(presentationFrame(1.5, 3), presentationFrame(2, 4), 'custom duration preserves the same phase positions');
+  assert.deepEqual(presentationFrame(Number.NaN), restart, 'invalid elapsed time cannot leak a previous pose');
+  assert.deepEqual(presentationFrame(1.5, 0), presentationFrame(1.5, 3), 'invalid duration falls back to the default');
 });

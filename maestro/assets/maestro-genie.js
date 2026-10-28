@@ -124,6 +124,7 @@
   function endSpeech(run) {
     if (activeSpeech !== run || run.ended) return;
     run.ended = true;
+    run.stopWaiting?.();
     activeSpeech = null;
     state.speaking = false;
     panel.classList.remove('is-talking');
@@ -137,25 +138,57 @@
     panel.classList.remove('is-talking');
     state.speaking = false;
   }
+  function russianVoice(voices) {
+    const russian = voices.filter(v => /^ru(?:-|$)/i.test(v.lang || ''));
+    const local = russian.filter(v => v.localService === true);
+    const pavel = v => /(?:^|\W)(?:павел|pavel)(?:$|\W)/i.test(v.name || '');
+    return local.find(pavel) || local[0] || russian.find(pavel) || russian[0];
+  }
   function browserSpeech(run) {
     if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance !== 'function') {
       endSpeech(run); setStatus('В этом браузере нет синтеза речи'); return;
     }
     try {
+      const synth = window.speechSynthesis;
       const u = new SpeechSynthesisUtterance(run.text);
       u.lang = 'ru-RU'; u.rate = 0.98; u.pitch = 0.96;
-      const voices = window.speechSynthesis.getVoices();
-      const russian = voices.filter(v => /^ru(?:-|$)/i.test(v.lang || ''));
-      const local = russian.filter(v => v.localService === true);
-      const pavel = v => /(?:^|\W)(?:павел|pavel)(?:$|\W)/i.test(v.name || '');
-      const voice = local.find(pavel) || local[0] || russian.find(pavel) || russian[0];
-      if (voice) u.voice = voice;
-      else if (voices.length) { endSpeech(run); setStatus('Русский голос недоступен в этом браузере'); return; }
-      else run.voiceUnverified = true; // Empty getVoices() is common before the browser initializes voices.
       u.onstart = () => beginSpeech(run);
       u.onboundary = event => boundarySpeech(run, event.charIndex, event.charLength);
       u.onend = u.onerror = () => endSpeech(run);
-      window.speechSynthesis.speak(u);
+      const queue = (voices, allowUnknown = false) => {
+        if (activeSpeech !== run || run.ended || !state.voice) return;
+        const voice = russianVoice(voices);
+        if (voice) u.voice = voice;
+        else if (voices.length) { endSpeech(run); setStatus('Русский голос недоступен в этом браузере'); return; }
+        else if (allowUnknown) run.voiceUnverified = true;
+        else return;
+        try { synth.speak(u); }
+        catch (_) { endSpeech(run); setStatus('Не удалось включить озвучивание'); }
+      };
+      const voices = synth.getVoices() || [];
+      if (voices.length) { queue(voices); return; }
+      // Chromium may populate voices after the first user gesture. Wait briefly before allowing
+      // the browser to choose an unverified voice from an empty list.
+      setStatus('Подбираем русский голос…');
+      let timeout;
+      const cleanup = () => {
+        clearTimeout(timeout);
+        synth.removeEventListener?.('voiceschanged', onVoices);
+        run.stopWaiting = null;
+      };
+      const onVoices = () => {
+        if (activeSpeech !== run || run.ended || !state.voice) { cleanup(); return; }
+        const available = synth.getVoices() || [];
+        if (russianVoice(available)) { cleanup(); queue(available); }
+      };
+      run.stopWaiting = cleanup;
+      synth.addEventListener?.('voiceschanged', onVoices);
+      timeout = setTimeout(() => {
+        cleanup();
+        try { queue(synth.getVoices() || [], true); }
+        catch (_) { endSpeech(run); setStatus('Не удалось включить озвучивание'); }
+      }, 1200);
+      onVoices(); // Covers voices arriving between the first read and listener registration.
     } catch (_) { endSpeech(run); setStatus('Не удалось включить озвучивание'); }
   }
   async function say(text) {

@@ -48,13 +48,15 @@ async function carouselClearsConsultation(page) {
 }
 try {
   await ready();
-  okay("Desktop rigged human with detailed skin stays under 3.2 MB", fs.statSync("maestro/assets/models/architect-human.glb").size < 3_200_000);
-  okay("Mobile rigged human stays under 1.8 MB", fs.statSync("maestro/assets/models/architect-human-mobile.glb").size < 1_800_000);
+  okay("Optional desktop 3D sketch stays under 3.2 MB", fs.statSync("maestro/assets/models/architect-human.glb").size < 3_200_000);
+  okay("Optional mobile 3D sketch stays under 1.8 MB", fs.statSync("maestro/assets/models/architect-human-mobile.glb").size < 1_800_000);
   browser = await chromium.launch({ headless: true, args: ["--enable-webgl", "--use-gl=angle", "--use-angle=swiftshader"], ...(process.env.CI ? {} : { channel: "chrome" }) });
   const desktop = await browser.newContext({ viewport: { width: 1400, height: 900 }, acceptDownloads: true });
   const page = await desktop.newPage();
   const errors = [];
   watchErrors(page, errors);
+  const desktopModelRequests = [];
+  page.on("request", request => { if (/architect-human(?:-mobile)?\.glb/.test(new URL(request.url()).pathname)) desktopModelRequests.push(request.url()); });
   await goto(page, "index.html");
   okay("Home title", (await page.title()).includes("Maestro"));
   okay("Lead form exists", await page.locator("#leadForm").count() === 1);
@@ -65,23 +67,41 @@ try {
   await page.locator('[data-next-mode="live"]').click();
   okay("Live mode changes the whole homepage", await page.locator(".hero").isHidden());
   okay("Live announces scene loading", await page.locator("#next-model-status").isVisible());
-  await page.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
-  okay("Desktop Architect GLB loaded with the WebGL scene", await page.locator("#next-canvas canvas").count() === 1);
+  await page.waitForFunction(() => document.querySelector("#next-canvas")?.dataset.portraitState === "loaded", null, { timeout: 30000 });
+  okay("Live opens the approved animated raster portrait", await page.locator("#next-live").getAttribute("data-presentation") === "portrait" && await page.locator("#next-live").getAttribute("data-portrait-ready") === "true" && await page.locator("#next-canvas canvas").count() === 1);
+  okay("Opening the portrait does not request the optional GLB", desktopModelRequests.length === 0);
   await page.waitForFunction(() => {
     const image = document.querySelector(".architect-art");
     return image?.complete && image.naturalWidth > 500;
   });
-  okay("Live opens the actual rigged human with face controls", await page.locator("#next-live").getAttribute("data-presentation") === "model" && await page.locator('#next-canvas').getAttribute('data-body-rig') === 'true' && await page.locator('#next-canvas').getAttribute('data-face-rig') === 'true');
+  const desktopModel = page.waitForResponse(response => new URL(response.url()).pathname.endsWith("architect-human.glb") && response.status() === 200);
   await page.locator('button[data-presentation="model"]').click();
-  okay("Visitor can select the actual 3D model", await page.locator("#next-live").getAttribute("data-presentation") === "model" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "true");
+  await desktopModel;
+  await page.waitForFunction(() => document.querySelector("#next-canvas")?.dataset.modelState === "loaded", null, { timeout: 30000 });
+  okay("Visitor can choose the optional rigged 3D sketch", await page.locator("#next-live").getAttribute("data-presentation") === "model" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "true" && await page.locator('#next-canvas').getAttribute('data-body-rig') === 'true' && await page.locator('#next-canvas').getAttribute('data-face-rig') === 'true' && desktopModelRequests.length === 1);
   await page.screenshot({ path: artifacts + "/architect-model-desktop.png", fullPage: false });
   await page.locator('button[data-presentation="portrait"]').click();
-  okay("Visitor can return to the portrait composition", await page.locator("#next-live").getAttribute("data-presentation") === "portrait" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "false");
+  okay("Visitor can return to the loaded portrait composition", await page.locator("#next-live").getAttribute("data-presentation") === "portrait" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "false" && await page.locator("#next-live").getAttribute("data-portrait-ready") === "true");
+  const sitesStartingLeft = await page.locator('#next-orbit button[data-id="sites"]').evaluate(button => {
+    const value = button.style.left;
+    return value.endsWith('%') ? parseFloat(value) / 100 * button.closest('.next-orbit').clientWidth : parseFloat(value);
+  });
   await page.locator("#architect-next").click();
+  await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "moving", null, { timeout: 10000 });
+  okay("Hidden consultation panel is inert during the hand gesture", await page.locator(".next-detail").evaluate(detail => detail.inert && getComputedStyle(detail).opacity === "0"));
+  await page.waitForFunction(() => {
+    const card = document.querySelector('#next-orbit button[data-id="sites"]');
+    return document.querySelector('#next-live')?.dataset.panelPresenting === 'moving' && card?.style.zIndex === '28' && Number(card.style.opacity) < .8;
+  }, null, { timeout: 15000 });
+  okay("Portrait gesture carries and fades the selected card", await page.locator('#next-orbit button[data-id="sites"]').evaluate((card, initial) => Math.abs(parseFloat(card.style.left) - initial) > 30 && card.style.transform.includes("scale("), sitesStartingLeft));
+  await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "open", null, { timeout: 15000 });
+  okay("Chosen direction opens beside the portrait after the gesture", await page.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1") && await page.locator('#next-orbit button[data-id="sites"]').isHidden());
   okay("Carousel advances the detail and form together", await page.locator("#next-title").innerText() === "Сайты и дизайн" && await page.locator("#interest").inputValue() === "Сайт");
   await page.locator("#architect-prev").click();
+  await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "moving", null, { timeout: 10000 });
   okay("Carousel returns to Strategy and its Audit service", await page.locator("#next-title").innerText() === "Стратегия" && await page.locator("#interest").inputValue() === "Аудит");
   await page.locator("#architect-pause").click();
+  okay("Canceling a portrait gesture restores panel keyboard access", await page.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1"));
   await page.mouse.move(1, 1);
   const pausedPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
   await page.waitForTimeout(350);
@@ -105,6 +125,9 @@ try {
   const reducedPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
   await page.waitForTimeout(350);
   okay("Reduced motion stops the carousel without disabling navigation", await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") === reducedPosition && await page.locator("#architect-next").isEnabled());
+  await page.locator('#architect-select').selectOption('automation');
+  okay("Reduced motion shows selected details immediately without trapping focus", await page.locator("#next-title").innerText() === "Автоматизация" && await page.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1") && await page.locator("#next-live").getAttribute("data-panel-presenting") !== "moving");
+  await page.locator('#architect-select').selectOption('strategy');
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.locator('#next-lead').click();
   okay("Initial Strategy lead maps to Audit", await page.locator("#interest").inputValue() === "Аудит");
@@ -130,7 +153,7 @@ try {
   await goto(fallbackPage, 'index.html');
   await fallbackPage.locator('[data-next-mode="live"]').click();
   await fallbackPage.locator('#next-fallback').waitFor({ state: 'visible' });
-  okay("2D fallback clears the loading indicator", await fallbackPage.locator('#next-model-status').isHidden() && await fallbackPage.locator('#next-orbit button').count() === 11);
+  okay("2D fallback shows the static Architect and clears loading", await fallbackPage.locator('#next-model-status').isHidden() && await fallbackPage.locator('#next-orbit button').count() === 11 && await fallbackPage.locator('.architect-art').isVisible());
   await fallbackPage.close();
 
   const compatPage = await desktop.newPage();
@@ -139,26 +162,28 @@ try {
   await goto(compatPage, 'index.html');
   await compatPage.locator('#next-model-status').evaluate(element => element.remove());
   await compatPage.locator('[data-next-mode="live"]').click();
-  await compatPage.waitForFunction(() => document.querySelector('#next-model-status')?.textContent.includes('загружена'), null, { timeout: 30000 });
+  await compatPage.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.portraitState === 'loaded', null, { timeout: 30000 });
   okay("Older cached markup can still load the Architect scene", await compatPage.locator('#next-canvas canvas').count() === 1 && await compatPage.locator('#next-model-status').count() === 1 && compatErrors.length === 0);
   await compatPage.close();
 
   const failedModel = await desktop.newPage();
   await failedModel.route('**/architect-human.glb*', route => route.abort());
   await goto(failedModel, 'index.html?mode=live');
+  await failedModel.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.portraitState === 'loaded', null, { timeout: 30000 });
+  await failedModel.locator('button[data-presentation="model"]').click();
   await failedModel.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.modelState === 'failed');
-  okay('A failed human model switches to an explicitly selected portrait', await failedModel.locator('#next-live').getAttribute('data-presentation') === 'portrait' && await failedModel.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true' && !await failedModel.locator('button[data-presentation=model]').isEnabled());
+  okay('A failed optional 3D sketch returns to the approved portrait', await failedModel.locator('#next-live').getAttribute('data-presentation') === 'portrait' && await failedModel.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true' && !await failedModel.locator('button[data-presentation=model]').isEnabled());
   await failedModel.locator('#architect-select').selectOption('automation');
   okay('Model failure preserves service and lead context', await failedModel.locator('#interest').inputValue() === 'Автоматизация');
   await failedModel.close();
 
   const lostContext = await desktop.newPage();
   await goto(lostContext, 'index.html?mode=live');
-  await lostContext.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.modelState === 'loaded');
+  await lostContext.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.portraitState === 'loaded', null, { timeout: 30000 });
   await lostContext.locator('#next-canvas canvas').evaluate(canvas => canvas.getContext('webgl2').getExtension('WEBGL_lose_context').loseContext());
   await lostContext.locator('#next-fallback').waitFor({ state: 'visible' });
   okay('Context loss disposes the renderer and reveals all eleven static slides', await lostContext.locator('#next-canvas canvas').count() === 0 && await lostContext.locator('#next-orbit button:not([hidden])').count() === 11);
-  okay('Context loss clears the selected model state', await lostContext.locator('button[data-presentation=model]').getAttribute('aria-pressed') === 'false' && await lostContext.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true');
+  okay('Context loss restores the static approved portrait', await lostContext.locator('.architect-art').isVisible() && await lostContext.locator('button[data-presentation=model]').getAttribute('aria-pressed') === 'false' && await lostContext.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true');
   await lostContext.close();
 
   const call = page.getByRole("button", { name: "Вызвать консультанта МАЭСТРО" });
@@ -277,6 +302,8 @@ try {
   });
   const m = await mobile.newPage();
   watchErrors(m, errors);
+  const mobileModelRequests = [];
+  m.on("request", request => { if (new URL(request.url()).pathname.endsWith("architect-human-mobile.glb")) mobileModelRequests.push(request.url()); });
   await goto(m, "index.html");
   okay("Mobile genie launcher visible", await m.locator(".maestro-genie-launcher").isVisible());
   await m.locator(".maestro-genie-launcher").click();
@@ -306,22 +333,27 @@ try {
   await goto(m, "brief-builder.html");
   okay("Mobile builder visible", await m.locator("#download").isVisible());
   await m.screenshot({ path: artifacts + "/brief-mobile.png", fullPage: true });
-  const mobileModel = m.waitForResponse(response => new URL(response.url()).pathname.endsWith("architect-human-mobile.glb") && response.status() === 200);
   await goto(m, "index.html?mode=live");
-  await mobileModel;
-  await m.waitForFunction(() => document.querySelector("#next-model-status")?.textContent.includes("загружена"), null, { timeout: 30000 });
-  okay("Mobile loads its smaller Architect GLB", await m.locator("#next-canvas canvas").count() === 1);
+  await m.waitForFunction(() => document.querySelector("#next-canvas")?.dataset.portraitState === "loaded", null, { timeout: 30000 });
+  okay("Mobile opens the approved portrait with its WebGL gesture layer", await m.locator("#next-canvas canvas").count() === 1 && await m.locator("#next-live").getAttribute("data-presentation") === "portrait" && await m.locator("#next-live").getAttribute("data-portrait-ready") === "true");
+  okay("Mobile portrait does not download the optional GLB", mobileModelRequests.length === 0);
   await m.waitForFunction(() => {
     const image = document.querySelector(".architect-art");
     return image?.complete && image.naturalWidth > 500;
   });
-  okay("Mobile opens a human with both body and facial rig", await m.locator("#next-live").getAttribute("data-presentation") === "model" && await m.locator('#next-canvas').getAttribute('data-body-rig') === 'true' && await m.locator('#next-canvas').getAttribute('data-face-rig') === 'true');
-  await m.screenshot({ path: artifacts + '/architect-human-mobile.png', fullPage: true });
+  await m.screenshot({ path: artifacts + '/architect-portrait-mobile-initial.png', fullPage: true });
   await m.locator("#architect-next").click();
   okay("Mobile carousel updates the selected service", await m.locator("#next-title").innerText() === "Сайты и дизайн" && await m.locator("#interest").inputValue() === "Сайт");
+  await m.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "open", null, { timeout: 15000 });
+  okay("Mobile gesture reveals the selected consultation", await m.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1"));
+  const mobileModel = m.waitForResponse(response => new URL(response.url()).pathname.endsWith("architect-human-mobile.glb") && response.status() === 200);
   await m.locator('button[data-presentation="model"]').click();
-  okay("Mobile can switch to the GLB view", await m.locator("#next-live").getAttribute("data-presentation") === "model");
+  await mobileModel;
+  await m.waitForFunction(() => document.querySelector("#next-canvas")?.dataset.modelState === "loaded", null, { timeout: 30000 });
+  okay("Mobile can choose the smaller optional 3D sketch", await m.locator("#next-live").getAttribute("data-presentation") === "model" && await m.locator('#next-canvas').getAttribute('data-body-rig') === 'true' && await m.locator('#next-canvas').getAttribute('data-face-rig') === 'true' && mobileModelRequests.length === 1);
+  await m.screenshot({ path: artifacts + '/architect-human-mobile.png', fullPage: true });
   await m.locator('button[data-presentation="portrait"]').click();
+  okay("Mobile returns to the loaded portrait", await m.locator("#next-live").getAttribute("data-presentation") === "portrait" && await m.locator("#next-live").getAttribute("data-portrait-ready") === "true");
   okay("Mobile reference layout has no horizontal overflow", await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
   okay("Mobile carousel controls do not cover the consultation panel", await carouselClearsConsultation(m));
   await m.locator(".architect-question summary").click();

@@ -13,7 +13,7 @@ if(root){
   question.maxLength=350;
   const answer=document.getElementById('next-answer');
   const detail=root.querySelector('.next-detail');
-  let active=catalog[0],scene=null,loading=null,presentation='model',orbitPaused=false;
+  let active=catalog[0],scene=null,loading=null,presentation='portrait',orbitPaused=false;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   const setFormInterest=(item)=>{const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest};
   const select=(item,userSelected=false)=>{
@@ -63,7 +63,7 @@ if(root){
   root.querySelectorAll('button[data-presentation]').forEach(button=>button.addEventListener('click',()=>{
     presentation=button.dataset.presentation;live.dataset.presentation=presentation;
     root.querySelectorAll('button[data-presentation]').forEach(control=>control.setAttribute('aria-pressed',String(control.dataset.presentation===presentation)));
-    document.getElementById('architect-view-note').textContent=presentation==='model'?'Потяните сцену, чтобы повернуть модель':'Портрет и объёмная карусель';
+    document.getElementById('architect-view-note').textContent=presentation==='model'?'Эскиз объёмной модели. Потяните, чтобы повернуть.':'Живой образ и объёмная карусель';
     scene?.setPresentation(presentation);
   }));
   lead.addEventListener('click',()=>setFormInterest(active));
@@ -73,7 +73,7 @@ if(root){
     window.MAESTRO_GENIE.open();
     window.scrollTo({left:0,top:Math.max(0,window.scrollY+detail.getBoundingClientRect().top-100),behavior:reduce.matches?'instant':'smooth'});
   });
-  const fallback=(message)=>{scene?.dispose();scene=null;root.querySelector('button[data-presentation=model]').disabled=true;presentation='portrait';live.dataset.presentation='portrait';root.querySelectorAll('button[data-presentation]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.presentation==='portrait')));document.getElementById('architect-view-note').textContent='Портретный режим. 3D недоступно.';document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.hidden=false;button.removeAttribute('style')})};
+  const fallback=(message)=>{delete live.dataset.portraitReady;live.dataset.panelPresenting='';detail.inert=false;scene?.dispose();scene=null;root.querySelector('button[data-presentation=model]').disabled=true;presentation='portrait';live.dataset.presentation='portrait';root.querySelectorAll('button[data-presentation]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.presentation==='portrait')));document.getElementById('architect-view-note').textContent='Портретный режим. 3D недоступно.';document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.hidden=false;button.removeAttribute('style')})};
   live.addEventListener('architect:context-lost',()=>fallback('3D-сцена отключилась. Выберите направление на слайдах ниже.'));
   live.addEventListener('architect:model-error',()=>{
     presentation='portrait';live.dataset.presentation='portrait';scene?.setPresentation('portrait');
@@ -82,7 +82,7 @@ if(root){
   });
   const start=async()=>{
     if(scene||loading)return loading;
-    loading=import('./architect-scene.js?v=gesture-2').then(module=>{
+    loading=import('./architect-scene.js?v=portrait-1').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.setPresentation(presentation);scene.setMotion(!orbitPaused);scene.focus(catalog.indexOf(active),false);
       if(!document.body.classList.contains('next-mode-live'))scene.pause();

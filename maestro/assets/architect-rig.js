@@ -16,6 +16,8 @@ export function createRig(model) {
   });
   const find = (...names) => names.map(normalize).map(name => nodes.get(name)).find(Boolean);
   const head = find('Head', 'head', 'DEF-spine.006');
+  if (head) head.scale.multiplyScalar(1.12);
+  const headPose = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, .20, -.035));
   const spine = find('Spine2', 'Spine', 'spine03', 'spine.003', 'DEF-spine.003');
   const arms = ['Right', 'Left'].map((side, index) => {
     const suffix = index ? 'L' : 'R';
@@ -84,6 +86,7 @@ export function createRig(model) {
       initialized = true;
       rests.forEach((rest, bone) => bone.quaternion.copy(rest));
       resetFace();
+      if (head) head.quaternion.multiply(headPose);
       if (animate && spine) spine.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.sin(time * 1.4) * .008, Math.sin(time * .42) * .018, 0)));
       if (animate && head) head.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.sin(time * .7) * .015 + (speaking ? Math.sin(time * 3.4) * .012 : 0), clamp(gaze, -.25, .25), .012 * Math.sin(time * .43))));
       arms.forEach(arm => {
@@ -93,16 +96,18 @@ export function createRig(model) {
         const elbow = arm.elbow.getWorldPosition(new THREE.Vector3());
         const hand = arm.hand.getWorldPosition(new THREE.Vector3());
         const length = shoulder.distanceTo(elbow) + elbow.distanceTo(hand);
-        const idle = shoulder.clone().add(new THREE.Vector3(arm.side * .08, -length * (arm.side < 0 ? .93 : .73), length * (arm.side < 0 ? .16 : .45)));
+        const idle = shoulder.clone().add(new THREE.Vector3(arm.side < 0 ? -.08 : -.10, -length * (arm.side < 0 ? .93 : .32), length * (arm.side < 0 ? .16 : .48)));
         if (target && arm.side === side) idle.lerp(target, reachAmount);
         reach(arm, idle, 1);
+        if (arm.side > 0) arm.hand.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), 1.0));
       });
-      if (!animate) return;
       fingers.forEach(finger => {
-        const amount = finger.side === side ? reachAmount : 0;
-        const bend = finger.index ? -.1 * amount : .12 * amount;
+        const amount = animate && finger.side === side ? reachAmount : 0;
+        const rest = finger.segment === 2 ? .10 : finger.segment === 3 ? .08 : .06;
+        const bend = rest + (finger.index ? -.1 * amount : .12 * amount);
         finger.node.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), bend));
       });
+      if (!animate) return;
       const blinkTime = (time + 1.7) % 5.3;
       const blink = blinkTime < .26 ? Math.sin(Math.PI * blinkTime / .26) ** 2 : 0;
       setMorph(['eyeBlinkLeft', 'eyeBlinkRight', 'eyesClosed', 'eyes_closed'], blink);

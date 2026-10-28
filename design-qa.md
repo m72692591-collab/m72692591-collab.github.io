@@ -73,3 +73,22 @@ model failure describes the automatic portrait switch. Senior edit: Codex.
 Open visual gap: another face/hairstyle, procedural motion, approximate mouth
 poses. The head texture improves detail without establishing exact identity.
 This gap blocks a claim of 100% match and blocks automatic production replacement.
+
+
+## 2026-10-28: approved portrait animation supersedes GLB appearance work
+
+Owner-directed pivot: pause human GLB work, animate the approved portrait. The new
+alpha cutout and empty office are separate imagegen-derived assets. Real WebGL
+carousel panels follow the deformed hand point, expand, then reveal the shared
+consultation. The image layer is explicitly 2.5D, not a new 3D human. Removed
+ARCHITECT/02; brighter gold M is the canonical project logo.
+
+Current validation: 97 browser assertions, 86 structural checks, 12 rig/timeline
+checks, two portrait checks, speech lifecycle 25 events/eight utterances. Independent
+review resolved static fallback portrait loss, moving-panel focus and status-timer
+defects. Three responsive viewport screenshots inspected; panel/control overlap
+was found and corrected. HUMANITY_PASS: new labels identify a live image and a
+3D sketch; diagrams describe project stages without fabricated growth metrics.
+
+External profile rollout is incomplete: Telegram gateway account is not allowlisted;
+other exact MAESTRO profiles are not currently verified. No profile write is claimed.

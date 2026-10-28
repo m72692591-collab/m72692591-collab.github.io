@@ -1,0 +1,3 @@
+.maestro-brand-lockup{display:inline-flex;align-items:center;gap:10px}
+img.maestro-brand-mark{display:block;flex:none;width:38px;height:38px;object-fit:contain;background:#071423;border-radius:5px;padding:2px}
+@media(max-width:600px){img.maestro-brand-mark{width:34px;height:34px}.maestro-brand-lockup{gap:8px}}
