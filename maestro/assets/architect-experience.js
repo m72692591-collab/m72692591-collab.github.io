@@ -82,7 +82,7 @@ if(root){
   });
   const start=async()=>{
     if(scene||loading)return loading;
-    loading=import('./architect-scene.js?v=portrait-1').then(module=>{
+    loading=import('./architect-scene.js?v=glass-2').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.setPresentation(presentation);scene.setMotion(!orbitPaused);scene.focus(catalog.indexOf(active),false);
       if(!document.body.classList.contains('next-mode-live'))scene.pause();

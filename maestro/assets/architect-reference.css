@@ -121,26 +121,41 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 
 #architect-orb{display:none}body.next-mode-live #architect-orb{display:block;flex:none;width:56px;height:56px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;filter:drop-shadow(0 0 11px #268dff70)}body.next-mode-live #architect-orb img{width:100%;height:100%;object-fit:contain}body.next-mode-live #architect-orb:hover{filter:drop-shadow(0 0 16px #5cc8ffb0)}body.next-mode-live #architect-orb:focus-visible{outline:1px solid #b8e9ff;outline-offset:3px}body.next-mode-live .brand{margin-right:auto}body.next-mode-live .maestro-genie-nav{display:none}@media(max-width:700px){body.next-mode-live #architect-orb{width:44px;height:44px}body.next-mode-live .nav{gap:9px}}
 
-/* The two small diagrams describe project steps, not measured business growth. */
-.architect-bottom{left:max(27%,340px);right:4%;max-width:760px;gap:14px}
-.architect-glass{gap:7px;background:linear-gradient(135deg,#142d3d92,#071521b0);border-color:#a9d5f471;box-shadow:inset 0 1px 0 #d3ecff12,0 16px 45px #02091050;backdrop-filter:blur(12px);padding:16px 18px;min-height:205px}
+/* Flat virtual screens keep the photographed figure visible through their surfaces. */
+.next-live .next-orbit button{
+  border-radius:4px;border:1px solid rgba(239,249,255,.22);
+  background:rgba(20,76,111,.08);backdrop-filter:none;box-shadow:none;
+  color:#fff;text-shadow:0 1px 2px rgba(0,5,13,.9);
+}
+.next-live .next-orbit button[aria-pressed=true]{
+  border-color:rgba(239,249,255,.57);background:rgba(60,145,197,.10);box-shadow:none;
+}
+.next-live .next-orbit button:hover,.next-live .next-orbit button:focus-visible{
+  border-color:rgba(255,255,255,.75);background:rgba(68,151,197,.10);box-shadow:none;
+}
+.architect-slide-text{color:#f3f8fc;text-shadow:0 1px 2px rgba(0,5,13,.9)}
+.architect-bottom{left:max(38%,420px);right:4%;bottom:20px;max-width:900px;margin-left:auto;margin-right:0;gap:12px}
+.architect-glass{
+  gap:7px;min-height:205px;padding:16px 18px;border-radius:4px;
+  border:1px solid rgba(244,250,255,.24);background:rgba(16,64,94,.09);
+  backdrop-filter:none;box-shadow:none;color:#fff;text-shadow:0 1px 2px rgba(0,5,13,.9);
+}
+.architect-glass:hover{border-color:rgba(244,250,255,.58);background:rgba(38,109,151,.10);box-shadow:none}
+.architect-glass>span:not(.architect-card-label),.architect-glass em{color:#f3f8fc}
 .architect-card-label{display:flex;justify-content:space-between;gap:8px}
-.architect-card-label>span{color:#ceeaff80}
-.architect-glass strong{font-size:16px}
+.architect-card-label>span{color:rgba(243,250,255,.75)}
+.architect-glass strong{font-size:16px;color:#fff}
 .architect-plan-diagram{display:block;width:100%;height:61px;overflow:visible}
-.diagram-grid{fill:none;stroke:#8ebddc;stroke-width:.5;opacity:.12}
-.diagram-line{fill:none;stroke:#afdfff;stroke-width:1.3;filter:drop-shadow(0 0 4px #469eff)}
-.diagram-points{fill:#edf8ff;filter:drop-shadow(0 0 4px #4b9eff)}
-.architect-glass>span.architect-plan-stages{display:flex;justify-content:space-between;max-width:none;width:100%;font-size:9px;color:#b8cfe0;margin-top:-5px}
-.architect-glass>span.architect-process-diagram{display:flex;align-items:center;justify-content:space-between;max-width:none;min-height:82px;padding:6px 7px 0;color:#a7cbe2}
+.diagram-grid{fill:none;stroke:#c6e4fa;stroke-width:.5;opacity:.24}
+.diagram-line{fill:none;stroke:#d8efff;stroke-width:1.3}
+.diagram-points{fill:#f4fbff}
+.architect-glass>span.architect-plan-stages{display:flex;justify-content:space-between;max-width:none;width:100%;font-size:9px;color:#eef7ff;margin-top:-5px}
+.architect-glass>span.architect-process-diagram{display:flex;align-items:center;justify-content:space-between;max-width:none;min-height:82px;padding:6px 7px 0;color:#f2f9ff}
 .architect-process-diagram>span{display:flex;flex-direction:column;align-items:center;gap:7px}
-.architect-process-diagram img{width:42px;height:42px;padding:11px;border-radius:50%;background:radial-gradient(circle at 30% 15%,#c9e6ff66,#7ab3ff22);filter:invert(1);opacity:.85}
-.architect-process-diagram small{font:9px Arial,sans-serif;color:#d4e9f7}
-.architect-process-diagram i{font:18px Georgia,serif;margin-top:-19px;opacity:.6}
+.architect-process-diagram img{width:42px;height:42px;padding:11px;border-radius:4px;background:rgba(214,239,255,.08);filter:invert(1);opacity:.9}
+.architect-process-diagram small{font:9px Arial,sans-serif;color:#f1f8ff}
+.architect-process-diagram i{font:18px Georgia,serif;margin-top:-19px;opacity:.75}
 .architect-carousel-controls{left:60%;bottom:240px}
-.next-live .next-orbit button{background:linear-gradient(125deg,#16324978,#0a1d307d);backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 #cbeaff12,0 14px 40px #00101e40;text-shadow:0 1px 7px #03121e}
-.next-live .next-orbit button[aria-pressed=true]{background:linear-gradient(125deg,#28536c9c,#102a409b);border-color:#bde8ffb3;box-shadow:0 0 24px #76caff16,0 16px 38px #00152266}
-@media(max-width:700px){.architect-bottom{left:12px;right:12px;bottom:16px;gap:8px}.architect-glass{padding:12px 10px;gap:7px;min-height:204px}.architect-glass strong{font-size:13px;min-height:32px}.architect-plan-diagram{height:46px}.architect-glass>span.architect-plan-stages{font-size:7px}.architect-glass>span.architect-process-diagram{padding:0;min-height:65px}.architect-process-diagram img{width:30px;height:30px;padding:7px}.architect-process-diagram small{font-size:7px}.architect-process-diagram i{font-size:12px}.architect-carousel-controls{left:50%;bottom:243px}}
 
 /* Approved portrait is animated as an image layer; the room is a separate backdrop. */
 .architect-room{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;z-index:-3;filter:brightness(.74)}
@@ -148,27 +163,49 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 .next-live:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#03121ab0,transparent 48%,#03101a14),linear-gradient(0deg,#05101b66,transparent 25%)}
 .next-live[data-presentation=model] .architect-art,.next-live[data-portrait-ready=true] .architect-art{visibility:hidden;opacity:0}
 .architect-intro{top:52px}
-.next-live .next-orbit button{border-radius:15px 6px 15px 6px;border-color:#c2e7ff7a;background:linear-gradient(120deg,#7197b524,#183d555e);backdrop-filter:blur(3px);box-shadow:inset 0 1px 0 #e4f4ff22,0 12px 38px #020d183d}
-.next-live .next-orbit button[aria-pressed=true]{background:linear-gradient(120deg,#88b9da3d,#1a456270);border-color:#dcf4ffae}
-.next-live[data-panel-presenting=moving] .next-detail{opacity:var(--panel-reveal,0);pointer-events:none;transform:scale(calc(.94 + var(--panel-reveal,0)*.06));transform-origin:100% 30%}
-.next-live[data-panel-presenting=open] .next-detail{opacity:1;pointer-events:auto}
-@media(min-width:701px){.next-live[data-panel-presenting=moving] .next-detail,.next-live[data-panel-presenting=open] .next-detail{left:var(--active-panel-left,5%);top:var(--active-panel-top,350px);width:300px}}
-@media(max-width:700px){.architect-intro{top:57px;width:170px}.architect-motto{max-width:160px}.architect-room{object-position:60% top}.next-live[data-presentation=portrait] .next-canvas{mask-image:linear-gradient(to bottom,#000 63%,transparent 85%)}}
 
-/* Keep the opened panel, carousel controls and lower diagrams in separate areas. */
+/* The selected service stays at the left edge in every presentation phase. */
+.next-live .next-detail{
+ left:clamp(24px,4vw,64px);top:350px;width:300px;padding:20px;
+ border:1px solid rgba(244,250,255,.28);border-radius:4px;
+ background:rgba(7,24,40,.55);backdrop-filter:blur(5px);box-shadow:none;
+ color:#fff;text-shadow:0 1px 2px rgba(0,5,13,.8);
+}
+.next-live .next-detail .btn{border-radius:3px;border-color:rgba(244,250,255,.30);background:rgba(37,105,148,.12)}
+.next-live .next-detail .primary{background:rgba(66,131,171,.18)}
+.next-live[data-panel-presenting=moving] .next-detail{opacity:var(--panel-reveal,0);pointer-events:none;transform:none}
+.next-live[data-panel-presenting=open] .next-detail{opacity:1;pointer-events:auto;transform:none}
+
+/* These screens and controls remain fixed while a card travels to the panel. */
 @media(min-width:1101px){
- .next-live[data-panel-presenting=moving] .architect-bottom,.next-live[data-panel-presenting=open] .architect-bottom{left:calc(var(--active-panel-left,5%) + 320px);right:4%;gap:10px}
- .next-live[data-panel-presenting=moving] .architect-carousel-controls,.next-live[data-panel-presenting=open] .architect-carousel-controls{left:auto;right:4%;transform:none;max-width:calc(100% - var(--active-panel-left,5%) - 340px);bottom:255px}
+ .next-live .next-orbit button{width:340px;min-width:340px;max-width:340px}
+ .next-live .next-detail{left:clamp(24px,4vw,64px);top:350px;width:300px}
+ .architect-bottom{left:max(38%,420px);right:4%;bottom:20px;max-width:900px}
+ .architect-carousel-controls{left:60%;right:auto;bottom:240px;transform:translateX(-50%);max-width:90%}
 }
 @media(min-width:701px) and (max-width:1100px){
- .next-live{height:1260px;min-height:1260px;max-height:none}
- .architect-bottom{left:24px;right:24px;max-width:760px}
- .architect-carousel-controls{left:50%;bottom:250px}
+ .next-live{height:1100px;min-height:1100px;max-height:none}
+ .next-live .next-detail{left:24px;top:350px;width:260px}
+ .architect-bottom{left:24px;right:24px;top:760px;bottom:auto;max-width:none;margin:0}
+ .architect-carousel-controls{left:50%;right:auto;top:1000px;bottom:auto;transform:translateX(-50%);max-width:90%}
 }
 @media(max-width:700px){
- .next-live{height:1340px;min-height:1340px}
- .next-live .next-detail{top:650px}
- .next-live:has(.architect-question[open]){height:1550px;min-height:1550px}
+ .next-live{height:1280px;min-height:1280px}
+ .architect-intro{top:57px;width:170px}.architect-motto{max-width:160px}.architect-room{object-position:60% top}
+ .next-live[data-presentation=portrait] .next-canvas{mask-image:linear-gradient(to bottom,#000 63%,transparent 85%)}
+ .next-live .next-detail{top:900px;left:16px;width:min(340px,calc(100% - 32px));padding:16px}
+ .architect-bottom{left:12px;right:12px;top:580px;bottom:auto;max-width:none;margin:0;gap:8px}
+ .architect-glass{padding:12px 10px;gap:7px;min-height:220px;font-size:11px}
+ .architect-glass strong{font-size:14px;min-height:32px}
+ .architect-card-label{font-size:9px}.architect-glass em{font-size:10px}
+ .architect-plan-diagram{height:46px}
+ .architect-glass>span.architect-plan-stages{font-size:9px}
+ .architect-glass>span.architect-process-diagram{padding:0;min-height:65px}
+ .architect-process-diagram img{width:30px;height:30px;padding:7px}
+ .architect-process-diagram small{font-size:9px}.architect-process-diagram i{font-size:12px}
+ .architect-carousel-controls{left:50%;right:auto;top:812px;bottom:auto;transform:translateX(-50%)}
+ .next-live:has(.architect-question[open]){height:1490px;min-height:1490px}
+ .next-live .next-loading{top:190px;bottom:auto}
 }
 .brand .mark{display:none}.architect-logo{display:block;width:42px;height:42px;object-fit:contain}
 

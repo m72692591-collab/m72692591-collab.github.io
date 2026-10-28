@@ -126,7 +126,8 @@ export function createPortrait(scene, { onReady, onError } = {}) {
       const mobile = width < 700;
       const imageHeight = mobile ? Math.min(520, height * .65) : Math.min(760, height * .94);
       const imageWidth = imageHeight * 1.5;
-      const left = width * .59 - imageWidth * .54;
+      const anchor = !mobile && width <= 1100 ? .66 : .59;
+      const left = width * anchor - imageWidth * .54;
       const top = mobile ? 120 : 60;
       const distance = Math.max(.01, Math.abs(camera.position.z - PLANE_Z));
       const worldPerPixel = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * distance / height;

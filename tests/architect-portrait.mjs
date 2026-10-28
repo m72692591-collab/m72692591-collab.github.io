@@ -42,7 +42,7 @@ test('approved raster cutout fits the stage and its fingertip follows only the g
       portrait.resize(camera, width, height);
       const imageHeight = width < 700 ? Math.min(520, height * .65) : Math.min(760, height * .94);
       const imageWidth = imageHeight * 1.5;
-      const left = width * .59 - imageWidth * .54;
+      const left = width * (width >= 700 && width <= 1100 ? .66 : .59) - imageWidth * .54;
       const center = mesh.position.clone().project(camera);
       close((center.x * .5 + .5) * width, left + imageWidth / 2, 'image center x');
       close((-center.y * .5 + .5) * height, expectedTop + imageHeight / 2, 'image center y');

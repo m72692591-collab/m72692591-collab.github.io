@@ -86,6 +86,7 @@ try {
     const value = button.style.left;
     return value.endsWith('%') ? parseFloat(value) / 100 * button.closest('.next-orbit').clientWidth : parseFloat(value);
   });
+  const lowerScreensBefore = await page.locator('.architect-bottom').boundingBox();
   await page.locator("#architect-next").click();
   await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "moving", null, { timeout: 10000 });
   okay("Hidden consultation panel is inert during the hand gesture", await page.locator(".next-detail").evaluate(detail => detail.inert && getComputedStyle(detail).opacity === "0"));
@@ -96,6 +97,9 @@ try {
   okay("Portrait gesture carries and fades the selected card", await page.locator('#next-orbit button[data-id="sites"]').evaluate((card, initial) => Math.abs(parseFloat(card.style.left) - initial) > 30 && card.style.transform.includes("scale("), sitesStartingLeft));
   await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "open", null, { timeout: 15000 });
   okay("Chosen direction opens beside the portrait after the gesture", await page.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1") && await page.locator('#next-orbit button[data-id="sites"]').isHidden());
+  okay("Opened panel stays outside the central portrait area", await page.locator('.next-detail').evaluate(detail => detail.getBoundingClientRect().right < innerWidth * .32));
+  const lowerScreensAfter = await page.locator('.architect-bottom').boundingBox();
+  okay("Lower screens do not jump while a service opens", ['x','y','width','height'].every(key => Math.abs(lowerScreensAfter[key] - lowerScreensBefore[key]) < 1));
   okay("Carousel advances the detail and form together", await page.locator("#next-title").innerText() === "Сайты и дизайн" && await page.locator("#interest").inputValue() === "Сайт");
   await page.locator("#architect-prev").click();
   await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "moving", null, { timeout: 10000 });
@@ -374,6 +378,18 @@ try {
   await m.screenshot({ path: artifacts + "/architect-portrait-mobile.png", fullPage: true });
   okay("Browser produced no uncaught errors", errors.length === 0 || (process.stderr.write(errors.join("\n")), false));
   process.stdout.write("\nPASSED " + checks + " browser assertions (desktop + mobile)\n");
+} catch (error) {
+  for (const context of browser?.contexts() || []) {
+    for (const failedPage of context.pages()) {
+      console.error('Failure state', failedPage.url(), await failedPage.evaluate(() => ({
+        canvas: document.querySelector('#next-canvas')?.dataset,
+        fallback: document.querySelector('#next-fallback')?.textContent,
+        fallbackVisible: document.querySelector('#next-fallback')?.hidden === false,
+        status: document.querySelector('#next-model-status')?.textContent
+      })).catch(() => 'page unavailable'));
+    }
+  }
+  throw error;
 } finally {
   if (browser) await browser.close();
   server.kill();

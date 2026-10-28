@@ -145,9 +145,12 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     actor.updateMatrixWorld(true);
     const modelChest = rig?.chestPosition();
     const photoHand = picture ? portrait.handPosition() : null;
-    const chest = picture ? (photoHand?.y ?? .8) + .24 : (modelChest?.y ?? 2.2) - .55;
+    // Leave the photographed palm below the floating screens, fully visible.
+    const chestOffset = mobile() ? .35 : container.clientWidth <= 1100 ? .50 : .90;
+    const chest = picture ? (photoHand?.y ?? .8) + chestOffset : (modelChest?.y ?? 2.2) - .55;
     const centerX = mobile() ? .15 : .65;
-    const radius = mobile() ? 2.8 : Math.min(4.8, container.clientWidth / container.clientHeight * 2.05);
+    const radius = mobile() ? 4.3 : Math.max(3.5, Math.min(6.3, container.clientWidth / container.clientHeight * 2.9));
+    const detailBox = {x:detail.offsetLeft,y:detail.offsetTop,width:detail.offsetWidth,height:detail.offsetHeight};
     meshes.forEach((mesh, index) => {
       const a = index * TAU / catalog.length + angle, front = (Math.cos(a) + 1) / 2;
       mesh.position.set(centerX + Math.sin(a) * radius, chest + Math.cos(a) * .12, Math.cos(a) * .8);
@@ -157,7 +160,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
       button.style.left = `${(projected.x * .5 + .5) * 100}%`;
       button.style.top = `${(-projected.y * .5 + .5) * 100}%`;
       button.style.opacity = String(.12 + front * .88);
-      button.style.transform = `translate(-50%,-50%) perspective(900px) rotateY(${-Math.sin(a) * 24}deg) scale(${.62 + front * .38})`;
+      button.style.transform = `translate(-50%,-50%) perspective(1200px) rotateY(${-Math.sin(a) * 10}deg) scale(${.72 + front * .28})`;
       button.style.zIndex = String(Math.round(front * 24));
       button.style.pointerEvents = front < .35 ? 'none' : '';
       if (picture && index === chosen && present && photoHand) {
@@ -165,8 +168,13 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
         const handX = (hand.x * .5 + .5) * container.clientWidth;
         const handY = (-hand.y * .5 + .5) * container.clientHeight;
         const width = button.offsetWidth || (mobile() ? 260 : 300);
-        const anchorX = Math.max(width / 2 + 16, Math.min(container.clientWidth - width / 2 - 16, handX - width * .35));
-        const anchorY = handY - 22;
+        const handAnchorX = Math.max(width / 2 + 16, Math.min(container.clientWidth - width / 2 - 16, handX - width / 2 - 24));
+        const handAnchorY = handY - 30;
+        // The hand presents the screen into the free side column. Never derive
+        // the opened panel's position from the palm: that covered the torso.
+        const dock = THREE.MathUtils.smoothstep(present.carry, .72, 1);
+        const anchorX = THREE.MathUtils.lerp(handAnchorX, detail.offsetLeft + detail.offsetWidth / 2, dock);
+        const anchorY = THREE.MathUtils.lerp(handAnchorY, detail.offsetTop + 90, dock);
         const originalX = (projected.x * .5 + .5) * container.clientWidth;
         const originalY = (-projected.y * .5 + .5) * container.clientHeight;
         const grip = present.release > 0 ? 1 : present.attach;
@@ -177,14 +185,18 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
         button.style.zIndex = '28';
         live.dataset.panelPresenting = 'moving';
         live.style.setProperty('--panel-reveal', present.reveal);
-        if (!mobile() && present.carry > .96 && present.release === 0) {
-          live.style.setProperty('--active-panel-left', `${Math.max(24, anchorX - 150)}px`);
-          live.style.setProperty('--active-panel-top', `${Math.max(190, Math.min(container.clientHeight - 340, anchorY - 65))}px`);
-        }
       }
       if (picture && docked && index === chosen) button.hidden = true;
+      if (picture && index !== chosen && (!present || present.reveal > 0)) {
+        const x = (projected.x * .5 + .5) * container.clientWidth;
+        const y = (-projected.y * .5 + .5) * container.clientHeight;
+        const halfWidth = button.offsetWidth * (.72 + front * .28) / 2;
+        const halfHeight = button.offsetHeight * (.72 + front * .28) / 2;
+        if (x + halfWidth > detailBox.x && x - halfWidth < detailBox.x + detailBox.width &&
+            y + halfHeight > detailBox.y && y - halfHeight < detailBox.y + detailBox.height) button.hidden = true;
+      }
       button.dataset.depth = front.toFixed(3);
-      mesh.visible = !button.hidden; mesh.material.opacity = .025 + front * .025;
+      mesh.visible = !button.hidden; mesh.material.opacity = .008 + front * .012;
     });
     if (picture && docked) live.dataset.panelPresenting = 'open';
     detail.inert = picture && Boolean(present) && present.reveal < 1;

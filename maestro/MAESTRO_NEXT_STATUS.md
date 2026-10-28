@@ -27,7 +27,7 @@ Implemented:
 
 ## Verification
 
-Current local evidence: 97 desktop/mobile browser assertions, 86 structural
+Current local evidence: 99 desktop/mobile browser assertions, 86 structural
 checks, 12 rig/timeline tests, two portrait-controller tests, and speech bridge
 checks (25 synthetic events / eight utterances). Real in-app browser speech also
 produced start/boundary/end callbacks for two full replies (7.356 s and 6.738 s);
@@ -38,6 +38,19 @@ Independent review found and resolved lost static portrait after WebGL loss,
 keyboard access to an invisible moving panel, and a stale loading-status timer.
 Final screenshots cover 1440, 780 and 390 px layouts. The source image received
 Gemini visual review earlier in this task; the new cutout was inspected locally.
+
+Owner visual correction: the hand-derived dock covered the torso, and the glass
+slides were too opaque. The expanded panel now stays in the left column; its
+traveling screen clears the palm and settles into that column. Orbit screens use
+8–10% tint, fine borders, flat corners and no backdrop blur. Wider spacing avoids
+overprinted labels on narrow displays; screens behind the side panel are hidden.
+Lower screens cover the portrait's waist crop and remain stable during selection.
+On mobile they precede the navigation controls and the consultation panel.
+Independent screenshot review caught the mobile chin overlap and colliding slide
+text; both were corrected before the 99-assertion browser pass. One earlier local
+run timed out loading the portrait in the failed-model scenario; the immediate
+diagnostic rerun completed all scenarios. The earlier GitHub speech-job failure
+was an absent Playwright dependency, resolved by running it in the browser job.
 
 ## Limits and external rollout
 
