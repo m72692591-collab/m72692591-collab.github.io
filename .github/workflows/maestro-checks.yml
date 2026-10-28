@@ -38,9 +38,8 @@ jobs:
           node-version: '22'
       - name: Verify JavaScript syntax, static links and integration invariants
         run: node tests/maestro-smoke.mjs
-      - name: Verify speech cancellation, portrait motion and hand gesture
+      - name: Verify portrait motion and hand gesture
         run: |
-          node tests/maestro-speech.mjs
           node tests/architect-rig.mjs
           node tests/architect-portrait.mjs
       - uses: shivammathur/setup-php@v2
@@ -62,6 +61,8 @@ jobs:
         run: |
           npm install --no-save --no-audit --no-fund playwright@1.56.1
           npx playwright install --with-deps chromium
+      - name: Verify speech lifecycle and cancellation
+        run: node tests/maestro-speech.mjs
       - name: Run desktop and mobile browser journeys
         run: node tests/maestro-browser.mjs
       - name: Save visual QA screenshots
