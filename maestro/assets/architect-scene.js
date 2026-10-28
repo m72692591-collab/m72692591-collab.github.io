@@ -33,6 +33,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   let presentation = 'portrait', motion = true, loaded = false, modelRequested = false, disposed = false, paused = false, visible = true, docked = false;
   let hovered = false, focused = false, dragging = false, pointerId = null, downX = 0, lastX = 0;
   let chosen = 0, angle = 0, actorYaw = -.30, time = 0, action = null, rig = null, frame = 0, previousTime = performance.now();
+  let idleTime = .75, wasIdle = false;
   actor.rotation.y = actorYaw;
   let speechActive = false, speechState = null, statusTimer;
   let status = stage.querySelector('#next-model-status');
@@ -122,6 +123,10 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     const animate = motion && !reduced.matches;
     if (animate) time += dt;
     const idle = animate && !hovered && !focused && !dragging && !action;
+    // Resume with a visible sweep, without jumping the portrait or speech clock.
+    if (idle && !wasIdle) idleTime = .75;
+    if (idle) idleTime += dt;
+    wasIdle = idle;
     const picture = presentation === 'portrait';
     const present = action && picture ? presentationFrame(time - action.started) : null;
     const sweep = action ? (picture ? { reach: present.reach, contact: present.attach, progress: Math.min(1, (time - action.started) / .75), done: present.done } : gestureFrame(time - action.started)) : { reach: 0, contact: 0, progress: 0 };
@@ -129,7 +134,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
       angle = THREE.MathUtils.lerp(action.from, action.to, sweep.progress);
       if (sweep.done) { angle = action.to; action = null; if (picture) { docked = true; live.dataset.panelPresenting = 'open'; if (document.activeElement === buttons[chosen]) detail.querySelector('a')?.focus({preventScroll:true}); } }
     } else if (idle) {
-      const cycle = time % 8, wave = cycle < 3 ? Math.sin(Math.PI * cycle / 3) ** 2 : 0;
+      const cycle = idleTime % 8, wave = cycle < 3 ? Math.sin(Math.PI * cycle / 3) ** 2 : 0;
       angle += dt * .14 * wave; sweep.reach = wave * .45;
     }
     actor.visible = presentation === 'model' && loaded;
