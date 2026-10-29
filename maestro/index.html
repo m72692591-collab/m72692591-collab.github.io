@@ -29,7 +29,7 @@ body{background:#fffaf4;color:var(--text)}.hero{background:radial-gradient(circl
 <link rel="stylesheet" href="assets/maestro-v2.css?v=proportions-v6">
 <link rel="stylesheet" href="assets/maestro-genie.css?v=1">
 <link rel="stylesheet" href="assets/maestro-lab-teaser.css?v=1">
-<link rel="stylesheet" href="assets/architect-reference.css?v=glass-2">
+<link rel="stylesheet" href="assets/architect-reference.css?v=manual-cube-2">
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="#top"><span class="mark">М</span><img class="architect-logo" src="assets/architect/architect-mark.webp?v=gold-1" alt="" width="42" height="42"><span class="brand-name">МАЭСТРО<small>BUSINESS</small></span></a><nav class="links" id="links"><a href="#solutions">Решения</a><a href="maestro-lab.html">Лаборатория</a><a href="brief-builder.html">Создать ТЗ</a><a href="#products">Можно отдельно</a><a href="#process">Как работаем</a><a href="#pricing">Тарифы</a><a href="agency.html">Агентство</a><button type="button" id="next-header-toggle">Живой 3D</button><a href="#portfolio">Портфолио</a><a href="#documents">Документы</a><a href="#lead">Связаться</a></nav><button type="button" id="architect-orb" aria-label="Открыть консультанта Маэстро" aria-controls="maestro-genie-panel"><img src="assets/architect/architect-orb.webp" alt="" width="56" height="56"></button><button class="menu" id="menu">☰</button></div></header>
@@ -43,7 +43,7 @@ body{background:#fffaf4;color:var(--text)}.hero{background:radial-gradient(circl
       <img class="architect-room" src="assets/architect/architect-office-empty.webp" width="1536" height="1024" alt="" loading="lazy" decoding="async" aria-hidden="true">
       <img class="architect-art" src="assets/architect/architect-office.webp" width="1536" height="1024" alt="Архитектор в полупрозрачном голубом костюме в стеклянном офисе" loading="lazy" decoding="async">
       <div class="architect-intro"><p class="architect-motto">Анализирует. Структурирует.<br>Проектирует рост.</p><p class="architect-about">Ваша задача, возможности бизнеса<br>и следующий шаг — в одной сцене.</p></div>
-      <div class="architect-view" role="group" aria-label="Вид персонажа"><button type="button" data-presentation="portrait" aria-pressed="true">Живой образ</button><button type="button" data-presentation="model" aria-pressed="false">3D-эскиз</button><span id="architect-view-note">Выберите направление на карусели</span></div>
+      <div class="architect-view" role="group" aria-label="Вид персонажа"><button type="button" data-presentation="portrait" aria-pressed="true">Живой образ</button><button type="button" data-presentation="model" aria-pressed="false">3D-эскиз</button><span id="architect-view-note">Потяните экраны мышью и выберите направление</span></div>
       <div class="next-stage"><div id="next-canvas" class="next-canvas" aria-label="Объёмная карусель направлений. Потяните, чтобы повернуть."></div><div id="next-model-status" class="next-loading" aria-live="polite">Загружаем 3D-сцену…</div><div id="next-orbit" class="next-orbit" role="group" aria-label="Карусель направлений"></div><div id="next-fallback" class="next-fallback" hidden>3D-сцена недоступна. Направления можно выбрать кнопками.</div></div>
       <div class="architect-directory" aria-label="Быстрый выбор направления"></div>
       <aside class="next-detail" aria-live="polite"><span class="next-kicker">Давайте начнём с вашей задачи</span><h3 id="next-title"></h3><p id="next-description"></p><div class="next-detail-actions"><a id="next-open" class="btn ghost" href="#solutions">Открыть раздел</a><a id="next-lead" class="btn primary" href="#lead">Разобрать вашу ситуацию</a></div><details class="architect-question"><summary>Задать вопрос Маэстро</summary><label for="next-question">О чём хотите спросить?</label><textarea id="next-question" placeholder="Напишите вашу задачу…"></textarea><button type="button" id="next-ask" class="btn ghost">Спросить Маэстро</button><div id="next-answer" class="next-answer" aria-live="polite"></div></details><small>Консультант отвечает по материалам сайта.</small></aside>
@@ -112,5 +112,5 @@ document.getElementById('leadForm').addEventListener('submit',async e=>{e.preven
 <script src="assets/maestro-leads.js?v=1" defer></script>
 <script src="assets/visual-fit.js?v=1" defer></script>
 <script src="assets/home-demo.js?v=1" defer></script>
-<script type="module" src="assets/architect-experience.js?v=glass-2"></script>
+<script type="module" src="assets/architect-experience.js?v=manual-cube-2"></script>
 </body></html>

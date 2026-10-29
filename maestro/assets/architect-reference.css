@@ -122,10 +122,14 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 #architect-orb{display:none}body.next-mode-live #architect-orb{display:block;flex:none;width:56px;height:56px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;filter:drop-shadow(0 0 11px #268dff70)}body.next-mode-live #architect-orb img{width:100%;height:100%;object-fit:contain}body.next-mode-live #architect-orb:hover{filter:drop-shadow(0 0 16px #5cc8ffb0)}body.next-mode-live #architect-orb:focus-visible{outline:1px solid #b8e9ff;outline-offset:3px}body.next-mode-live .brand{margin-right:auto}body.next-mode-live .maestro-genie-nav{display:none}@media(max-width:700px){body.next-mode-live #architect-orb{width:44px;height:44px}body.next-mode-live .nav{gap:9px}}
 
 /* Flat virtual screens keep the photographed figure visible through their surfaces. */
+.next-live .next-canvas{z-index:1}
+/* display:contents lets the WebGL portrait occlude the rear half of the orbit. */
+.next-live .next-orbit.architect-ready:not(.next-static){display:contents}
 .next-live .next-orbit button{
+  min-height:252px;text-align:center;align-items:center;justify-content:flex-start;padding:28px 24px;gap:14px;
   border-radius:4px;border:1px solid rgba(239,249,255,.22);
   background:rgba(20,76,111,.08);backdrop-filter:none;box-shadow:none;
-  color:#fff;text-shadow:0 1px 2px rgba(0,5,13,.9);
+  color:#fff;text-shadow:0 1px 3px rgba(0,5,13,.95),0 0 9px rgba(0,5,13,.8);
 }
 .next-live .next-orbit button[aria-pressed=true]{
   border-color:rgba(239,249,255,.57);background:rgba(60,145,197,.10);box-shadow:none;
@@ -133,7 +137,8 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 .next-live .next-orbit button:hover,.next-live .next-orbit button:focus-visible{
   border-color:rgba(255,255,255,.75);background:rgba(68,151,197,.10);box-shadow:none;
 }
-.architect-slide-text{color:#f3f8fc;text-shadow:0 1px 2px rgba(0,5,13,.9)}
+.architect-slide-text{color:#f3f8fc;text-shadow:0 1px 3px rgba(0,5,13,.95),0 0 9px rgba(0,5,13,.8)}
+.next-live .next-orbit button strong,.next-live .next-orbit button .architect-slide-text{width:100%;text-align:center}
 .architect-bottom{left:max(38%,420px);right:4%;bottom:20px;max-width:900px;margin-left:auto;margin-right:0;gap:12px}
 .architect-glass{
   gap:7px;min-height:205px;padding:16px 18px;border-radius:4px;
@@ -178,19 +183,42 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 
 /* These screens and controls remain fixed while a card travels to the panel. */
 @media(min-width:1101px){
- .next-live .next-orbit button{width:340px;min-width:340px;max-width:340px}
- .next-live .next-detail{left:clamp(24px,4vw,64px);top:350px;width:300px}
+ /* Fit the complete scene below the fixed header, including short laptop windows. */
+ .next-live{height:calc(100svh - 72px);min-height:0;max-height:none}
+ .next-live .next-canvas{inset:0}
+ .next-live .next-orbit button{width:380px;min-width:380px;max-width:380px;min-height:280px}
+ .next-live .next-detail{--detail-top:350px;left:clamp(24px,4vw,64px);top:var(--detail-top);width:300px;max-height:calc(100% - var(--detail-top) - 16px);overflow-y:auto;overscroll-behavior:contain}
+ .next-live[data-panel-presenting=moving] .next-detail,.next-live[data-panel-presenting=open] .next-detail{--detail-top:24px;transform-origin:50% 0}
+ .next-live .next-detail:has(.maestro-genie-panel:not([hidden])){overflow:visible}
+ .next-live[data-panel-presenting=moving] .architect-intro,.next-live[data-panel-presenting=open] .architect-intro{opacity:0;pointer-events:none}
  .architect-bottom{left:max(38%,420px);right:4%;bottom:20px;max-width:900px}
- .architect-carousel-controls{left:60%;right:auto;bottom:240px;transform:translateX(-50%);max-width:90%}
+ .architect-carousel-controls{left:clamp(24px,4vw,64px);right:auto;bottom:20px;transform:none;width:300px;max-width:calc(38% - 48px)}
+ .architect-carousel-controls select{flex-basis:100%;width:100%;margin-bottom:0}
+}
+@media(min-width:1101px) and (max-height:850px){
+ .architect-intro{top:30px}
+ .next-live .next-detail{--detail-top:clamp(210px,31svh,270px);padding:16px 18px}
+ .architect-bottom{bottom:12px;gap:10px}
+ .architect-glass{min-height:165px;padding:12px 15px;gap:5px;font-size:10px}
+ .architect-glass strong{font-size:15px}
+ .architect-card-label{font-size:10px}
+ .architect-plan-diagram{height:42px}
+ .architect-glass>span.architect-process-diagram{min-height:58px;padding:0 5px}
+ .architect-process-diagram img{width:34px;height:34px;padding:8px}
+ .architect-process-diagram>span{gap:5px}
+ .architect-glass em{font-size:10px}
+ .architect-carousel-controls{bottom:12px}
 }
 @media(min-width:701px) and (max-width:1100px){
  .next-live{height:1100px;min-height:1100px;max-height:none}
+ .next-live .next-orbit button{width:280px;min-width:280px;max-width:280px;min-height:240px}
  .next-live .next-detail{left:24px;top:350px;width:260px}
  .architect-bottom{left:24px;right:24px;top:760px;bottom:auto;max-width:none;margin:0}
  .architect-carousel-controls{left:50%;right:auto;top:1000px;bottom:auto;transform:translateX(-50%);max-width:90%}
 }
 @media(max-width:700px){
  .next-live{height:1280px;min-height:1280px}
+ .next-live .next-orbit button{width:260px;min-width:260px;max-width:260px;min-height:232px;padding:24px 18px}
  .architect-intro{top:57px;width:170px}.architect-motto{max-width:160px}.architect-room{object-position:60% top}
  .next-live[data-presentation=portrait] .next-canvas{mask-image:linear-gradient(to bottom,#000 63%,transparent 85%)}
  .next-live .next-detail{top:900px;left:16px;width:min(340px,calc(100% - 32px));padding:16px}
@@ -209,3 +237,35 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 }
 .brand .mark{display:none}.architect-logo{display:block;width:42px;height:42px;object-fit:contain}
 
+
+/* Hide compressed text on edge-on glass screens, preserving their silhouette. */
+.next-orbit.architect-ready:not(.next-static) button>*{opacity:var(--slide-label-opacity,1);transition:opacity .15s}
+
+/* The real section unfolds within the side screen; no duplicated page content. */
+.architect-page{margin-top:20px;border-top:1px solid #b5dfff3b;padding-top:12px}
+.architect-page[hidden]{display:none}
+.architect-page-close{border:0;background:transparent;padding:5px 0 16px;color:#cbe8f8;font:12px Arial,sans-serif;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+.architect-page .architect-screen-section{display:block;padding:0;background:none;border:0;min-height:0}
+.architect-page .wrap{width:100%;max-width:none}
+.architect-page :is(.grid,.grid2,.grid3,.grid4,.cards,.products,.pricing,.pricegrid,.cases,.hero-grid,.docs,.maestro-lab-head,.maestro-lab-grid,.palette,.split,.steps){grid-template-columns:minmax(0,1fr)!important;gap:12px}
+.architect-page .big{grid-column:auto}
+.architect-page h2{font:24px/1.15 Georgia,serif;letter-spacing:0;margin:10px 0 16px}
+.architect-page :is(.card,.price,.case,.product){padding:14px;border-radius:4px;background:#14324b73;box-shadow:none}
+.architect-page .card{background:#14324b73!important}
+.architect-page .price ul,.architect-page .tag{color:#d9eaf5}
+.architect-page .tag{background:#24485b}
+.architect-page img{max-width:100%}
+.architect-page .lead{font-size:13px;line-height:1.5}
+.architect-page .visual-stripe{margin:0 0 20px;height:220px;min-height:0;border-radius:4px}
+.architect-page .visual-stripe>div{left:14px;right:14px;bottom:18px;max-width:none}
+.architect-page .visual-stripe strong{font-size:25px;line-height:1.12;letter-spacing:-.02em}
+.architect-page .eyebrow{font-size:10px;letter-spacing:.08em}
+.next-detail:has(.maestro-genie-panel:not([hidden])) .architect-page{display:none}
+.next-orbit.architect-ready:not(.next-static) button{touch-action:pan-y;cursor:grab;user-select:none}
+.next-orbit.architect-ready:not(.next-static) button:active{cursor:grabbing}
+@media(min-width:1101px){
+ .next-live .next-detail[data-section-open]{max-height:calc(100% - var(--detail-top) - 98px)}
+ .next-live[data-panel-presenting=moving] .next-detail{box-shadow:0 -8px 30px rgba(145,219,255,var(--panel-impact,0));transform:scaleY(max(.02,var(--panel-reveal,0)));transform-origin:50% 0}
+}
+@media(max-width:1100px){.next-live .next-detail[data-section-open]{max-height:470px;overflow-y:auto}.next-live:has(.next-detail[data-section-open]){min-height:1440px}}
+@media(prefers-reduced-motion:reduce){.next-live[data-panel-presenting=moving] .next-detail{transform:none;box-shadow:none}}

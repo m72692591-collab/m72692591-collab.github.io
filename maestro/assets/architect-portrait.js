@@ -6,6 +6,12 @@ const SOURCE_WIDTH = 1536;
 const SOURCE_HEIGHT = 1024;
 const PLANE_Z = .35;
 const FINGERTIP = { x: 830, y: 640 };
+const SHOULDER = {x:1005,y:392}, ELBOW = {x:1070,y:650};
+// Author-defined cut lines follow the original sleeve and fingers. Each part is
+// a rigid textured polygon: rotations never stretch its photographed pixels.
+const ARM = [[970,348],[1030,335],[1081,352],[1097,403],[1107,487],[1110,532],[1120,592],[1134,651],[1127,708],[1090,746],[1042,768],[979,786],[944,764],[930,743],[893,739],[850,713],[822,687],[815,655],[827,642],[863,654],[871,626],[881,626],[929,648],[941,632],[932,587],[943,563],[956,568],[966,590],[980,620],[995,641],[999,602],[981,558],[965,531],[958,480],[960,421]];
+const UPPER = [...ARM.slice(0,8),[1110,670],[1000,615],[999,602],...ARM.slice(31)];
+const LOWER = [[1000,600],[1108,615],...ARM.slice(7,31)];
 const unit = value => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
 
 const vertexShader = `
@@ -38,21 +44,7 @@ const vertexShader = `
     warped.x += head * (-(source.y - 340.0) * roll + sin(uTime * .73) * 1.2 * uAnimate);
     warped.y += head * ((source.x - 800.0) * roll + sin(uTime * .91) * 1.3 * uAnimate);
 
-    // The cutout has no separate arm layer. Keep the deformation near the
-    // photographed right arm and anchored at the shoulder.
-    float upperArm = (1.0 - smoothstep(45.0, 95.0,
-      segmentDistance(source, vec2(1000.0, 400.0), vec2(1060.0, 600.0))))
-      * smoothstep(400.0, 615.0, source.y) * .55;
-    float forearm = (1.0 - smoothstep(48.0, 105.0,
-      segmentDistance(source, vec2(1060.0, 600.0), vec2(950.0, 690.0)))) * .78;
-    float hand = 1.0 - smoothstep(48.0, 110.0,
-      segmentDistance(source, vec2(950.0, 690.0), vec2(830.0, 640.0)));
-    float arm = max(max(upperArm, forearm), hand);
-    warped.y -= sin(uTime * 1.2) * 1.7 * upper * (1.0 - arm) * uAnimate;
-    float reach = uReach * uAnimate;
-    float carrying = uCarry * uAttach * uAnimate;
-    warped += arm * vec2(-52.0 * reach - 82.0 * carrying,
-                          -14.0 * reach + 10.0 * carrying);
+    // The arm is rendered by separate jointed meshes. Never warp the sleeve.
 
     vec3 transformed = vec3(warped.x - 768.0, 512.0 - warped.y, position.z);
     gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
@@ -61,6 +53,8 @@ const vertexShader = `
 
 const fragmentShader = `
   uniform sampler2D uMap;
+  uniform sampler2D uUnderlay;
+  uniform vec2 uContour[${ARM.length}];
   uniform float uBlink;
   uniform float uMouth;
   varying vec2 vUv;
@@ -78,6 +72,16 @@ const fragmentShader = `
     samplePoint.y -= uMouth * mouth * smoothstep(277.0, 291.0, source.y) * 3.0;
     vec2 sampleUv = vec2(samplePoint.x / 1536.0, 1.0 - samplePoint.y / 1024.0);
     vec4 color = texture2D(uMap, clamp(sampleUv, vec2(0.0), vec2(1.0)));
+    bool inside = false;
+    float edgeDistance = 10000.0;
+    for (int i=0; i<${ARM.length}; i++) {
+      vec2 a=uContour[i], b=uContour[(i+1)%${ARM.length}];
+      vec2 edge=b-a;
+      edgeDistance=min(edgeDistance,length(source-a-edge*clamp(dot(source-a,edge)/dot(edge,edge),0.0,1.0)));
+      if ((a.y>source.y)!=(b.y>source.y) && source.x<(b.x-a.x)*(source.y-a.y)/(b.y-a.y)+a.x) inside=!inside;
+    }
+    float repairMask=inside ? 1.0 : 1.0-smoothstep(0.0,3.0,edgeDistance);
+    color=mix(color,texture2D(uUnderlay,vUv),repairMask);
     color.a *= 1.0 - smoothstep(900.0, 1024.0, source.y);
     if (color.a < .003) discard;
     gl_FragColor = color;
@@ -89,7 +93,7 @@ export function createPortrait(scene, { onReady, onError } = {}) {
   const geometry = new THREE.PlaneGeometry(SOURCE_WIDTH, SOURCE_HEIGHT, 96, 64);
   const material = new THREE.ShaderMaterial({
     uniforms: {
-      uMap: { value: null }, uTime: { value: 0 }, uAnimate: { value: 0 },
+      uMap: { value: null }, uUnderlay:{value:null}, uContour:{value:ARM.map(([x,y])=>new THREE.Vector2(x,y))}, uTime: { value: 0 }, uAnimate: { value: 0 },
       uReach: { value: 0 }, uAttach: { value: 0 }, uCarry: { value: 0 },
       uBlink: { value: 0 }, uMouth: { value: 0 }
     },
@@ -102,7 +106,24 @@ export function createPortrait(scene, { onReady, onError } = {}) {
   mesh.visible = false;
   scene.add(mesh);
 
-  let disposed = false, ready = false, wantedVisible = true, texture = null;
+  const shoulder = new THREE.Group(), elbow = new THREE.Group();
+  shoulder.position.set(SHOULDER.x-768,512-SHOULDER.y,.01);
+  elbow.position.set(ELBOW.x-SHOULDER.x,SHOULDER.y-ELBOW.y,.01);
+  mesh.add(shoulder); shoulder.add(elbow);
+  const armMaterials=[];
+  function part(points,pivot,parent,order) {
+    const shape=new THREE.Shape(points.map(([x,y])=>new THREE.Vector2(x-pivot.x,pivot.y-y)));
+    const geometry=new THREE.ShapeGeometry(shape), positions=geometry.getAttribute('position');
+    const uv=geometry.getAttribute('uv');
+    for(let i=0;i<positions.count;i++) uv.setXY(i,(positions.getX(i)+pivot.x)/1536,1-(pivot.y-positions.getY(i))/1024);
+    const mat=new THREE.MeshBasicMaterial({transparent:true,depthWrite:false,toneMapped:false,side:THREE.DoubleSide});
+    const piece=new THREE.Mesh(geometry,mat); piece.renderOrder=order; piece.frustumCulled=false;
+    parent.add(piece);armMaterials.push(mat);return piece;
+  }
+  const upperArm=part(UPPER,SHOULDER,shoulder,-1), forearm=part(LOWER,ELBOW,elbow,0);
+  mesh.userData.armParts={shoulder,elbow,upperArm,forearm};
+
+  let disposed = false, ready = false, wantedVisible = true, texture = null, underlay=null;
   let speaking = false, lastBoundary = 0, handPose = { reach: 0, attach: 0, carry: 0 };
   let laidOut = false;
   new THREE.TextureLoader().load(
@@ -112,13 +133,17 @@ export function createPortrait(scene, { onReady, onError } = {}) {
       texture = loaded;
       texture.colorSpace = THREE.SRGBColorSpace;
       material.uniforms.uMap.value = texture;
-      ready = true;
-      mesh.visible = wantedVisible;
-      onReady?.();
+      armMaterials.forEach(mat=>{mat.map=texture;mat.needsUpdate=true;});
+      finish();
     },
     undefined,
     error => { if (!disposed) onError?.(error); }
   );
+  function finish(){if(texture&&underlay&&!disposed){ready=true;mesh.visible=wantedVisible;onReady?.();}}
+  new THREE.TextureLoader().load(new URL('./architect/architect-torso-underlay.webp',import.meta.url).href, loaded=>{
+    if(disposed){loaded.dispose();return;} underlay=loaded;underlay.colorSpace=THREE.SRGBColorSpace;
+    material.uniforms.uUnderlay.value=underlay;finish();
+  },undefined,error=>{if(!disposed)onError?.(error);});
 
   return {
     resize(camera, width, height) {
@@ -128,7 +153,7 @@ export function createPortrait(scene, { onReady, onError } = {}) {
       const imageWidth = imageHeight * 1.5;
       const anchor = !mobile && width <= 1100 ? .66 : .59;
       const left = width * anchor - imageWidth * .54;
-      const top = mobile ? 120 : 60;
+      const top = mobile ? 120 : width > 1100 && height < 780 ? 32 : 60;
       const distance = Math.max(.01, Math.abs(camera.position.z - PLANE_Z));
       const worldPerPixel = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * distance / height;
       const centerX = left + imageWidth / 2;
@@ -147,6 +172,13 @@ export function createPortrait(scene, { onReady, onError } = {}) {
       const attach = moving ? unit(gesture?.attach) : 0;
       const carry = moving ? unit(gesture?.carry) : 0;
       handPose = { reach, attach, carry };
+      const carrying=carry*attach;
+      // Rotate the entire silhouette as a rigid plane, with a restrained torso
+      // turn accompanying the arm. No stretching of the photographed suit.
+      mesh.rotation.y = moving ? -.12 * carrying + Math.sin(now * .47) * .012 : 0;
+      mesh.rotation.z = moving ? -.018 * carrying + Math.sin(now * .63) * .003 : 0;
+      shoulder.rotation.z=moving ? -.035*reach-.105*carrying+Math.sin(now*.8)*.009 : 0;
+      elbow.rotation.z=moving ? -.16*reach+.24*carrying+Math.sin(now*1.1+.5)*.016 : 0;
       material.uniforms.uTime.value = now;
       material.uniforms.uAnimate.value = moving ? 1 : 0;
       material.uniforms.uReach.value = reach;
@@ -169,11 +201,13 @@ export function createPortrait(scene, { onReady, onError } = {}) {
     },
     handPosition() {
       if (disposed || !ready || !laidOut) return null;
-      const carrying = handPose.carry * handPose.attach;
-      const x = FINGERTIP.x - 52 * handPose.reach - 82 * carrying;
-      const y = FINGERTIP.y - 14 * handPose.reach + 10 * carrying;
       mesh.updateMatrixWorld(true);
-      return mesh.localToWorld(new THREE.Vector3(x - SOURCE_WIDTH / 2, SOURCE_HEIGHT / 2 - y, 0));
+      return elbow.localToWorld(new THREE.Vector3(FINGERTIP.x-ELBOW.x,ELBOW.y-FINGERTIP.y,0));
+    },
+    orbitCenter(){
+      if(disposed||!ready||!laidOut)return null;
+      mesh.updateMatrixWorld(true);
+      return new THREE.Vector3(880-768,512-530,0).multiply(mesh.scale).add(mesh.position);
     },
     setVisible(value) {
       wantedVisible = Boolean(value);
@@ -183,7 +217,8 @@ export function createPortrait(scene, { onReady, onError } = {}) {
       if (disposed) return;
       disposed = true;
       scene.remove(mesh);
-      geometry.dispose(); material.dispose(); texture?.dispose();
+      geometry.dispose(); material.dispose(); texture?.dispose(); underlay?.dispose();
+      upperArm.geometry.dispose();forearm.geometry.dispose();armMaterials.forEach(mat=>mat.dispose());
     }
   };
 }

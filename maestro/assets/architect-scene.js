@@ -2,7 +2,7 @@ import * as THREE from './vendor/three.module.min.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { MeshoptDecoder } from './vendor/meshopt_decoder.mjs';
 import { createRig } from './architect-rig.js';
-import { createPortrait } from './architect-portrait.js';
+import { createPortrait } from './architect-portrait.js?v=manual-cube-2';
 import { TAU, gestureFrame, presentationFrame, nearestAngle } from './architect-motion.js';
 
 export function createScene(container, orbit, catalog, reduced, onSelect) {
@@ -30,10 +30,15 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   const touch = new THREE.Group();
   for (const radius of [.075, .13, .22]) touch.add(new THREE.Mesh(new THREE.RingGeometry(radius, radius + .012, 36), new THREE.MeshBasicMaterial({ color: 0xbfeeff, transparent: true, opacity: .8, side: THREE.DoubleSide, depthWrite: false })));
   scene.add(touch);
+  const flightCube = new THREE.Group();
+  const cubeShape = new THREE.BoxGeometry(1,1,1);
+  flightCube.add(new THREE.Mesh(cubeShape,new THREE.MeshBasicMaterial({color:0x74cbff,transparent:true,opacity:.14,depthWrite:false})));
+  flightCube.add(new THREE.LineSegments(new THREE.EdgesGeometry(cubeShape),new THREE.LineBasicMaterial({color:0xc7efff,transparent:true,opacity:.9})));
+  flightCube.visible=false;scene.add(flightCube);
   let presentation = 'portrait', motion = true, loaded = false, modelRequested = false, disposed = false, paused = false, visible = true, docked = false;
-  let hovered = false, focused = false, dragging = false, pointerId = null, downX = 0, lastX = 0;
+  let hovered = false, focused = false, dragging = false, pointerId = null, pointerTarget = null, downX = 0, downY = 0, lastX = 0, suppressClick = false;
+  let selectionVersion = 0, pendingPresented = null;
   let chosen = 0, angle = 0, actorYaw = -.30, time = 0, action = null, rig = null, frame = 0, previousTime = performance.now();
-  let idleTime = .75, wasIdle = false;
   actor.rotation.y = actorYaw;
   let speechActive = false, speechState = null, statusTimer;
   let status = stage.querySelector('#next-model-status');
@@ -116,26 +121,49 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     portrait.resize(camera, width, height);
     actor.position.x = mobile() ? .35 : .65; redraw();
   }
+  function notifyPresented() {
+    const version = selectionVersion, index = chosen;
+    pendingPresented = {version, index};
+    // Speech listeners may redraw the scene. Dispatch after this frame finishes.
+    queueMicrotask(flushPresented);
+  }
+  function flushPresented() {
+    if (!pendingPresented || disposed) return;
+    if (pendingPresented.version !== selectionVersion) { pendingPresented = null; return; }
+    if (paused || document.hidden) return;
+    const {index} = pendingPresented;
+    pendingPresented = null;
+    stage.dispatchEvent(new CustomEvent('architect:presented', { bubbles: true, detail: { index } }));
+  }
+  function finishPresentation(notify = true) {
+    if (action) angle = action.to;
+    action = null; docked = presentation === 'portrait';
+    live.dataset.panelPresenting = docked ? 'open' : '';
+    live.style.setProperty('--panel-reveal', '1');
+    detail.inert = false;
+    if (notify) notifyPresented();
+  }
+  function canPresent() {
+    const rect = container.getBoundingClientRect();
+    const headerBottom = document.querySelector('header')?.getBoundingClientRect().bottom || 0;
+    const visibleHeight = Math.min(innerHeight, rect.bottom) - Math.max(headerBottom, rect.top);
+    return !paused && !document.hidden && rect.width > 0 && visibleHeight >= Math.min(160, rect.height * .25);
+  }
   function render(now = performance.now()) {
     frame = 0;
     if (disposed || !visible || paused || document.hidden) return;
     const dt = Math.min((now - previousTime) / 1000, .05); previousTime = now;
     const animate = motion && !reduced.matches;
+    if (action && !canPresent()) finishPresentation();
     if (animate) time += dt;
     const idle = animate && !hovered && !focused && !dragging && !action;
-    // Resume with a visible sweep, without jumping the portrait or speech clock.
-    if (idle && !wasIdle) idleTime = .75;
-    if (idle) idleTime += dt;
-    wasIdle = idle;
     const picture = presentation === 'portrait';
-    const present = action && picture ? presentationFrame(time - action.started) : null;
-    const sweep = action ? (picture ? { reach: present.reach, contact: present.attach, progress: Math.min(1, (time - action.started) / .75), done: present.done } : gestureFrame(time - action.started)) : { reach: 0, contact: 0, progress: 0 };
+    const elapsed = action ? Math.max(0, (now - action.started) / 1000) : 0;
+    const present = action && picture ? presentationFrame(elapsed) : null;
+    const sweep = action ? (picture ? { reach: present.reach, contact: present.attach, progress: Math.min(1, elapsed / .75), done: present.done } : gestureFrame(elapsed)) : { reach: 0, contact: 0, progress: 0 };
     if (action) {
       angle = THREE.MathUtils.lerp(action.from, action.to, sweep.progress);
-      if (sweep.done) { angle = action.to; action = null; if (picture) { docked = true; live.dataset.panelPresenting = 'open'; if (document.activeElement === buttons[chosen]) detail.querySelector('a')?.focus({preventScroll:true}); } }
-    } else if (idle) {
-      const cycle = idleTime % 8, wave = cycle < 3 ? Math.sin(Math.PI * cycle / 3) ** 2 : 0;
-      angle += dt * .14 * wave; sweep.reach = wave * .45;
+      if (sweep.done) { finishPresentation(); if (picture && document.activeElement === buttons[chosen]) detail.querySelector('a')?.focus({preventScroll:true}); }
     }
     actor.visible = presentation === 'model' && loaded;
     portrait.setVisible(picture);
@@ -145,53 +173,75 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     actor.updateMatrixWorld(true);
     const modelChest = rig?.chestPosition();
     const photoHand = picture ? portrait.handPosition() : null;
-    // Leave the photographed palm below the floating screens, fully visible.
-    const chestOffset = mobile() ? .35 : container.clientWidth <= 1100 ? .50 : .90;
-    const chest = picture ? (photoHand?.y ?? .8) + chestOffset : (modelChest?.y ?? 2.2) - .55;
-    const centerX = mobile() ? .15 : .65;
-    const radius = mobile() ? 4.3 : Math.max(3.5, Math.min(6.3, container.clientWidth / container.clientHeight * 2.9));
+    const portraitCenter = picture ? portrait.orbitCenter?.() : null;
+    const centerX = picture ? (portraitCenter?.x ?? (mobile() ? .15 : .65)) : (mobile() ? .15 : .65);
+    const centerY = picture ? (portraitCenter?.y ?? (photoHand?.y ?? .8) + .45) : (modelChest?.y ?? 2.2) - .55;
+    const worldPerPixel = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * Math.abs(camera.position.z) / container.clientHeight;
+    const radiusX = Math.min(container.clientWidth * (mobile() ? .78 : .40), mobile() ? 310 : 560) * worldPerPixel;
+    const radiusY = (mobile() ? 105 : container.clientWidth <= 1100 ? 125 : 110) * worldPerPixel;
+    const radiusZ = mobile() ? 1.15 : 1.55;
+    const cardWidth = mobile() ? 260 : container.clientWidth <= 1100 ? 280 : 380;
+    const cardHeight = mobile() ? 232 : container.clientWidth <= 1100 ? 240 : 280;
+    flightCube.visible=false;
     const detailBox = {x:detail.offsetLeft,y:detail.offsetTop,width:detail.offsetWidth,height:detail.offsetHeight};
     meshes.forEach((mesh, index) => {
-      const a = index * TAU / catalog.length + angle, front = (Math.cos(a) + 1) / 2;
-      mesh.position.set(centerX + Math.sin(a) * radius, chest + Math.cos(a) * .12, Math.cos(a) * .8);
-      mesh.rotation.y = -Math.sin(a) * .18;
+      const a = index * TAU / catalog.length + angle, depth = Math.cos(a), front = (depth + 1) / 2;
+      mesh.position.set(centerX + Math.sin(a) * radiusX, centerY - depth * radiusY, depth * radiusZ);
+      mesh.rotation.y = -Math.sin(a) * .95;
       const projected = mesh.position.clone().project(camera), button = buttons[index];
-      button.hidden = front < (mobile() ? .76 : .82) && index !== chosen;
-      button.style.left = `${(projected.x * .5 + .5) * 100}%`;
-      button.style.top = `${(-projected.y * .5 + .5) * 100}%`;
-      button.style.opacity = String(.12 + front * .88);
-      button.style.transform = `translate(-50%,-50%) perspective(1200px) rotateY(${-Math.sin(a) * 10}deg) scale(${.72 + front * .28})`;
-      button.style.zIndex = String(Math.round(front * 24));
-      button.style.pointerEvents = front < .35 ? 'none' : '';
+      const x = (projected.x * .5 + .5) * container.clientWidth;
+      const y = (-projected.y * .5 + .5) * container.clientHeight;
+      const scale = .56 + front * .44;
+      const turn = -Math.sin(a) * (mobile() ? 68 : 64);
+      const apparentWidth = cardWidth * scale * Math.max(.24, Math.abs(Math.cos(THREE.MathUtils.degToRad(turn))));
+      const apparentHeight = cardHeight * scale;
+      button.hidden = x + apparentWidth / 2 < 0 || x - apparentWidth / 2 > container.clientWidth ||
+        y + apparentHeight / 2 < 0 || y - apparentHeight / 2 > container.clientHeight;
+      button.style.left = `${x}px`;
+      button.style.top = `${y}px`;
+      button.style.opacity = String((.22 + .78 * Math.pow(front, 5)) * (present && index !== chosen ? .12 : 1));
+      button.style.setProperty('--slide-label-opacity', String(THREE.MathUtils.smoothstep(Math.abs(Math.cos(THREE.MathUtils.degToRad(turn))), .46, .77)));
+      button.style.transform = `translate(-50%,-50%) perspective(1200px) rotateY(${turn}deg) scale(${scale})`;
+      button.style.zIndex = depth < 0 ? '0' : '3';
+      button.style.pointerEvents = depth < 0 ? 'none' : '';
       if (picture && index === chosen && present && photoHand) {
         const hand = photoHand.clone().project(camera);
         const handX = (hand.x * .5 + .5) * container.clientWidth;
         const handY = (-hand.y * .5 + .5) * container.clientHeight;
-        const width = button.offsetWidth || (mobile() ? 260 : 300);
+        const width = cardWidth;
         const handAnchorX = Math.max(width / 2 + 16, Math.min(container.clientWidth - width / 2 - 16, handX - width / 2 - 24));
         const handAnchorY = handY - 30;
-        // The hand presents the screen into the free side column. Never derive
-        // the opened panel's position from the palm: that covered the torso.
-        const dock = THREE.MathUtils.smoothstep(present.carry, .72, 1);
-        const anchorX = THREE.MathUtils.lerp(handAnchorX, detail.offsetLeft + detail.offsetWidth / 2, dock);
-        const anchorY = THREE.MathUtils.lerp(handAnchorY, detail.offsetTop + 90, dock);
-        const originalX = (projected.x * .5 + .5) * container.clientWidth;
-        const originalY = (-projected.y * .5 + .5) * container.clientHeight;
-        const grip = present.release > 0 ? 1 : present.attach;
-        button.style.left = `${THREE.MathUtils.lerp(originalX, anchorX, grip)}px`;
-        button.style.top = `${THREE.MathUtils.lerp(originalY, anchorY, grip)}px`;
-        button.style.transform = `translate(-50%,-50%) scale(${1 + present.expand * .12})`;
-        button.style.opacity = String(1 - present.reveal);
-        button.style.zIndex = '28';
+        const upperDock = container.clientWidth > 1100;
+        const dock = upperDock ? THREE.MathUtils.smoothstep(present.carry,.3,1) : THREE.MathUtils.smoothstep(present.carry,.72,1);
+        const dockX=detail.offsetLeft+detail.offsetWidth/2;
+        const landingY=upperDock ? 32 : detail.offsetTop+90;
+        const unfold=present.expand;
+        const anchorX=THREE.MathUtils.lerp(handAnchorX,dockX,dock);
+        const anchorY=THREE.MathUtils.lerp(handAnchorY,landingY,dock)-Math.sin(dock*Math.PI)*45;
+        const grip=present.release>0 ? 1 : present.attach;
+        const fold=upperDock ? THREE.MathUtils.smoothstep(present.carry,0,.3)*(1-unfold) : 0;
+        button.style.left=`${THREE.MathUtils.lerp(x,anchorX,grip)}px`;
+        button.style.top=`${THREE.MathUtils.lerp(y,THREE.MathUtils.lerp(anchorY,detail.offsetTop+cardHeight/2,unfold),grip)}px`;
+        button.style.transform=`translate(-50%,-50%) scale(${(1-fold)*(1+unfold*.12)})`;
+        button.style.opacity=String((1-present.reveal)*(1-fold));
+        button.style.zIndex='28';
+        button.style.setProperty('--slide-label-opacity', '1');
+        if(upperDock && fold>.02){
+          const ndc=new THREE.Vector3(anchorX/container.clientWidth*2-1,1-anchorY/container.clientHeight*2,.5).unproject(camera);
+          const ray=ndc.sub(camera.position).normalize();
+          flightCube.position.copy(camera.position).addScaledVector(ray,(1-camera.position.z)/ray.z);
+          flightCube.scale.setScalar(44*worldPerPixel*fold);
+          flightCube.rotation.set(.45+present.carry*1.6,.6+present.carry*2.4,.15+present.carry*.5);
+          flightCube.visible=true;
+        }
+        live.style.setProperty('--panel-impact',String(Math.sin(unfold*Math.PI)*(1-present.reveal)));
         live.dataset.panelPresenting = 'moving';
         live.style.setProperty('--panel-reveal', present.reveal);
       }
       if (picture && docked && index === chosen) button.hidden = true;
       if (picture && index !== chosen && (!present || present.reveal > 0)) {
-        const x = (projected.x * .5 + .5) * container.clientWidth;
-        const y = (-projected.y * .5 + .5) * container.clientHeight;
-        const halfWidth = button.offsetWidth * (.72 + front * .28) / 2;
-        const halfHeight = button.offsetHeight * (.72 + front * .28) / 2;
+        const halfWidth = apparentWidth / 2;
+        const halfHeight = apparentHeight / 2;
         if (x + halfWidth > detailBox.x && x - halfWidth < detailBox.x + detailBox.width &&
             y + halfHeight > detailBox.y && y - halfHeight < detailBox.y + detailBox.height) button.hidden = true;
       }
@@ -200,7 +250,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     });
     if (picture && docked) live.dataset.panelPresenting = 'open';
     detail.inert = picture && Boolean(present) && present.reveal < 1;
-    arc.position.set(centerX, chest, 0); arc.scale.set(radius, .8, 1);
+    arc.position.set(centerX, centerY, 0); arc.scale.set(radiusX, radiusZ, 1);
     const side = action?.side || 1, target = meshes[chosen].position.clone();
     target.x += side * .7; target.z += .45;
     rig?.update({ time, animate, reachAmount: sweep.reach, side, target, gaze: (target.x - actor.position.x) * .12 });
@@ -216,23 +266,38 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     if (animate && ((!hovered && !focused && !dragging) || action || actor.visible || picture || speechActive)) frame = requestAnimationFrame(render);
   }
   function redraw() { cancelAnimationFrame(frame); previousTime = performance.now(); render(); }
-  const intersection = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; if (visible) redraw(); else cancelAnimationFrame(frame); });
+  const intersection = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; if (visible) redraw(); else { if (action) finishPresentation(); cancelAnimationFrame(frame); } });
   intersection.observe(container);
   const sizing = new ResizeObserver(resize); sizing.observe(container);
   const down = event => {
-    if (event.button !== 0) return;
-    dragging = true; pointerId = event.pointerId; downX = lastX = event.clientX; action = null; docked = false; live.dataset.panelPresenting = '';
-    canvas.setPointerCapture(pointerId); redraw();
+    if (event.button !== 0 || !event.isPrimary || pointerId !== null) return;
+    pointerId = event.pointerId; pointerTarget = event.currentTarget;
+    downX = lastX = event.clientX; downY = event.clientY; suppressClick = false;
+    pointerTarget.setPointerCapture(pointerId);
   };
-  const move = event => { if (!dragging) return; const dx = event.clientX - lastX; angle += dx * .006; actorYaw += dx * .004; lastX = event.clientX; redraw(); };
+  const move = event => {
+    if (event.pointerId !== pointerId) return;
+    const distanceX = event.clientX - downX, distanceY = event.clientY - downY;
+    if (!dragging) {
+      if (Math.abs(distanceX) <= 7) return;
+      if (event.pointerType === 'touch' && Math.abs(distanceY) > Math.abs(distanceX)) return;
+      dragging = true; suppressClick = true; selectionVersion++;
+      action = null; docked = false; live.dataset.panelPresenting = ''; detail.inert = false;
+    }
+    event.preventDefault();
+    const dx = event.clientX - lastX;
+    angle += dx * .006; actorYaw += dx * .004; lastX = event.clientX;
+    redraw();
+  };
   const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
   const up = event => {
-    if (!dragging) return;
-    const click = event.type === 'pointerup' && Math.abs(event.clientX - downX) < 7;
-    dragging = false;
-    if (canvas.hasPointerCapture(pointerId)) canvas.releasePointerCapture(pointerId);
-    pointerId = null;
-    if (click) {
+    if (event.pointerId !== pointerId) return;
+    const target = pointerTarget;
+    const click = event.type === 'pointerup' && !dragging && Math.hypot(event.clientX - downX, event.clientY - downY) <= 7;
+    const capturedId = pointerId;
+    dragging = false; pointerId = null; pointerTarget = null;
+    if (target.hasPointerCapture(capturedId)) target.releasePointerCapture(capturedId);
+    if (click && target === canvas) {
       const rect = canvas.getBoundingClientRect();
       pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
       raycaster.setFromCamera(pointer, camera); const hit = raycaster.intersectObjects(meshes.filter(mesh => mesh.visible))[0];
@@ -240,13 +305,20 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     }
     redraw();
   };
+  const preventDragClick = event => {
+    if (suppressClick && event.detail !== 0) { event.preventDefault(); event.stopImmediatePropagation(); suppressClick = false; }
+  };
   const speech = event => { speechActive = event.detail.phase !== 'end'; speechState = speechActive ? { ...speechState, ...event.detail } : null; rig?.speech(event.detail, time); portrait.speech(event.detail,time); redraw(); };
-  const reduceChange = () => { if (reduced.matches && action) { angle = action.to; action = null; docked = false; live.dataset.panelPresenting = ''; } redraw(); };
-  const visibilityChange = () => { if (document.hidden) cancelAnimationFrame(frame); else redraw(); };
+  const reduceChange = () => { if (reduced.matches && action) finishPresentation(); redraw(); };
+  const visibilityChange = () => { if (document.hidden) { if (action) finishPresentation(); cancelAnimationFrame(frame); } else { redraw(); flushPresented(); } };
   const contextLost = event => { event.preventDefault(); cancelAnimationFrame(frame); stage.dispatchEvent(new CustomEvent('architect:context-lost', { bubbles: true })); };
   const listeners = [];
-  function listen(target, event, callback) { target.addEventListener(event, callback); listeners.push([target, event, callback]); }
-  listen(canvas, 'pointerdown', down); listen(canvas, 'pointermove', move); listen(canvas, 'pointerup', up); listen(canvas, 'pointercancel', up); listen(canvas, 'lostpointercapture', up);
+  function listen(target, event, callback, options = false) { target.addEventListener(event, callback, options); listeners.push([target, event, callback, options]); }
+  [canvas, ...buttons].forEach(target => {
+    target.style.touchAction = 'pan-y';
+    listen(target, 'pointerdown', down); listen(target, 'pointermove', move); listen(target, 'pointerup', up); listen(target, 'pointercancel', up); listen(target, 'lostpointercapture', up);
+    listen(target, 'click', preventDragClick, true);
+  });
   listen(canvas, 'webglcontextlost', contextLost); listen(window, 'maestro:speech', speech);
   listen(document, 'visibilitychange', visibilityChange); listen(reduced, 'change', reduceChange);
   buttons.forEach(button => {
@@ -257,20 +329,20 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   });
   resize();
   return {
-    setPresentation(value) { clearTimeout(statusTimer); presentation = value; action = null; docked = false; live.dataset.panelPresenting = ''; detail.inert = false; if (value === 'model') loadModel(); else if (container.dataset.portraitState === 'loaded') status.hidden = true; redraw(); },
-    setMotion(value) { motion = value; if (!motion) { action = null; docked = false; live.dataset.panelPresenting = ''; } redraw(); },
+    setPresentation(value) { clearTimeout(statusTimer); selectionVersion++; presentation = value; action = null; docked = false; live.dataset.panelPresenting = ''; detail.inert = false; if (value === 'model') loadModel(); else if (container.dataset.portraitState === 'loaded') status.hidden = true; redraw(); },
+    setMotion(value) { motion = value; if (!motion && action) finishPresentation(); redraw(); },
     focus(index, animate = true) {
       const direction = index === (chosen + 1) % catalog.length ? -1 : index === (chosen - 1 + catalog.length) % catalog.length ? 1 : 0;
-      chosen = index; docked = false; live.dataset.panelPresenting = ''; const target = nearestAngle(-index * TAU / catalog.length, angle);
-      if (animate && motion && !reduced.matches) action = { from: angle, to: target, started: time, side: direction || Math.sign(target - angle) || 1 };
-      else { angle = target; action = null; }
+      selectionVersion++; chosen = index; docked = false; live.dataset.panelPresenting = ''; detail.inert = false; const target = nearestAngle(-index * TAU / catalog.length, angle);
+      if (animate && motion && !reduced.matches && canPresent()) action = { from: angle, to: target, started: performance.now(), side: direction || Math.sign(target - angle) || 1 };
+      else { angle = target; action = null; if (animate) finishPresentation(); }
       redraw();
     },
-    pause() { paused = true; cancelAnimationFrame(frame); },
-    resume() { paused = false; redraw(); },
+    pause() { paused = true; if (action) finishPresentation(); cancelAnimationFrame(frame); },
+    resume() { paused = false; redraw(); flushPresented(); },
     dispose() {
       disposed = true; cancelAnimationFrame(frame); clearTimeout(statusTimer);
-      intersection.disconnect(); sizing.disconnect(); listeners.forEach(([target, event, callback]) => target.removeEventListener(event, callback));
+      intersection.disconnect(); sizing.disconnect(); listeners.forEach(([target, event, callback, options]) => target.removeEventListener(event, callback, options));
       portrait.dispose(); cleanupObject(scene); renderer.dispose(); canvas.remove();
     }
   };

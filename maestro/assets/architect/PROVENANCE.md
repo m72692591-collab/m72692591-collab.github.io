@@ -16,7 +16,7 @@ The owner supplied the triptych “Триптих интерфейсов «Ма�
 
 The owner explicitly paused further human GLB work and asked to animate the
 approved portrait instead. The default Live view now uses an alpha image on a
-subdivided WebGL plane with localized head/arm/face deformation. This is 2.5D
+subdivided WebGL plane with small head/face animation and a separately jointed arm. This is 2.5D
 raster animation, not a volumetric person, motion capture or phoneme-accurate lip sync.
 The original portrait above remains the static fallback. The optional GLB is
 labelled `3D-эскиз` and is loaded only when requested.
@@ -35,3 +35,20 @@ labelled `3D-эскиз` and is loaded only when requested.
 - `architect-mark.webp` above was superseded by the owner's brighter primary
   logo. Current hash: `C3F7D832B12B0D92207F5DA9463CB5085CA3ABDB128587B5174ABFAFA7FEF2E1`.
   See `../../brand/BRAND_CANON.md` for master files and approved cross-platform use.
+
+
+## Articulated arm correction, 2026-10-29
+
+- `architect-torso-underlay.webp`: built-in Image Gen edit of the approved
+  transparent cutout. The forward arm was removed and the occluded jacket
+  reconstructed, keeping the 1536 × 1024 canvas aligned. PNG-to-WebP format
+  conversion only, quality 94; 185,070 bytes. SHA-256
+  `10C87C68258F41156D347A3D133EF833A737F218569F2229397128F425AFFB2C`.
+- Only the masked region previously occupied by the arm uses this new layer.
+  The visible face and body outside that region remain the original cutout.
+- The sleeve and hand use rigid textured polygons from the original image,
+  rotated about shoulder and elbow pivots. No arm stretching shader remains.
+  The silhouette was checked at rest, reach, half carry and full carry; an
+  initial residual sliver below the palm was found and corrected in the contour.
+- This remains a bounded 2.5D puppet gesture, not natural captured performance.
+  No paid generation API, stock purchase or external video service was used.

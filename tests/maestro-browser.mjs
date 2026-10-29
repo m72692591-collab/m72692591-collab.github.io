@@ -7,10 +7,10 @@ import http from "node:http";
 import { setTimeout as delay } from "node:timers/promises";
 import fs from "node:fs";
 
-const base = "http://127.0.0.1:8765/maestro/";
+const base = process.env.MAESTRO_TEST_BASE || "http://127.0.0.1:8765/maestro/";
 const artifacts = "test-artifacts/maestro";
 fs.mkdirSync(artifacts, { recursive: true });
-const server = spawn(process.platform === "win32" ? "python" : "python3", ["-m", "http.server", "8765", "--bind", "127.0.0.1", "--directory", "."], { stdio: "ignore", windowsHide: true });
+const server = process.env.MAESTRO_TEST_BASE ? null : spawn(process.platform === "win32" ? "python" : "python3", ["-m", "http.server", "8765", "--bind", "127.0.0.1", "--directory", "."], { stdio: "ignore", windowsHide: true });
 let browser;
 let checks = 0;
 function okay(label, condition) {
@@ -35,6 +35,9 @@ async function goto(page, path) {
 }
 function watchErrors(page, errors) {
   page.on("pageerror", e => errors.push(e.message));
+  page.on("console", message => {
+    if (message.type() === "error" && /Shader Error|VALIDATE_STATUS|shader.*compile|program.*link/i.test(message.text())) errors.push(message.text());
+  });
 }
 async function carouselClearsConsultation(page) {
   const detail = await page.locator(".next-detail").boundingBox();
@@ -70,6 +73,38 @@ try {
   await page.waitForFunction(() => document.querySelector("#next-canvas")?.dataset.portraitState === "loaded", null, { timeout: 30000 });
   okay("Live opens the approved animated raster portrait", await page.locator("#next-live").getAttribute("data-presentation") === "portrait" && await page.locator("#next-live").getAttribute("data-portrait-ready") === "true" && await page.locator("#next-canvas canvas").count() === 1);
   okay("Opening the portrait does not request the optional GLB", desktopModelRequests.length === 0);
+  await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
+  await page.mouse.move(1, 1);
+  await page.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.motionState === 'idle');
+  const orbitLayers = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll('#next-orbit button:not([hidden])')];
+    const front = cards.find(card => card.style.zIndex === '3');
+    const rear = cards.find(card => card.style.zIndex === '0');
+    return { display: getComputedStyle(document.querySelector('#next-orbit')).display,
+      canvasZ: getComputedStyle(document.querySelector('#next-canvas')).zIndex,
+      frontY: front?.getBoundingClientRect().y, rearY: rear?.getBoundingClientRect().y,
+      front: Boolean(front), rear: Boolean(rear) };
+  });
+  okay("The carousel has visible front and rear paths around the portrait", orbitLayers.display === 'contents' && orbitLayers.canvasZ === '1' && orbitLayers.front && orbitLayers.rear && orbitLayers.frontY > orbitLayers.rearY);
+  const strategyCard = page.locator('#next-orbit button[data-id="strategy"]');
+  const orbitStart = await strategyCard.getAttribute('style');
+  await page.waitForTimeout(600);
+  okay("The carousel stays in place while the portrait is alive", await strategyCard.getAttribute('style') === orbitStart);
+  okay("Desktop virtual screen has the requested readable dimensions", await strategyCard.evaluate(card => getComputedStyle(card).width === '380px' && getComputedStyle(card).minHeight === '280px'));
+  const cardBounds = await strategyCard.boundingBox();
+  const dragStart = { x: cardBounds.x + cardBounds.width / 2, y: cardBounds.y + 45 };
+  await page.mouse.move(dragStart.x, dragStart.y); await page.mouse.down();
+  await page.mouse.move(dragStart.x + 120, dragStart.y, { steps: 8 }); await page.mouse.up();
+  okay("Dragging a virtual screen rotates the orbit without selecting it", await strategyCard.getAttribute('style') !== orbitStart && await page.locator('#architect-select').inputValue() === 'strategy' && await page.locator('#next-live').getAttribute('data-panel-presenting') !== 'moving');
+  const draggedPosition = await strategyCard.getAttribute('style');
+  await page.mouse.move(1, 1); await page.waitForTimeout(350);
+  okay("The carousel holds the position chosen by the visitor", await strategyCard.getAttribute('style') === draggedPosition);
+  const canvasBox = await page.locator('#next-canvas canvas').boundingBox();
+  const canvasStart = { x: canvasBox.x + 30, y: canvasBox.y + 240 };
+  await page.mouse.move(canvasStart.x, canvasStart.y); await page.mouse.down();
+  await page.mouse.move(canvasStart.x + 100, canvasStart.y, { steps: 8 }); await page.mouse.up();
+  okay("Dragging the free scene also rotates the orbit", await strategyCard.getAttribute('style') !== draggedPosition);
+  await page.evaluate(() => { window.presentedEvents = []; document.querySelector('#next-live').addEventListener('architect:presented', event => presentedEvents.push(event.detail.index)); });
   await page.waitForFunction(() => {
     const image = document.querySelector(".architect-art");
     return image?.complete && image.naturalWidth > 500;
@@ -87,16 +122,24 @@ try {
     return value.endsWith('%') ? parseFloat(value) / 100 * button.closest('.next-orbit').clientWidth : parseFloat(value);
   });
   const lowerScreensBefore = await page.locator('.architect-bottom').boundingBox();
+  await page.evaluate(() => {
+    window.gestureSamples = [];
+    window.gestureObserver = new MutationObserver(() => {
+      const detail = document.querySelector('.next-detail');
+      const card = document.querySelector('#next-orbit button[data-id="sites"]');
+      if (gestureSamples.length < 500) gestureSamples.push({inert:detail.inert, opacity:Number(getComputedStyle(detail).opacity), left:parseFloat(card.style.left), transform:card.style.transform, cardOpacity:Number(card.style.opacity), moving:document.querySelector('#next-live').dataset.panelPresenting === 'moving'});
+    });
+    gestureObserver.observe(document.querySelector('#next-live'), {subtree:true, attributes:true, attributeFilter:['style','data-panel-presenting','inert']});
+  });
   await page.locator("#architect-next").click();
-  await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "moving", null, { timeout: 10000 });
-  okay("Hidden consultation panel is inert during the hand gesture", await page.locator(".next-detail").evaluate(detail => detail.inert && getComputedStyle(detail).opacity === "0"));
-  await page.waitForFunction(() => {
-    const card = document.querySelector('#next-orbit button[data-id="sites"]');
-    return document.querySelector('#next-live')?.dataset.panelPresenting === 'moving' && card?.style.zIndex === '28' && Number(card.style.opacity) < .8;
-  }, null, { timeout: 15000 });
-  okay("Portrait gesture carries and fades the selected card", await page.locator('#next-orbit button[data-id="sites"]').evaluate((card, initial) => Math.abs(parseFloat(card.style.left) - initial) > 30 && card.style.transform.includes("scale("), sitesStartingLeft));
-  await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "open", null, { timeout: 15000 });
+  await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "open", null, { timeout: 30000 });
+  await page.evaluate(() => gestureObserver.disconnect());
+  okay("Consultation panel stays inert until its reveal completes", await page.evaluate(() => gestureSamples.some(sample => sample.moving && sample.inert && sample.opacity < 1)));
+  okay("Portrait gesture carries and fades the selected card", await page.evaluate(initial => gestureSamples.some(sample => sample.moving && sample.cardOpacity < .8 && Math.abs(sample.left - initial) > 30 && sample.transform.includes('scale(')), sitesStartingLeft));
+  okay("Presentation notifies the consultant once after opening", await page.evaluate(() => presentedEvents.length === 1 && presentedEvents[0] === 1));
   okay("Chosen direction opens beside the portrait after the gesture", await page.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1") && await page.locator('#next-orbit button[data-id="sites"]').isHidden());
+  okay("The selected screen contains the real site section", await page.locator('.architect-page #solutions').count() === 1 && await page.locator('#solutions').isVisible());
+  okay("Opening a section preserves unique document IDs", await page.evaluate(() => { const ids = [...document.querySelectorAll('[id]')].map(node => node.id); return new Set(ids).size === ids.length; }));
   okay("Opened panel stays outside the central portrait area", await page.locator('.next-detail').evaluate(detail => detail.getBoundingClientRect().right < innerWidth * .32));
   const lowerScreensAfter = await page.locator('.architect-bottom').boundingBox();
   okay("Lower screens do not jump while a service opens", ['x','y','width','height'].every(key => Math.abs(lowerScreensAfter[key] - lowerScreensBefore[key]) < 1));
@@ -112,30 +155,32 @@ try {
   okay("Carousel pause holds its position", await page.locator("#architect-pause").getAttribute("aria-pressed") === "true" && await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") === pausedPosition);
   await page.locator("#architect-pause").click();
   await page.mouse.move(1, 1);
-  const resumedPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
-  await page.waitForFunction(before => document.querySelector('#next-orbit button[data-id="strategy"]')?.getAttribute("style") !== before, resumedPosition, { timeout: 10000 });
-  okay("Carousel resumes movement on request", await page.locator("#architect-pause").getAttribute("aria-pressed") === "false" && await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") !== resumedPosition);
-  await page.locator('#next-orbit button[data-id="strategy"]').focus();
-  await page.locator('#next-orbit button[data-id="strategy"]').hover();
-  await page.mouse.move(1, 1);
-  const focusedPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
+  const resumedPosition = await strategyCard.getAttribute("style");
   await page.waitForTimeout(350);
-  okay("Keyboard focus holds the slide even when the pointer leaves", await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") === focusedPosition);
-  await page.locator("#architect-pause").focus();
-  const blurredPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
-  await page.waitForFunction(before => document.querySelector('#next-orbit button[data-id="strategy"]')?.getAttribute("style") !== before, blurredPosition, { timeout: 10000 });
-  okay("Carousel resumes after keyboard focus leaves its slides", await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") !== blurredPosition);
+  okay("Resuming the portrait does not start automatic carousel rotation", await page.locator("#architect-pause").getAttribute("aria-pressed") === "false" && await strategyCard.getAttribute("style") === resumedPosition);
+  // Keyboard navigation still selects a service after mouse dragging.
+  await page.locator('#next-orbit button:not([hidden])').first().focus();
+  await page.keyboard.press('ArrowRight');
+  okay("Keyboard arrows select the next catalog direction", await page.locator('#architect-select').inputValue() === 'sites');
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.waitForFunction(() => document.querySelector('#next-live').dataset.panelPresenting !== 'moving');
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   const reducedPosition = await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style");
   await page.waitForTimeout(350);
   okay("Reduced motion stops the carousel without disabling navigation", await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") === reducedPosition && await page.locator("#architect-next").isEnabled());
   await page.locator('#architect-select').selectOption('automation');
   okay("Reduced motion shows selected details immediately without trapping focus", await page.locator("#next-title").innerText() === "Автоматизация" && await page.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1") && await page.locator("#next-live").getAttribute("data-panel-presenting") !== "moving");
+  okay("Reduced motion opens the actual selected products section", await page.locator('.architect-page #products').count() === 1 && await page.locator('main > #solutions').count() === 1);
+  await page.locator('#next-open').click();
+  okay("Open section restores the normal page and its original section", await page.locator('.hero').isVisible() && await page.locator('main > #products').count() === 1 && await page.locator('#products').count() === 1);
+  await page.locator('[data-next-mode="live"]').click();
   await page.locator('#architect-select').selectOption('strategy');
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.locator('#next-lead').click();
   okay("Initial Strategy lead maps to Audit", await page.locator("#interest").inputValue() === "Аудит");
-  await page.locator('#architect-select').selectOption('automation');
+  await page.waitForFunction(() => document.querySelector('#next-canvas').getBoundingClientRect().bottom < 160);
+  await page.locator('#architect-select').evaluate(select => { select.value = 'automation'; select.dispatchEvent(new Event('change', { bubbles: true })); });
+  okay("Offscreen selection reveals its detail without waiting for animation", await page.locator('.next-detail').evaluate(detail => !detail.inert) && await page.locator('#next-live').getAttribute('data-panel-presenting') === 'open');
   okay("NEXT selection opens the chosen direction", await page.locator("#next-title").innerText() === "Автоматизация");
   if (!await page.locator("#next-question").isVisible()) await page.locator(".architect-question summary").click();
   await page.locator("#next-question").fill("Заявки теряются в чатах");
@@ -151,6 +196,29 @@ try {
   okay("Strategy handoff keeps its catalog service", await page.locator("#interest").inputValue() === "Аудит");
   await page.locator('[data-next-mode="classic"]').click();
   okay("Classic site remains available", await page.locator(".hero").isVisible());
+  okay("Returning to Classic restores moved sections without copies", await page.locator('main > #solutions').count() === 1 && await page.locator('main > #products').count() === 1 && await page.locator('#solutions').count() === 1 && await page.locator('#products').count() === 1);
+
+  const interrupted = await desktop.newPage();
+  await goto(interrupted, 'index.html?mode=live');
+  await interrupted.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.portraitState === 'loaded');
+  await interrupted.evaluate(() => {
+    window.presentedCount = 0;
+    document.addEventListener('architect:presented', () => window.presentedCount++);
+  });
+  await interrupted.locator('#architect-select').selectOption('automation');
+  await interrupted.waitForFunction(() => document.querySelector('#next-live').dataset.panelPresenting === 'moving');
+  await interrupted.evaluate(() => {
+    Object.defineProperty(document, 'hidden', {configurable:true, value:true});
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  okay('Hidden tab defers its presentation announcement', await interrupted.evaluate(() => presentedCount === 0));
+  await interrupted.evaluate(() => {
+    delete document.hidden;
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await interrupted.waitForFunction(() => document.querySelector('.architect-page #products'));
+  okay('Returning to the tab opens the chosen section exactly once', await interrupted.evaluate(() => presentedCount === 1) && await interrupted.locator('.next-detail').getAttribute('data-section-open') === 'automation');
+  await interrupted.close();
 
   const fallbackPage = await desktop.newPage();
   await fallbackPage.route('**/architect-scene.js*', route => route.abort());
@@ -158,6 +226,7 @@ try {
   await fallbackPage.locator('[data-next-mode="live"]').click();
   await fallbackPage.locator('#next-fallback').waitFor({ state: 'visible' });
   okay("2D fallback shows the static Architect and clears loading", await fallbackPage.locator('#next-model-status').isHidden() && await fallbackPage.locator('#next-orbit button').count() === 11 && await fallbackPage.locator('.architect-art').isVisible());
+  okay("2D fallback keeps its horizontal service directory", await fallbackPage.locator('#next-orbit').evaluate(orbit => getComputedStyle(orbit).display === 'flex'));
   await fallbackPage.close();
 
   const compatPage = await desktop.newPage();
@@ -341,11 +410,22 @@ try {
   await m.waitForFunction(() => document.querySelector("#next-canvas")?.dataset.portraitState === "loaded", null, { timeout: 30000 });
   okay("Mobile opens the approved portrait with its WebGL gesture layer", await m.locator("#next-canvas canvas").count() === 1 && await m.locator("#next-live").getAttribute("data-presentation") === "portrait" && await m.locator("#next-live").getAttribute("data-portrait-ready") === "true");
   okay("Mobile portrait does not download the optional GLB", mobileModelRequests.length === 0);
+  okay("Mobile virtual screens remain large enough to read", await m.locator('#next-orbit button[data-id="strategy"]').evaluate(card => getComputedStyle(card).width === '260px' && getComputedStyle(card).minHeight === '232px'));
   await m.waitForFunction(() => {
     const image = document.querySelector(".architect-art");
     return image?.complete && image.naturalWidth > 500;
   });
   await m.screenshot({ path: artifacts + '/architect-portrait-mobile-initial.png', fullPage: true });
+  const touchCard = m.locator('#next-orbit button[data-id="strategy"]');
+  const touchBounds = await touchCard.boundingBox();
+  const touchStart = { x: Math.min(280, touchBounds.x + touchBounds.width / 2), y: Math.max(120, touchBounds.y + 50) };
+  const touchBefore = await touchCard.getAttribute('style');
+  const touchSession = await mobile.newCDPSession(m);
+  await touchSession.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [touchStart] });
+  for (let step = 1; step <= 6; step++) await touchSession.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: touchStart.x + step * 10, y: touchStart.y }] });
+  await touchSession.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await touchSession.detach();
+  okay("Touch dragging rotates screens without selecting a direction", await touchCard.getAttribute('style') !== touchBefore && await m.locator('#architect-select').inputValue() === 'strategy' && await m.locator('#next-live').getAttribute('data-panel-presenting') !== 'moving');
   await m.locator("#architect-next").click();
   okay("Mobile carousel updates the selected service", await m.locator("#next-title").innerText() === "Сайты и дизайн" && await m.locator("#interest").inputValue() === "Сайт");
   await m.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "open", null, { timeout: 15000 });
@@ -392,5 +472,5 @@ try {
   throw error;
 } finally {
   if (browser) await browser.close();
-  server.kill();
+  server?.kill();
 }

@@ -1,4 +1,5 @@
 import {catalog} from './maestro-next-catalog.js';
+import {createSectionScreen} from './architect-section.js';
 
 const root=document.getElementById('next-experience');
 if(root){
@@ -13,17 +14,24 @@ if(root){
   question.maxLength=350;
   const answer=document.getElementById('next-answer');
   const detail=root.querySelector('.next-detail');
+  const sectionScreen=createSectionScreen(detail);
   let active=catalog[0],scene=null,loading=null,presentation='portrait',orbitPaused=false;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   const setFormInterest=(item)=>{const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest};
   const select=(item,userSelected=false)=>{
+    sectionScreen.restore();
     active=item;document.getElementById('architect-select').value=item.id;title.textContent=item.title;description.textContent=item.description;open.href=item.href;
     lead.href='#lead';orbit.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
-    answer.textContent='';scene?.focus(catalog.indexOf(item),userSelected);
+    answer.textContent='';if(userSelected)window.MAESTRO_GENIE?.stopVoice?.();scene?.focus(catalog.indexOf(item),userSelected);
     document.getElementById('architect-counter').textContent=`${String(catalog.indexOf(item)+1).padStart(2,'0')} / ${catalog.length}`;
     document.querySelectorAll('.architect-directory button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
-    if(userSelected){setFormInterest(item);window.MAESTRO_GENIE?.speak?.(`${item.title}. ${item.description}`)}
+    if(userSelected){setFormInterest(item);if(!scene){if(document.body.classList.contains('next-mode-live'))sectionScreen.show(item);window.MAESTRO_GENIE?.speak?.(`${item.title}. ${item.description}`)}}
   };
+  live.addEventListener('architect:presented',()=>{
+    if(!document.body.classList.contains('next-mode-live'))return;
+    sectionScreen.show(active);
+    window.MAESTRO_GENIE?.speak?.(`${active.title}. ${active.description}`);
+  });
   const classicList=document.getElementById('next-classic-list');
   const slideIcons={strategy:'strategy',sites:'view',marketing:'marketing',sales:'finance',automation:'automation',ai:'chat',team:'team',analytics:'strategy',cases:'view',pricing:'finance',documents:'view'};
   catalog.forEach((item)=>{
@@ -50,7 +58,7 @@ if(root){
   orbit.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();advance(event.key==='ArrowRight'?1:-1);orbit.querySelector('button[aria-pressed=true]')?.focus()}});
   document.getElementById('architect-prev').addEventListener('click',()=>advance(-1));
   document.getElementById('architect-next').addEventListener('click',()=>advance(1));
-  document.getElementById('architect-pause').addEventListener('click',event=>{orbitPaused=!orbitPaused;event.currentTarget.setAttribute('aria-pressed',String(orbitPaused));event.currentTarget.textContent=orbitPaused?'Вращать':'Пауза';scene?.setMotion(!orbitPaused)});
+  document.getElementById('architect-pause').addEventListener('click',event=>{orbitPaused=!orbitPaused;event.currentTarget.setAttribute('aria-pressed',String(orbitPaused));event.currentTarget.textContent=orbitPaused?'Оживить':'Пауза';scene?.setMotion(!orbitPaused)});
   const voiceButton=document.createElement('button');voiceButton.type='button';voiceButton.id='architect-voice';voiceButton.textContent='Включить голос';voiceButton.setAttribute('aria-pressed','false');
   root.querySelector('.architect-view').insertBefore(voiceButton,document.getElementById('architect-view-note'));
   voiceButton.addEventListener('click',()=>{
@@ -63,7 +71,7 @@ if(root){
   root.querySelectorAll('button[data-presentation]').forEach(button=>button.addEventListener('click',()=>{
     presentation=button.dataset.presentation;live.dataset.presentation=presentation;
     root.querySelectorAll('button[data-presentation]').forEach(control=>control.setAttribute('aria-pressed',String(control.dataset.presentation===presentation)));
-    document.getElementById('architect-view-note').textContent=presentation==='model'?'Эскиз объёмной модели. Потяните, чтобы повернуть.':'Живой образ и объёмная карусель';
+    document.getElementById('architect-view-note').textContent=presentation==='model'?'Эскиз объёмной модели. Потяните, чтобы повернуть.':'Потяните экраны мышью и выберите направление';
     scene?.setPresentation(presentation);
   }));
   lead.addEventListener('click',()=>setFormInterest(active));
@@ -82,7 +90,7 @@ if(root){
   });
   const start=async()=>{
     if(scene||loading)return loading;
-    loading=import('./architect-scene.js?v=glass-2').then(module=>{
+    loading=import('./architect-scene.js?v=manual-cube-2').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.setPresentation(presentation);scene.setMotion(!orbitPaused);scene.focus(catalog.indexOf(active),false);
       if(!document.body.classList.contains('next-mode-live'))scene.pause();
@@ -91,6 +99,7 @@ if(root){
     return loading;
   };
   const setMode=(mode,scroll=false)=>{
+    if(mode!=='live')sectionScreen.restore();
     const isLive=mode==='live';classic.hidden=isLive;live.hidden=!isLive;
     document.body.classList.toggle('next-mode-live',isLive);
     root.querySelectorAll('[data-next-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.nextMode===mode)));
@@ -104,6 +113,7 @@ if(root){
   };
   root.querySelectorAll('[data-next-mode]').forEach(button=>button.addEventListener('click',()=>setMode(button.dataset.nextMode,true)));
   document.getElementById('next-header-toggle')?.addEventListener('click',()=>{setMode(document.body.classList.contains('next-mode-live')?'classic':'live',true);document.getElementById('links')?.classList.remove('open');document.getElementById('menu')?.setAttribute('aria-expanded','false')});
+  open.addEventListener('click',()=>{sectionScreen.restore();setMode('classic')});
   document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener('click',()=>{
     const target=document.querySelector(link.getAttribute('href'));
     const section=target?.closest('main > section');

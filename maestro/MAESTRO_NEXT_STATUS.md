@@ -1,6 +1,6 @@
 # MAESTRO NEXT — current status
 
-## 2026-10-28: owner pivot to the approved animated portrait
+## 2026-10-30: manual orbital screens and articulated portrait
 
 The owner explicitly asked to pause the separate human GLB and animate the
 approved portrait. Live now defaults to the same blue-suit visual as the chosen
@@ -9,10 +9,13 @@ not a claim of a photoreal volumetric human.
 
 Implemented:
 - A transparent portrait over a separate glass-office backdrop; smaller framing,
-  gentle head/body motion, localized arm deformation, blinking and subtle mouth
+  gentle head motion, a rigid shoulder/forearm chain, blinking and subtle mouth
   movement connected to actual speech events.
-- Wide translucent panels. Selection reaches, attaches a card to the hand point,
-  carries it left, enlarges it and reveals the shared consultation panel. Desktop,
+- Wide translucent panels (380 x 280 px on desktop). The visitor drags the orbit;
+  idle rotation is disabled. Selection reaches, attaches a card to the hand point,
+  folds it into a WebGL cube, carries it to the upper left and unfolds the side
+  panel. The actual classic section is moved into that panel and restored on
+  direction/mode changes, preserving its IDs and handlers. Desktop,
   tablet and mobile layouts keep forms, controls and lower diagrams separate.
 - The owner-requested removal of the ARCHITECT title and 02 number.
 - Stronger gold M logo in both home modes and six supporting pages. The canonical
@@ -27,7 +30,23 @@ Implemented:
 
 ## Verification
 
-Current local evidence: 99 desktop/mobile browser assertions, 86 structural
+Current local revision: 117 desktop/mobile browser assertions passed, including
+mouse/touch dragging without accidental selection, idle hold, section reuse and
+restoration, hidden-tab completion, reduced motion and fallback. Also passed:
+86 structural checks, 12 rig/timeline tests, two portrait-controller tests, and
+the speech bridge (25 synthetic events / eight utterances). Browser console
+checks include WebGL shader compilation errors. No such errors were found.
+
+Independent visual review inspected rest/reach/half-carry/full-carry arm poses
+and 1440x780 / 1583x780 windows. Both lower screens end at y=768, within the
+viewport. The old palm sliver and rubber sleeve deformation are removed; a small
+angular transition inside the shoulder remains at extreme poses. The test camera
+was corrected to avoid clipping the rotated plane before those pose checks.
+Independent code review found a lost hidden-tab completion event and narrow-panel
+grid/contrast problems; both were corrected. Current full-section visual checks
+cover solutions, products, AI, portfolio, pricing and documents.
+
+Previous local baseline: 99 desktop/mobile browser assertions, 86 structural
 checks, 12 rig/timeline tests, two portrait-controller tests, and speech bridge
 checks (25 synthetic events / eight utterances). Real in-app browser speech also
 produced start/boundary/end callbacks for two full replies (7.356 s and 6.738 s);
@@ -54,7 +73,7 @@ was an absent Playwright dependency, resolved by running it in the browser job.
 
 ## Limits and external rollout
 
-The image is animated with a mesh, not captured human performance. Arm range and
+The image uses articulated 2.5D parts, not captured human performance. Arm range and
 facial expression remain limited by one source photograph. Exact natural movement
 and perfect speech-to-lip matching are not claimed. No paid service was used.
 
@@ -67,3 +86,31 @@ ACCOUNT_REF_NOT_ALLOWLISTED for the known Telegram bot; other exact MAESTRO
 profile targets need verified identification. ANIMA TACTUS and PRAXELTA Repair
 profiles are excluded. Production publication is recorded only after PR checks,
 merge/deployment and live read-back; local preview alone is not publication.
+
+
+## Current correction and acceptance evidence
+
+Task: eliminate stretched hand/sleeve pixels, restore a front/rear orbit around
+an unchanged approved portrait, and double virtual-screen height. Completion
+requires joint-pose visual inspection and browser navigation/fallback checks.
+
+Implemented: rigid shoulder and forearm polygons, reconstructed torso underlay,
+manual 3D ellipse with rear screens occluded by the portrait, and 280 px
+screen height on desktop (240 tablet, 232 mobile). Screen text fades when the
+screen turns edge-on. The selected screen remains
+prominent during a gesture; other orbit screens are dimmed. Existing text is kept.
+
+Visual inspection: rest/reach/half-carry/full-carry renderer snapshots found a
+residual old palm sliver, corrected in the silhouette mask. Independent review
+then found no gross warping, duplicate palm or detached elbow in those four
+poses. A small angular transition inside the shoulder remains in the extreme
+pose. These stills are not proof of fully natural movement or facial acting.
+
+Current gesture was recorded in a local browser; approved portrait appearance
+is preserved, with bounded arm motion and a small whole-silhouette turn. This is
+not a reconstructed volumetric torso or captured human biomechanics. The 3-second
+selection uses elapsed wall time so a slow renderer does not prolong the sequence.
+Speech starts after the selected section opens, only when voice is enabled.
+No production deployment is performed by
+this correction. Gemini review for this revision: ROUTE_UNAVAILABLE (no verified
+active Gemini review session available); local independent visual critic used.

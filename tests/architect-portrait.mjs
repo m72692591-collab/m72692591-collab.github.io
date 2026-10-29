@@ -11,9 +11,9 @@ const close = (actual, expected, label, tolerance = 1e-5) =>
 
 test('approved raster cutout fits the stage and its fingertip follows only the gesture', () => {
   const originalLoad = THREE.TextureLoader.prototype.load;
-  let imageUrl, disposedTexture = false;
+  const imageUrls=[]; let disposedTexture = false;
   THREE.TextureLoader.prototype.load = function (url, onLoad) {
-    imageUrl = url;
+    imageUrls.push(url);
     const texture = new THREE.Texture();
     texture.addEventListener('dispose', () => { disposedTexture = true; });
     onLoad(texture);
@@ -25,7 +25,8 @@ test('approved raster cutout fits the stage and its fingertip follows only the g
   try {
     portrait = createPortrait(scene, {onReady: () => { ready++; }});
     assert.equal(ready, 1);
-    assert.ok(imageUrl.endsWith('/architect/architect-portrait-cutout.webp'));
+    assert.ok(imageUrls.some(url=>url.endsWith('/architect/architect-portrait-cutout.webp')));
+    assert.ok(imageUrls.some(url=>url.endsWith('/architect/architect-torso-underlay.webp')));
     const mesh = scene.children[0];
     assert.ok(mesh instanceof THREE.Mesh && mesh.material instanceof THREE.ShaderMaterial);
     assert.equal(mesh.material.toneMapped, false, 'portrait keeps the source colors outside scene tone mapping');
@@ -51,12 +52,20 @@ test('approved raster cutout fits the stage and its fingertip follows only the g
     checkCenter(800, 650, 60);
     portrait.update({time: 0, animate: false});
     const resting = portrait.handPosition();
+    const restOrbit=portrait.orbitCenter();
+    const parts=mesh.userData.armParts;
+    const originalVertices=Array.from(parts.forearm.geometry.attributes.position.array);
     assert.ok(resting?.isVector3);
     portrait.update({time: 1.35, animate: true, gesture: presentationFrame(1.35)});
     const pulling = portrait.handPosition();
     assert.ok(pulling.x < resting.x, 'right hand pulls the card toward viewer left');
+    assert.deepEqual(Array.from(parts.forearm.geometry.attributes.position.array),originalVertices,'gesture rotates rigid forearm without deforming sleeve vertices');
+    assert.deepEqual(parts.forearm.scale.toArray(),[1,1,1],'gesture never stretches photographed hand or sleeve');
+    close(portrait.orbitCenter().distanceTo(restOrbit),0,'orbit anchor stays independent of the gesture');
     portrait.update({time: 3, animate: true, gesture: presentationFrame(3)});
-    close(portrait.handPosition().x, resting.x, 'hand returns while the card remains presented');
+    const returned=portrait.handPosition();
+    portrait.update({time:3,animate:true});
+    close(portrait.handPosition().distanceTo(returned),0,'completed gesture returns to the current idle joint pose');
 
     portrait.speech({phase: 'start', text: 'Здравствуйте'}, 3);
     portrait.update({time: 3.2, animate: true});
