@@ -14,6 +14,33 @@ const UPPER = [...ARM.slice(0,8),[1110,670],[1000,615],[999,602],...ARM.slice(31
 const LOWER = [[1000,600],[1108,615],...ARM.slice(7,31)];
 const unit = value => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
 
+// The sleeve contour is static. Rasterize its exact three-pixel feather once,
+// instead of evaluating every edge at every pixel on every animation frame.
+function createRepairMask() {
+  const data = new Uint8Array(SOURCE_WIDTH * SOURCE_HEIGHT);
+  const minX = Math.floor(Math.min(...ARM.map(point => point[0])) - 3);
+  const maxX = Math.ceil(Math.max(...ARM.map(point => point[0])) + 3);
+  const minY = Math.floor(Math.min(...ARM.map(point => point[1])) - 3);
+  const maxY = Math.ceil(Math.max(...ARM.map(point => point[1])) + 3);
+  for (let y = minY; y <= maxY; y++) for (let x = minX; x <= maxX; x++) {
+    const px = x + .5, py = y + .5;
+    let inside = false, distanceSquared = Infinity;
+    for (let i = 0; i < ARM.length; i++) {
+      const a = ARM[i], b = ARM[(i + 1) % ARM.length];
+      const dx = b[0] - a[0], dy = b[1] - a[1];
+      const along = unit(((px - a[0]) * dx + (py - a[1]) * dy) / (dx * dx + dy * dy));
+      distanceSquared = Math.min(distanceSquared, (px - a[0] - along * dx) ** 2 + (py - a[1] - along * dy) ** 2);
+      if ((a[1] > py) !== (b[1] > py) && px < dx * (py - a[1]) / dy + a[0]) inside = !inside;
+    }
+    const t = unit(Math.sqrt(distanceSquared) / 3);
+    data[y * SOURCE_WIDTH + x] = inside ? 255 : Math.round(255 * (1 - t * t * (3 - 2 * t)));
+  }
+  const mask = new THREE.DataTexture(data, SOURCE_WIDTH, SOURCE_HEIGHT, THREE.RedFormat);
+  mask.minFilter = mask.magFilter = THREE.LinearFilter;
+  mask.needsUpdate = true;
+  return mask;
+}
+
 const vertexShader = `
   uniform float uTime;
   uniform float uAnimate;
@@ -54,33 +81,26 @@ const vertexShader = `
 const fragmentShader = `
   uniform sampler2D uMap;
   uniform sampler2D uUnderlay;
-  uniform vec2 uContour[${ARM.length}];
+  uniform sampler2D uRepairMask;
   uniform float uBlink;
   uniform float uMouth;
   varying vec2 vUv;
 
   void main() {
     vec2 source = vec2(vUv.x * 1536.0, (1.0 - vUv.y) * 1024.0);
-    float leftEye = exp(-pow((source.x - 731.0) / 32.0, 2.0)
-                        - pow((source.y - 213.0) / 12.0, 2.0));
-    float rightEye = exp(-pow((source.x - 813.0) / 34.0, 2.0)
-                         - pow((source.y - 210.0) / 12.0, 2.0));
     vec2 samplePoint = source;
-    samplePoint.y -= uBlink * max(leftEye, rightEye) * 5.5;
-    float mouth = exp(-pow((source.x - 782.0) / 51.0, 2.0)
-                      - pow((source.y - 285.0) / 16.0, 2.0));
-    samplePoint.y -= uMouth * mouth * smoothstep(277.0, 291.0, source.y) * 3.0;
+    if (uBlink > .001 && source.x > 620.0 && source.x < 930.0 && source.y > 165.0 && source.y < 260.0) {
+      vec2 left = (source - vec2(731.0, 213.0)) / vec2(32.0, 12.0);
+      vec2 right = (source - vec2(813.0, 210.0)) / vec2(34.0, 12.0);
+      samplePoint.y -= uBlink * max(exp(-dot(left,left)), exp(-dot(right,right))) * 5.5;
+    }
+    if (uMouth > .001 && source.x > 610.0 && source.x < 950.0 && source.y > 230.0 && source.y < 345.0) {
+      vec2 mouth = (source - vec2(782.0, 285.0)) / vec2(51.0, 16.0);
+      samplePoint.y -= uMouth * exp(-dot(mouth,mouth)) * smoothstep(277.0, 291.0, source.y) * 3.0;
+    }
     vec2 sampleUv = vec2(samplePoint.x / 1536.0, 1.0 - samplePoint.y / 1024.0);
     vec4 color = texture2D(uMap, clamp(sampleUv, vec2(0.0), vec2(1.0)));
-    bool inside = false;
-    float edgeDistance = 10000.0;
-    for (int i=0; i<${ARM.length}; i++) {
-      vec2 a=uContour[i], b=uContour[(i+1)%${ARM.length}];
-      vec2 edge=b-a;
-      edgeDistance=min(edgeDistance,length(source-a-edge*clamp(dot(source-a,edge)/dot(edge,edge),0.0,1.0)));
-      if ((a.y>source.y)!=(b.y>source.y) && source.x<(b.x-a.x)*(source.y-a.y)/(b.y-a.y)+a.x) inside=!inside;
-    }
-    float repairMask=inside ? 1.0 : 1.0-smoothstep(0.0,3.0,edgeDistance);
+    float repairMask=texture2D(uRepairMask,vec2(vUv.x,1.0-vUv.y)).r;
     color=mix(color,texture2D(uUnderlay,vUv),repairMask);
     color.a *= 1.0 - smoothstep(900.0, 1024.0, source.y);
     if (color.a < .003) discard;
@@ -90,10 +110,11 @@ const fragmentShader = `
 `;
 
 export function createPortrait(scene, { onReady, onError } = {}) {
+  const repairMask = createRepairMask();
   const geometry = new THREE.PlaneGeometry(SOURCE_WIDTH, SOURCE_HEIGHT, 96, 64);
   const material = new THREE.ShaderMaterial({
     uniforms: {
-      uMap: { value: null }, uUnderlay:{value:null}, uContour:{value:ARM.map(([x,y])=>new THREE.Vector2(x,y))}, uTime: { value: 0 }, uAnimate: { value: 0 },
+      uMap: { value: null }, uUnderlay:{value:null}, uRepairMask:{value:repairMask}, uTime: { value: 0 }, uAnimate: { value: 0 },
       uReach: { value: 0 }, uAttach: { value: 0 }, uCarry: { value: 0 },
       uBlink: { value: 0 }, uMouth: { value: 0 }
     },
@@ -217,7 +238,7 @@ export function createPortrait(scene, { onReady, onError } = {}) {
       if (disposed) return;
       disposed = true;
       scene.remove(mesh);
-      geometry.dispose(); material.dispose(); texture?.dispose(); underlay?.dispose();
+      geometry.dispose(); material.dispose(); texture?.dispose(); underlay?.dispose(); repairMask.dispose();
       upperArm.geometry.dispose();forearm.geometry.dispose();armMaterials.forEach(mat=>mat.dispose());
     }
   };

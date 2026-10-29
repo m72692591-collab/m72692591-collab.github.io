@@ -2,7 +2,7 @@ import * as THREE from './vendor/three.module.min.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { MeshoptDecoder } from './vendor/meshopt_decoder.mjs';
 import { createRig } from './architect-rig.js';
-import { createPortrait } from './architect-portrait.js?v=manual-cube-2';
+import { createPortrait } from './architect-portrait.js?v=manual-cube-4';
 import { TAU, gestureFrame, presentationFrame, nearestAngle } from './architect-motion.js';
 
 export function createScene(container, orbit, catalog, reduced, onSelect) {

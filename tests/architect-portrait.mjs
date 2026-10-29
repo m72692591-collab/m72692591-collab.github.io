@@ -31,6 +31,13 @@ test('approved raster cutout fits the stage and its fingertip follows only the g
     assert.ok(mesh instanceof THREE.Mesh && mesh.material instanceof THREE.ShaderMaterial);
     assert.equal(mesh.material.toneMapped, false, 'portrait keeps the source colors outside scene tone mapping');
     assert.equal(mesh.material.uniforms.uMap.value.colorSpace, THREE.SRGBColorSpace);
+    const mask = mesh.material.uniforms.uRepairMask.value;
+    assert.equal(mask.image.data[230 * 1536 + 780], 0, 'repair never replaces the approved face');
+    assert.equal(mask.image.data[700 * 1536 + 930], 255, 'repair covers the old photographed palm');
+    assert.ok(mask.image.data.some(value => value > 0 && value < 255), 'cut contour retains its feather');
+    let disposedMask = false;
+    mask.addEventListener('dispose', () => { disposedMask = true; });
+    scene.userData.verifyMaskDisposal = () => assert.ok(disposedMask, 'dispose releases the precomputed mask');
     assert.equal(mesh.visible, true);
 
     const camera = new THREE.PerspectiveCamera(38, 800 / 650, .1, 60);
@@ -88,6 +95,7 @@ test('approved raster cutout fits the stage and its fingertip follows only the g
     THREE.TextureLoader.prototype.load = originalLoad;
   }
   assert.equal(scene.children.length, 0, 'dispose removes the portrait mesh');
+  scene.userData.verifyMaskDisposal();
   assert.equal(disposedTexture, true, 'dispose releases the raster texture');
 });
 
