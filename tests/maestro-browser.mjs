@@ -54,7 +54,7 @@ try {
   okay("Optional desktop 3D sketch stays under 3.2 MB", fs.statSync("maestro/assets/models/architect-human.glb").size < 3_200_000);
   okay("Optional mobile 3D sketch stays under 1.8 MB", fs.statSync("maestro/assets/models/architect-human-mobile.glb").size < 1_800_000);
   browser = await chromium.launch({ headless: true, args: ["--enable-webgl", "--use-gl=angle", "--use-angle=swiftshader"], ...(process.env.CI ? {} : { channel: "chrome" }) });
-  const desktop = await browser.newContext({ viewport: { width: 1400, height: 900 }, acceptDownloads: true });
+  const desktop = await browser.newContext({ viewport: { width: 1400, height: 900 }, acceptDownloads: true, reducedMotion: 'no-preference' });
   const page = await desktop.newPage();
   const errors = [];
   watchErrors(page, errors);
@@ -463,6 +463,9 @@ try {
     for (const failedPage of context.pages()) {
       console.error('Failure state', failedPage.url(), await failedPage.evaluate(() => ({
         canvas: document.querySelector('#next-canvas')?.dataset,
+        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+        hidden: document.hidden,
+        focused: document.activeElement?.outerHTML?.slice(0, 300),
         fallback: document.querySelector('#next-fallback')?.textContent,
         fallbackVisible: document.querySelector('#next-fallback')?.hidden === false,
         status: document.querySelector('#next-model-status')?.textContent

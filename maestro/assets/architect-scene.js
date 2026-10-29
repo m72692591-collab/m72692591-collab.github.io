@@ -36,7 +36,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   flightCube.add(new THREE.LineSegments(new THREE.EdgesGeometry(cubeShape),new THREE.LineBasicMaterial({color:0xc7efff,transparent:true,opacity:.9})));
   flightCube.visible=false;scene.add(flightCube);
   let presentation = 'portrait', motion = true, loaded = false, modelRequested = false, disposed = false, paused = false, visible = true, docked = false;
-  let hovered = false, focused = false, dragging = false, pointerId = null, pointerTarget = null, downX = 0, downY = 0, lastX = 0, suppressClick = false;
+  let dragging = false, pointerId = null, pointerTarget = null, downX = 0, downY = 0, lastX = 0, suppressClick = false;
   let selectionVersion = 0, pendingPresented = null;
   let chosen = 0, angle = 0, actorYaw = -.30, time = 0, action = null, rig = null, frame = 0, previousTime = performance.now();
   actor.rotation.y = actorYaw;
@@ -156,7 +156,6 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     const animate = motion && !reduced.matches;
     if (action && !canPresent()) finishPresentation();
     if (animate) time += dt;
-    const idle = animate && !hovered && !focused && !dragging && !action;
     const picture = presentation === 'portrait';
     const elapsed = action ? Math.max(0, (now - action.started) / 1000) : 0;
     const present = action && picture ? presentationFrame(elapsed) : null;
@@ -261,9 +260,9 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
       touch.lookAt(camera.position); touch.scale.setScalar(.65 + (1 - sweep.contact) * .7);
       touch.children.forEach(ring => { ring.material.opacity = sweep.contact * .8; });
     }
-    container.dataset.motionState = dragging ? 'drag' : action ? 'gesture' : idle ? 'idle' : 'still';
+    container.dataset.motionState = dragging ? 'drag' : action ? 'gesture' : animate ? 'idle' : 'still';
     renderer.render(scene, camera);
-    if (animate && ((!hovered && !focused && !dragging) || action || actor.visible || picture || speechActive)) frame = requestAnimationFrame(render);
+    if (animate) frame = requestAnimationFrame(render);
   }
   function redraw() { cancelAnimationFrame(frame); previousTime = performance.now(); render(); }
   const intersection = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; if (visible) redraw(); else { if (action) finishPresentation(); cancelAnimationFrame(frame); } });
@@ -321,12 +320,6 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   });
   listen(canvas, 'webglcontextlost', contextLost); listen(window, 'maestro:speech', speech);
   listen(document, 'visibilitychange', visibilityChange); listen(reduced, 'change', reduceChange);
-  buttons.forEach(button => {
-    listen(button, 'pointerenter', () => { hovered = true; redraw(); });
-    listen(button, 'pointerleave', () => { hovered = false; redraw(); });
-    listen(button, 'focus', () => { focused = true; redraw(); });
-    listen(button, 'blur', () => { focused = false; redraw(); });
-  });
   resize();
   return {
     setPresentation(value) { clearTimeout(statusTimer); selectionVersion++; presentation = value; action = null; docked = false; live.dataset.panelPresenting = ''; detail.inert = false; if (value === 'model') loadModel(); else if (container.dataset.portraitState === 'loaded') status.hidden = true; redraw(); },
