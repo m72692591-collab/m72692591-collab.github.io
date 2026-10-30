@@ -4,6 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Конструктор технического задания — МАЭСТРО</title>
 <meta name="description" content="Сформируйте бесплатное предварительное техническое задание для сайта, бота, CRM или автоматизации. Данные остаются в вашем браузере до отправки.">
+<link rel="canonical" href="https://m72692591-collab.github.io/maestro/brief-builder.html">
 <meta name="theme-color" content="#09172b">
 <style>
 :root{--bg:#09172b;--surface:#10273d;--panel:#152d44;--edge:#4e71835c;--text:#f2f8fb;--muted:#a9c1d1;--gold:#ffce7a;--cyan:#80e5e2;--green:#98ecbf}
@@ -49,7 +50,8 @@ footer{border-top:1px solid var(--edge);padding:25px 0 40px;color:var(--muted);f
 <header><div class="wrap"><a href="index.html" class="brand"><b>◈</b> МАЭСТРО</a><a href="maestro-lab.html" style="font-size:13px">Лаборатория ↗</a></div></header>
 <main class="wrap">
 <section class="intro"><span class="eyebrow">MAESTRO / PROJECT DESIGNER</span><h1>Превратите идею в <em>понятное ТЗ.</em></h1>
-<p>Опишите задачу. Система сформирует структурированный черновик требований, который можно скопировать, сохранить или перенести в заявку. Без регистрации и оплаты.</p></section>
+<p>Опишите задачу. Система сформирует структурированный черновик требований, который можно скопировать, сохранить или перенести в заявку. Без регистрации и оплаты.</p>
+<p>Нужен именно сайт? <a href="site-factory.html">Посмотрите восемь этапов производства и получите рабочие запросы</a>.</p></section>
 <div class="layout">
 <form id="builder" class="panel">
 <h2>Параметры проекта</h2><p class="desc">Изменения мгновенно отражаются в документе справа. Поля с личными данными необязательны.</p>
@@ -97,6 +99,8 @@ footer{border-top:1px solid var(--edge);padding:25px 0 40px;color:var(--muted);f
 "use strict";
 const $=id=>document.getElementById(id);
 const ids=["kind","industry","goal","process","volume","deadline","budget","approval","notes"];
+// Direct links from website production route select the correct project type.
+if (new URLSearchParams(location.search).get("kind") === "site") $("kind").value = "Сайт";
 const escapeText=s=>String(s||"").replace(/\r/g," ").trim();
 const v=id=>escapeText($(id).value);
 const selected=()=>[...document.querySelectorAll("#integrations input:checked")].map(el=>el.value);
