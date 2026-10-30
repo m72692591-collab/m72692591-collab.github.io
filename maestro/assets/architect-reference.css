@@ -297,6 +297,58 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 .architect-topic-card-actions,.architect-topic-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .architect-topic-link{font-size:12px;line-height:1.5;color:#a5dcff;text-underline-offset:4px}
 .architect-topic-link:hover{color:#fff}
-.architect-topic-image{display:block;width:100%;height:120px;object-fit:cover;margin-bottom:14px}
-@media(min-width:1101px){.next-live .next-detail[data-section-open]{width:clamp(320px,31vw,450px)}}
+.architect-topic-image{display:block;width:auto;max-width:100%;height:auto;max-height:clamp(160px,27svh,260px);object-fit:contain;margin:0 auto 18px}
+@media(min-width:1101px){
+ .next-live .next-detail[data-section-open]{width:clamp(440px,43vw,680px)}
+ .next-live:has(.next-detail[data-section-open]) .architect-bottom{left:48%}
+}
 @media(max-width:1100px){.next-live .next-detail[data-section-open]{padding:18px}.architect-page .architect-topic-title{font-size:27px}}
+
+/* A topic can unfold from the cube into a complete, independently scrollable page. */
+body.next-mode-live:has(.next-live[data-page-layout=full] .next-detail[data-section-open]) .next-heading{visibility:hidden;pointer-events:none}
+.architect-page-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}
+.architect-page-toolbar .architect-page-close{padding:7px 0;text-align:left}
+.architect-page-layout{flex-shrink:0;border:1px solid #9cdafa66;border-radius:4px;padding:9px 12px;background:#6ab8e414;color:#e2f5ff;font:11px/1.4 Arial,sans-serif;cursor:pointer}
+.architect-page-layout:hover{background:#6ab8e42a;border-color:#bfe8ff}
+.architect-page-toolbar button:focus-visible{outline:2px solid #bfe8ff;outline-offset:4px}
+.next-live[data-page-layout=full] .next-detail[data-section-open]{position:fixed;inset:72px 0 0;z-index:40;width:100%;height:calc(100svh - 72px);max-height:calc(100svh - 72px);padding:28px max(32px,calc((100vw - 1200px)/2));border-radius:0;border:0;background:radial-gradient(ellipse at 82% 0,#164866 0,transparent 55%),linear-gradient(150deg,#0b2133,#07131f 75%);overflow-y:auto;overscroll-behavior:contain;transform-origin:50% 0}
+.next-live[data-page-layout=full] .architect-page-toolbar{position:sticky;top:-28px;z-index:3;padding:16px 0;background:#0c2235f5;border-bottom:1px solid #a5ddff29;backdrop-filter:blur(20px)}
+.next-live[data-page-layout=full] .architect-topic-header{padding:28px 0 36px;margin-bottom:28px;border-top:0;min-height:0}
+.next-live[data-page-layout=full] .architect-topic-title{font-size:clamp(38px,5vw,68px);margin-bottom:20px}
+.next-live[data-page-layout=full] .architect-topic-icon{width:64px;height:64px;top:40px}
+.next-live[data-page-layout=full] .next-detail .architect-topic-summary{font-size:18px;max-width:52ch}
+.next-live[data-page-layout=full] .architect-topic-kicker{font-size:11px;margin-bottom:24px}
+.next-live[data-page-layout=full] .architect-topic-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.next-live[data-page-layout=full] .architect-topic-card{padding:26px;background:linear-gradient(130deg,#82c9f212,#0a203375);border-radius:8px}
+.next-live[data-page-layout=full] .architect-topic-image{width:100%;max-height:none}
+.next-live[data-page-layout=full] .next-detail .architect-topic-card-title{font-size:26px}
+.next-live[data-page-layout=full] .next-detail :is(.architect-topic-copy,.architect-topic-intro,.architect-topic-note){font-size:15px;line-height:1.75}
+.next-live[data-page-layout=full] .architect-topic-list{font-size:15px}
+.next-live[data-page-layout=full] .architect-topic-link{font-size:14px}
+.next-live[data-page-layout=full] .architect-topic-tag{font-size:11px;padding:6px 9px}
+.next-live[data-page-layout=full] .architect-topic-grid:has(>.architect-topic-card:only-child){grid-template-columns:1fr}
+.next-live[data-page-layout=full] .architect-topic-card:only-child:has(.architect-topic-image){display:grid;grid-template-columns:1.1fr 1fr;column-gap:30px;align-content:start}
+.next-live[data-page-layout=full] .architect-topic-card:only-child>.architect-topic-image{grid-column:1;grid-row:1 / span 8;margin:0;align-self:start}
+.next-live[data-page-layout=full] .architect-topic-card:only-child:has(.architect-topic-image)>:not(img){grid-column:2}
+.next-live[data-page-layout=full] .next-detail-actions{max-width:600px;width:100%;align-self:center}
+.next-live[data-page-layout=full] .architect-question{max-width:600px;width:100%;align-self:center}
+.next-live[data-page-layout=full] .next-detail>small{text-align:center;padding-bottom:24px}
+.next-live[data-page-layout=full] .next-detail:has(.maestro-genie-panel:not([hidden])) .architect-page{display:block}
+.next-live[data-page-layout=full] .next-detail:has(.maestro-genie-panel:not([hidden])) :is(.architect-topic-content,.next-detail-actions,.architect-question){display:none}
+.next-live[data-page-layout=full] .next-detail #maestro-genie-root{order:-1;width:100%}
+.next-live[data-page-layout=full] .next-detail .maestro-genie-panel{position:relative;inset:auto;width:min(720px,100%);max-height:calc(100svh - 190px);margin:0 auto;overflow-y:auto;border-radius:12px}
+.next-live[data-page-layout=full][data-panel-presenting=moving] .next-detail{opacity:var(--panel-reveal,0);transform:scaleX(max(.035,var(--panel-reveal,0))) scaleY(max(.015,var(--panel-reveal,0)));pointer-events:none}
+.next-live[data-page-layout=full][data-panel-presenting=open] .next-detail{transform:none}
+@media(max-width:700px){
+ .next-live[data-page-layout=full] .next-detail[data-section-open]{inset:60px 0 0;height:calc(100svh - 60px);max-height:calc(100svh - 60px);padding:18px}
+ .next-live[data-page-layout=full] .architect-page-toolbar{top:-18px;padding:12px 0}
+ .next-live[data-page-layout=full] .architect-topic-grid{grid-template-columns:1fr;gap:16px}
+ .next-live[data-page-layout=full] .architect-topic-card{padding:18px}
+ .next-live[data-page-layout=full] .architect-topic-card:only-child:has(.architect-topic-image){display:block}
+ .next-live[data-page-layout=full] .architect-topic-card:only-child>.architect-topic-image{margin-bottom:18px}
+ .next-live[data-page-layout=full] .architect-topic-title{font-size:38px}
+ .next-live[data-page-layout=full] .next-detail .architect-topic-summary{font-size:15px}
+ .next-live[data-page-layout=full] .architect-topic-icon{width:40px;height:40px;top:32px}
+ .next-live[data-page-layout=full] .next-detail .architect-topic-card-title{font-size:23px}
+}
+@media(prefers-reduced-motion:reduce){.next-live[data-page-layout=full][data-panel-presenting=moving] .next-detail{transform:none}}

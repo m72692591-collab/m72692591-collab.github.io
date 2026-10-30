@@ -51,4 +51,39 @@ check("Accessibility reduced-motion styles present", read("assets/maestro-genie.
 check("Backend refuses sending without consent", read("server/lead-api.php").includes("consent_required"));
 check("Private storage documented", read("server/README.md").includes("серверный"));
 check("Calculations example correct", Math.abs(80 * 12 * 4.33 * 65 / 100 / 60 - 45.032) < 0.001);
+
+// Public static pages use one preferred URL across metadata and discovery files.
+const publicOrigin = "https://m72692591-collab.github.io";
+const publicBase = publicOrigin + "/maestro/";
+const sitemap = fs.readFileSync(path.resolve("sitemap.xml"), "utf8");
+const sitemapURLs = [...sitemap.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map(match => match[1]);
+const publicFiles = fs.readdirSync(root).filter(name => name.endsWith(".html"));
+const expectedURLs = publicFiles.map(name => publicBase + (name === "index.html" ? "" : name));
+check("Sitemap declares the standard XML namespace", /<urlset\s[^>]*xmlns="http:\/\/www.sitemaps.org\/schemas\/sitemap\/0.9"/.test(sitemap));
+check("Sitemap has unique URLs", new Set(sitemapURLs).size === sitemapURLs.length);
+check("Sitemap covers public pages without admin or mode duplicates", sitemapURLs.length === expectedURLs.length && expectedURLs.every(url => sitemapURLs.includes(url)));
+const attributes = tag => Object.fromEntries([...tag.matchAll(/([\w:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)]
+  .map(match => [match[1].toLowerCase(), match[2] ?? match[3]]));
+const pageTitles = [];
+for (const value of sitemapURLs) {
+  const url = new URL(value);
+  check("Sitemap URL is absolute and clean: " + url.pathname, url.origin === publicOrigin && !url.username && !url.password && !url.search && !url.hash && url.pathname.startsWith("/maestro/"));
+  const relative = url.pathname.slice("/maestro/".length) || "index.html";
+  const file = path.resolve(root, relative);
+  check("Sitemap URL maps to a public HTML file: " + relative, publicFiles.includes(relative) && file.startsWith(root + path.sep) && fs.existsSync(file));
+  const head = fs.readFileSync(file, "utf8").split(/<\/head\s*>/i)[0];
+  const canonical = [...head.matchAll(/<link\b[^>]*>/gi)].map(match => attributes(match[0]))
+    .filter(link => link.rel?.toLowerCase().split(/\s+/).includes("canonical"));
+  check("Canonical agrees with sitemap: " + relative, canonical.length === 1 && canonical[0].href === value);
+  const title = head.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1].trim();
+  const description = [...head.matchAll(/<meta\b[^>]*>/gi)].map(match => attributes(match[0]))
+    .find(meta => meta.name?.toLowerCase() === "description")?.content.trim();
+  check("Public page has a title and description: " + relative, Boolean(title && description));
+  pageTitles.push(title);
+}
+check("Public page titles are distinct", new Set(pageTitles).size === pageTitles.length);
+const robots = fs.readFileSync(path.resolve("robots.txt"), "utf8").split(/\r?\n/).map(line => line.replace(/#.*$/, "").trim());
+const robotsSitemaps = robots.filter(line => /^sitemap\s*:/i.test(line)).map(line => line.replace(/^sitemap\s*:\s*/i, ""));
+check("Host-root robots points to the canonical sitemap", robotsSitemaps.length === 1 && robotsSitemaps[0] === publicOrigin + "/sitemap.xml");
+check("Robots does not accidentally disallow public pages or assets", !robots.some(line => /^disallow\s*:\s*\S/i.test(line)));
 process.stdout.write("\nAll " + pass + " structural checks passed.\n");

@@ -1,5 +1,5 @@
-import {catalog} from './maestro-next-catalog.js?v=topic-pages-1';
-import {createSectionScreen} from './architect-section.js?v=topic-pages-1';
+import {catalog} from './maestro-next-catalog.js?v=topic-full-1';
+import {createSectionScreen} from './architect-section.js?v=topic-full-1';
 
 const root=document.getElementById('next-experience');
 if(root){
@@ -14,24 +14,33 @@ if(root){
   question.maxLength=350;
   const answer=document.getElementById('next-answer');
   const detail=root.querySelector('.next-detail');
+  live.dataset.pageLayout='side';
   const sectionScreen=createSectionScreen(detail);
   let active=catalog[0],scene=null,loading=null,presentation='portrait',orbitPaused=false;
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   const setFormInterest=(item)=>{const interest=document.getElementById('interest');if(interest&&[...interest.options].some(option=>option.value===item.interest))interest.value=item.interest};
   const select=(item,userSelected=false)=>{
-    sectionScreen.restore();
+    sectionScreen.restore({preserveLayout:true});
     active=item;document.getElementById('architect-select').value=item.id;title.textContent=item.title;description.textContent=item.description;open.href=item.href;
     if(userSelected&&document.body.classList.contains('next-mode-live'))sectionScreen.show(item);
     lead.href='#lead';orbit.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
     answer.textContent='';if(userSelected)window.MAESTRO_GENIE?.stopVoice?.();scene?.focus(catalog.indexOf(item),userSelected);
     document.getElementById('architect-counter').textContent=`${String(catalog.indexOf(item)+1).padStart(2,'0')} / ${catalog.length}`;
     document.querySelectorAll('.architect-directory button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
-    if(userSelected){setFormInterest(item);if(!scene){if(document.body.classList.contains('next-mode-live'))sectionScreen.show(item);window.MAESTRO_GENIE?.speak?.(`${item.title}. ${item.description}`)}}
+    if(userSelected){setFormInterest(item);if(!scene){if(document.body.classList.contains('next-mode-live'))sectionScreen.present();window.MAESTRO_GENIE?.speak?.(`${item.title}. ${item.description}`)}}
   };
   live.addEventListener('architect:presented',()=>{
     if(!document.body.classList.contains('next-mode-live'))return;
     if(detail.dataset.sectionOpen!==active.id)sectionScreen.show(active);
+    sectionScreen.present();
     window.MAESTRO_GENIE?.speak?.(`${active.title}. ${active.description}`);
+  });
+  live.addEventListener('architect:layout-request',event=>{
+    if(!['side','full'].includes(event.detail?.layout)||!document.body.classList.contains('next-mode-live'))return;
+    live.dataset.pageLayout=event.detail.layout;
+    const headerBottom=document.querySelector('header')?.getBoundingClientRect().bottom||0;
+    window.scrollTo({top:Math.max(0,window.scrollY+live.getBoundingClientRect().top-headerBottom),left:0,behavior:'instant'});
+    select(active,true);
   });
   const classicList=document.getElementById('next-classic-list');
   open.textContent='Классический сайт';
@@ -83,7 +92,7 @@ if(root){
     window.MAESTRO_GENIE.open();
     window.scrollTo({left:0,top:Math.max(0,window.scrollY+detail.getBoundingClientRect().top-100),behavior:reduce.matches?'instant':'smooth'});
   });
-  const fallback=(message)=>{delete live.dataset.portraitReady;live.dataset.panelPresenting='';detail.inert=false;scene?.dispose();scene=null;root.querySelector('button[data-presentation=model]').disabled=true;presentation='portrait';live.dataset.presentation='portrait';root.querySelectorAll('button[data-presentation]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.presentation==='portrait')));document.getElementById('architect-view-note').textContent='Портретный режим. 3D недоступно.';document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.hidden=false;button.removeAttribute('style')})};
+  const fallback=(message)=>{delete live.dataset.portraitReady;live.dataset.panelPresenting='';detail.inert=false;scene?.dispose();scene=null;root.querySelector('button[data-presentation=model]').disabled=true;presentation='portrait';live.dataset.presentation='portrait';root.querySelectorAll('button[data-presentation]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.presentation==='portrait')));document.getElementById('architect-view-note').textContent='Портретный режим. 3D недоступно.';document.getElementById('next-canvas').replaceChildren();const status=document.getElementById('next-model-status');if(status)status.hidden=true;document.getElementById('next-fallback').textContent=message;document.getElementById('next-fallback').hidden=false;orbit.classList.add('next-static');orbit.querySelectorAll('button').forEach(button=>{button.hidden=false;button.removeAttribute('style')});if(document.body.classList.contains('next-mode-live'))sectionScreen.present()};
   live.addEventListener('architect:context-lost',()=>fallback('3D-сцена отключилась. Выберите направление на слайдах ниже.'));
   live.addEventListener('architect:model-error',()=>{
     presentation='portrait';live.dataset.presentation='portrait';scene?.setPresentation('portrait');
@@ -92,7 +101,7 @@ if(root){
   });
   const start=async()=>{
     if(scene||loading)return loading;
-    loading=import('./architect-scene.js?v=topic-pages-1').then(module=>{
+    loading=import('./architect-scene.js?v=topic-full-1').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.setPresentation(presentation);scene.setMotion(!orbitPaused);scene.focus(catalog.indexOf(active),false);
       if(!document.body.classList.contains('next-mode-live'))scene.pause();

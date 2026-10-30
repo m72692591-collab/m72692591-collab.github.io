@@ -316,6 +316,7 @@
     launcher.setAttribute('aria-expanded', 'false');
     state.leadInterest = null;
     launcher.focus();
+    window.dispatchEvent(new CustomEvent('maestro:consultant-closed'));
   }
   function setLeadInterest(value) {
     const select = document.getElementById('interest');
@@ -328,6 +329,7 @@
     const values = { ai: 'ИИ-оператор', web: 'Сайт', crm: 'CRM', marketing: 'Другое', hr: 'HR', audit: 'Аудит', price: 'Другое', general: 'Другое', lead: 'Другое' };
     if (select) select.value = state.leadInterest || values[state.topic] || 'Другое';
     if (details && !details.value.trim() && state.lastQuestion) details.value = 'Обсуждали с консультантом: ' + state.lastQuestion;
+    window.dispatchEvent(new CustomEvent('maestro:lead-request'));
     close();
     if (form) form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     setTimeout(() => document.getElementById('name')?.focus({ preventScroll: true }), 400);

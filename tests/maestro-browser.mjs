@@ -169,7 +169,7 @@ try {
   okay("The selected screen opens its own sites topic", await page.locator('.architect-page article.architect-topic[data-topic="sites"]').count() === 1 && await page.locator('.architect-topic-title').innerText() === 'Сайты и дизайн');
   okay("Opening a topic leaves every original section in the classic page", await page.evaluate(() => originalClassicSections.every(section => section.isConnected && section.parentElement.tagName === 'MAIN')));
   okay("Opening a section preserves unique document IDs", await page.evaluate(() => { const ids = [...document.querySelectorAll('[id]')].map(node => node.id); return new Set(ids).size === ids.length; }));
-  okay("Opened panel stays outside the central portrait area", await page.locator('.next-detail').evaluate(detail => detail.getBoundingClientRect().right < innerWidth * .37));
+  okay("Opened topic has a readable wide side panel beside the portrait", await page.locator('.next-detail').evaluate(detail => { const rect = detail.getBoundingClientRect(); return rect.width >= 440 && rect.right < innerWidth * .49; }));
   await page.mouse.move(1,1);
   await page.waitForFunction(() => document.querySelector('#next-canvas').dataset.orbitMotion === 'held');
   // The completion frame still dims the other screens; the next frame restores
@@ -181,7 +181,7 @@ try {
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   okay("Reading an open topic stops automatic carousel movement", await page.locator('#next-canvas').getAttribute('data-orbit-motion') === 'held' && await page.locator('#next-orbit button').evaluateAll(cards => JSON.stringify(cards.map(card => [card.style.left,card.style.top,card.style.transform]))) === readingPositions);
   const lowerScreensAfter = await page.locator('.architect-bottom').boundingBox();
-  okay("Lower screens do not jump while a service opens", ['x','y','width','height'].every(key => Math.abs(lowerScreensAfter[key] - lowerScreensBefore[key]) < 1));
+  okay("Lower screens remain fully visible at the same bottom position when the side page widens", Math.abs(lowerScreensAfter.y + lowerScreensAfter.height - lowerScreensBefore.y - lowerScreensBefore.height) < 1 && lowerScreensAfter.y + lowerScreensAfter.height <= 900 && lowerScreensAfter.x >= await page.locator('.next-detail').evaluate(detail => detail.getBoundingClientRect().right + 12));
   okay("Carousel advances the detail and form together", await page.locator("#next-title").innerText() === "Сайты и дизайн" && await page.locator("#interest").inputValue() === "Сайт");
   await page.locator("#architect-prev").click();
   await page.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "moving", null, { timeout: 10000 });
@@ -267,6 +267,91 @@ try {
   okay('Returning to the tab presents the chosen topic exactly once', await interrupted.evaluate(() => presentedCount === 1) && await interrupted.locator('.next-detail').getAttribute('data-section-open') === 'automation');
   await interrupted.close();
 
+  // The same selected topic can unfold into a full page and return beside the
+  // portrait. Test the visitor flow and modal lifetime separately from animation.
+  const fullPage = await desktop.newPage();
+  watchErrors(fullPage, errors);
+  await fullPage.setViewportSize({width:1440,height:780});
+  await goto(fullPage, 'index.html?mode=live');
+  await fullPage.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.portraitState === 'loaded');
+  await fullPage.locator('#architect-select').selectOption('automation');
+  await fullPage.waitForFunction(() => document.querySelector('.next-detail').dataset.pagePresented === 'true');
+  const fullTopicContent = await fullPage.locator('.architect-topic').textContent();
+  await fullPage.evaluate(() => {
+    window.fullPresentationSamples = [];
+    window.fullPresentationObserver = new MutationObserver(() => {
+      const live = document.querySelector('#next-live'), detail = document.querySelector('.next-detail');
+      if (live.dataset.pageLayout === 'full' && live.dataset.panelPresenting === 'moving') fullPresentationSamples.push({inert:detail.inert, modal:detail.getAttribute('aria-modal'), presented:detail.dataset.pagePresented});
+    });
+    fullPresentationObserver.observe(document.querySelector('#next-live'), {subtree:true,attributes:true,attributeFilter:['data-page-layout','data-panel-presenting','data-page-presented','aria-modal','inert']});
+  });
+  await fullPage.locator('.architect-page-layout').click();
+  await fullPage.waitForFunction(() => document.querySelector('.next-detail').getAttribute('aria-modal') === 'true');
+  await fullPage.evaluate(() => fullPresentationObserver.disconnect());
+  okay('Full-page unfolding waits for presentation before activating its modal', await fullPage.evaluate(() => fullPresentationSamples.some(sample => sample.inert && sample.modal === null && sample.presented !== 'true')));
+  okay('Full page preserves only the selected automation topic and its content', await fullPage.locator('.architect-topic[data-topic="automation"]').count() === 1 && await fullPage.locator('.architect-topic').textContent() === fullTopicContent);
+  okay('Full topic fills the desktop viewport below its header without horizontal clipping', await fullPage.locator('.next-detail').evaluate(detail => { const rect = detail.getBoundingClientRect(), header = document.querySelector('header').getBoundingClientRect(); return Math.abs(rect.x) < 1 && Math.abs(rect.width-innerWidth) < 1 && Math.abs(rect.top-header.bottom) <= 1 && Math.abs(rect.bottom-innerHeight) < 1 && detail.scrollWidth <= detail.clientWidth + 1; }));
+  okay('Presented full page has a named dialog and keeps background controls inactive', await fullPage.locator('.next-detail').evaluate(detail => detail.getAttribute('role') === 'dialog' && detail.getAttribute('aria-label') === 'Автоматизация' && detail.dataset.pagePresented === 'true' && detail.contains(document.activeElement) && Boolean(document.querySelector('#architect-select').closest('[inert]')) && document.body.style.overflow === 'hidden'));
+  await fullPage.evaluate(() => {
+    const detail = document.querySelector('.next-detail');
+    window.modalFocusables = [...detail.querySelectorAll('a[href],button,input,select,textarea,summary,[tabindex]')].filter(node => !node.disabled && node.tabIndex >= 0 && !node.closest('[inert]') && node.getClientRects().length);
+    modalFocusables.at(-1).focus();
+  });
+  await fullPage.keyboard.press('Tab');
+  okay('Tab at the last full-page control returns to its first control', await fullPage.evaluate(() => modalFocusables.length > 2 && document.activeElement === modalFocusables[0]));
+  await fullPage.keyboard.press('Shift+Tab');
+  okay('Shift Tab at the first full-page control returns to its last control', await fullPage.evaluate(() => document.activeElement === modalFocusables.at(-1)));
+  await fullPage.locator('.next-detail').evaluate(detail => {detail.scrollTop=0;});
+  await fullPage.screenshot({path:artifacts + '/architect-topic-full-desktop.png',fullPage:false});
+  await fullPage.locator('.architect-page-layout').click();
+  await fullPage.waitForFunction(() => document.querySelector('#next-live').dataset.pageLayout === 'side' && document.querySelector('.next-detail').dataset.pagePresented === 'true');
+  okay('Returning beside Maestro keeps the topic and releases modal state', await fullPage.locator('.architect-topic').textContent() === fullTopicContent && await fullPage.evaluate(() => !document.querySelector('.next-detail').hasAttribute('aria-modal') && !document.querySelector('#architect-select').closest('[inert]') && document.body.style.overflow !== 'hidden'));
+  await fullPage.evaluate(() => scrollTo({top:150,behavior:'instant'}));
+  await fullPage.locator('.architect-page-layout').click();
+  await fullPage.waitForFunction(() => document.querySelector('#next-live').dataset.panelPresenting === 'moving');
+  okay('Opening a full topic from a scrolled scene returns the scene to the header', await fullPage.evaluate(() => Math.abs(document.querySelector('#next-live').getBoundingClientRect().top-document.querySelector('header').getBoundingClientRect().bottom) < 2));
+  await fullPage.keyboard.press('Escape');
+  await fullPage.waitForTimeout(3500);
+  okay('Escape during unfolding cancels the pending reveal without reopening it', await fullPage.locator('.architect-page').isHidden() && await fullPage.locator('#next-live').getAttribute('data-page-layout') === 'side' && await fullPage.locator('.next-detail').getAttribute('aria-modal') === null && await fullPage.locator('#architect-select').evaluate(select => document.activeElement === select));
+  await fullPage.emulateMedia({reducedMotion:'reduce'});
+  await fullPage.locator('#architect-select').selectOption('sites');
+  const topicImage = fullPage.locator('.architect-topic-image').first();
+  await topicImage.scrollIntoViewIfNeeded();
+  await topicImage.evaluate(image => image.decode());
+  okay('Side topic displays the whole service image at its natural proportions', await topicImage.evaluate(image => { const rect=image.getBoundingClientRect(), style=getComputedStyle(image); return style.objectFit === 'contain' && Math.abs(rect.width/rect.height-image.naturalWidth/image.naturalHeight) < .02 && rect.height <= innerHeight*.27+1; }));
+  await fullPage.locator('#architect-select').selectOption('cases');
+  const portfolioCount = await fullPage.locator('main > #portfolio .grid3 > .card').count();
+  okay('Portfolio topic contains all six current portfolio cards', portfolioCount === 6 && await fullPage.locator('.architect-topic[data-topic="cases"] .architect-topic-card').count() === portfolioCount);
+  await fullPage.locator('.architect-page-layout').click();
+  okay('Reduced motion opens the full portfolio immediately without an animated focus delay', await fullPage.locator('.next-detail').getAttribute('aria-modal') === 'true' && await fullPage.locator('.next-detail').getAttribute('data-page-presented') === 'true' && await fullPage.locator('#next-live').getAttribute('data-panel-presenting') !== 'moving' && await fullPage.locator('.architect-topic-card').count() === portfolioCount);
+  await fullPage.keyboard.press('Escape');
+  okay('Escape closes the full topic and restores carousel keyboard access', await fullPage.locator('.architect-page').isHidden() && await fullPage.locator('#architect-select').evaluate(select => document.activeElement === select && !select.closest('[inert]')) && await fullPage.evaluate(() => document.body.style.overflow !== 'hidden'));
+  await fullPage.locator('#architect-select').selectOption('automation');
+  await fullPage.locator('.architect-page-layout').click();
+  await fullPage.locator('.architect-question summary').click();
+  await fullPage.locator('#next-question').fill('Как автоматизировать заявки?');
+  await fullPage.locator('#next-ask').click();
+  okay('The consultant stays visible inside the full-page viewport', await fullPage.locator('.next-detail #maestro-genie-panel').evaluate(panel => { const rect=panel.getBoundingClientRect(); return !panel.hidden && rect.width > 250 && rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight; }));
+  await fullPage.locator('.next-detail [data-mg="close"]').click();
+  okay('Closing the full-page consultant returns to the same accessible topic', await fullPage.locator('.architect-topic[data-topic="automation"]').isVisible() && await fullPage.locator('.next-detail').getAttribute('aria-modal') === 'true');
+  await fullPage.locator('#next-lead').click();
+  await fullPage.waitForFunction(() => { const lead=document.querySelector('#lead').getBoundingClientRect(); return lead.top < innerHeight && lead.bottom > 0; });
+  okay('Full-page enquiry closes the overlay and preserves the selected service', await fullPage.locator('#interest').inputValue() === 'Автоматизация' && await fullPage.locator('.next-detail').getAttribute('aria-modal') === null && await fullPage.locator('#lead').evaluate(lead => !lead.closest('[inert]')) && await fullPage.evaluate(() => document.body.style.overflow !== 'hidden'));
+  await fullPage.locator('#architect-select').selectOption('automation');
+  await fullPage.locator('.architect-page-layout').click();
+  if (!await fullPage.locator('#next-question').isVisible()) await fullPage.locator('.architect-question summary').click();
+  await fullPage.locator('#next-question').fill('Как автоматизировать заявки?');
+  await fullPage.locator('#next-ask').click();
+  await fullPage.locator('.next-detail [data-mg="lead"]').click();
+  await fullPage.waitForFunction(() => { const lead=document.querySelector('#lead').getBoundingClientRect(); return lead.top < innerHeight && lead.bottom > 0; });
+  okay('The full-page consultant can hand off to the active enquiry form', await fullPage.locator('#interest').inputValue() === 'Автоматизация' && await fullPage.locator('.next-detail').getAttribute('aria-modal') === null && await fullPage.locator('#lead').evaluate(lead => !lead.closest('[inert]')) && await fullPage.evaluate(() => document.body.style.overflow !== 'hidden'));
+  await fullPage.locator('#architect-select').selectOption('automation');
+  await fullPage.locator('.architect-page-layout').click();
+  await fullPage.locator('#next-open').click();
+  okay('Classic navigation from a full topic releases all modal restrictions', await fullPage.locator('.hero').isVisible() && await fullPage.locator('.next-detail').getAttribute('aria-modal') === null && await fullPage.locator('#lead').evaluate(lead => !lead.closest('[inert]')) && await fullPage.evaluate(() => document.body.style.overflow !== 'hidden'));
+  okay('Full and side transitions preserve unique IDs and all original main sections', await fullPage.evaluate(() => { const ids=[...document.querySelectorAll('[id]')].map(node=>node.id); return new Set(ids).size === ids.length && ['solutions','products','portfolio'].every(id=>document.getElementById(id).parentElement.tagName === 'MAIN'); }));
+  await fullPage.close();
+
   const fallbackPage = await desktop.newPage();
   await fallbackPage.route('**/architect-scene.js*', route => route.abort());
   await goto(fallbackPage, 'index.html');
@@ -274,6 +359,11 @@ try {
   await fallbackPage.locator('#next-fallback').waitFor({ state: 'visible' });
   okay("2D fallback shows the static Architect and clears loading", await fallbackPage.locator('#next-model-status').isHidden() && await fallbackPage.locator('#next-orbit button').count() === 11 && await fallbackPage.locator('.architect-art').isVisible());
   okay("2D fallback keeps its horizontal service directory", await fallbackPage.locator('#next-orbit').evaluate(orbit => getComputedStyle(orbit).display === 'flex'));
+  await fallbackPage.locator('#architect-select').selectOption('automation');
+  await fallbackPage.locator('.architect-page-layout').click();
+  okay('The 2D fallback can open the same full topic without waiting for WebGL', await fallbackPage.locator('.next-detail').getAttribute('aria-modal') === 'true' && await fallbackPage.locator('.architect-topic[data-topic="automation"]').count() === 1);
+  await fallbackPage.keyboard.press('Escape');
+  okay('Closing the fallback full page restores its directory controls', await fallbackPage.locator('.architect-page').isHidden() && await fallbackPage.locator('#architect-select').evaluate(select => !select.closest('[inert]')));
   await fallbackPage.close();
 
   const compatPage = await desktop.newPage();
@@ -416,9 +506,10 @@ try {
   await admin.close();
 
   // Verify responsive layout, launcher position and mobile interactions.
+  await desktop.close();
   const mobile = await browser.newContext({
     viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
-    acceptDownloads: true
+    acceptDownloads: true, reducedMotion: 'reduce'
   });
   const m = await mobile.newPage();
   watchErrors(m, errors);
@@ -467,11 +558,14 @@ try {
   const touchBounds = await touchCard.boundingBox();
   const touchStart = { x: Math.min(280, touchBounds.x + touchBounds.width / 2), y: Math.max(120, touchBounds.y + 50) };
   const touchBefore = await touchCard.getAttribute('style');
+  okay('Touch drag begins on the visible virtual screen', await touchCard.evaluate((card, point) => card.contains(document.elementFromPoint(point.x,point.y)), touchStart));
   const touchSession = await mobile.newCDPSession(m);
   await touchSession.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [touchStart] });
   for (let step = 1; step <= 6; step++) await touchSession.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: touchStart.x + step * 10, y: touchStart.y }] });
+  await m.waitForFunction(() => document.querySelector('#next-canvas').dataset.orbitMotion === 'drag');
   await touchSession.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await touchSession.detach();
+  await m.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   okay("Touch dragging rotates screens without selecting a direction", await touchCard.getAttribute('style') !== touchBefore && await m.locator('#architect-select').inputValue() === 'strategy' && await m.locator('#next-live').getAttribute('data-panel-presenting') !== 'moving');
   await m.locator("#architect-next").click();
   okay("Mobile carousel updates the selected service", await m.locator("#next-title").innerText() === "Сайты и дизайн" && await m.locator("#interest").inputValue() === "Сайт");
@@ -502,6 +596,24 @@ try {
   await m.locator('[data-next-mode="live"]').click();
   await m.evaluate(() => scrollTo(0, 0));
   okay("Orb handoff and mode changes do not pan the mobile scene sideways", await m.evaluate(() => document.querySelector("#next-live").scrollLeft === 0 && document.querySelector(".architect-intro").getBoundingClientRect().left >= 0));
+  await m.locator('#architect-select').selectOption('automation');
+  const mobileTopicContent = await m.locator('.architect-topic').textContent();
+  await m.locator('.architect-page-layout').click();
+  okay('Mobile reduced motion opens the selected full page immediately', await m.locator('.next-detail').getAttribute('aria-modal') === 'true' && await m.locator('#next-live').getAttribute('data-panel-presenting') !== 'moving' && await m.locator('.architect-topic').textContent() === mobileTopicContent);
+  okay('Mobile full page fills the available viewport without clipping its width', await m.locator('.next-detail').evaluate(detail => { const rect=detail.getBoundingClientRect(), header=document.querySelector('header').getBoundingClientRect(); return Math.abs(rect.x) < 1 && Math.abs(rect.width-innerWidth) < 1 && Math.abs(rect.top-header.bottom) <= 1 && Math.abs(rect.bottom-innerHeight) < 1 && detail.scrollWidth <= detail.clientWidth + 1; }));
+  await m.screenshot({path:artifacts + '/architect-topic-full-mobile.png',fullPage:false});
+  if (!await m.locator('#next-question').isVisible()) await m.locator('.architect-question summary').click();
+  await m.locator('#next-question').fill('Как автоматизировать заявки?');
+  await m.locator('#next-ask').click();
+  okay('Mobile full-page consultant fits on screen with its close control', await m.locator('.next-detail #maestro-genie-panel').evaluate(panel => { const rect=panel.getBoundingClientRect(); return !panel.hidden && rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight; }));
+  await m.locator('.next-detail [data-mg="close"]').click();
+  if (await m.locator('#next-question').isVisible()) await m.locator('.architect-question summary').click();
+  await m.locator('.architect-page-layout').click();
+  okay('Mobile can return beside Maestro with the same topic and active controls', await m.locator('#next-live').getAttribute('data-page-layout') === 'side' && await m.locator('.architect-topic').textContent() === mobileTopicContent && await m.locator('#architect-select').evaluate(select => !select.closest('[inert]')) && await carouselClearsConsultation(m));
+  await m.locator('.architect-page-layout').click();
+  await m.locator('.architect-page-close').click();
+  okay('Mobile close restores scrolling and the carousel after a full topic', await m.locator('.architect-page').isHidden() && await m.locator('.next-detail').getAttribute('aria-modal') === null && await m.evaluate(() => document.body.style.overflow !== 'hidden'));
+  await m.evaluate(() => scrollTo({top:0,behavior:'instant'}));
   await m.screenshot({ path: artifacts + "/architect-portrait-mobile.png", fullPage: true });
   okay("Browser produced no uncaught errors", errors.length === 0 || (process.stderr.write(errors.join("\n")), false));
   process.stdout.write("\nPASSED " + checks + " browser assertions (desktop + mobile)\n");

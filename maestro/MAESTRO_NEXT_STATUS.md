@@ -1,6 +1,31 @@
 # MAESTRO NEXT — current status
 
-## 2026-10-30: raised orbit, individual topic pages and articulated portrait
+## 2026-10-30: wide topic pages and full-page cube preview
+
+Latest owner corrections are implemented in the feature branch:
+- The side page uses 43vw (up to 680px), with the fixed lower diagrams shifted
+  clear of its right edge. At 1440px the page is 619px wide instead of 446px.
+- Topic pictures preserve their natural proportions. Side pictures fit within
+  the reading panel; full-page pictures can use the complete content column.
+- "На весь экран" replays the hand/card/cube sequence into a full topic page
+  below the site header. "Рядом с Маэстро", the return control and Escape restore
+  the scene. Only the selected topic is rendered. The full page has keyboard
+  focus containment, background inert state and reduced-motion support.
+- The consultant stays inside the full page. Both the common CTA and the
+  consultant's enquiry action release the modal before reaching the shared form.
+- Current main portfolio changes through ac1909c were merged, preserving both
+  the new project links and the approved gold logo, including portfolio.html.
+- The seven owner-supplied review prompts are applied in design-qa.md. All 12
+  public pages have titles, descriptions and canonical URLs; root sitemap.xml
+  and robots.txt agree with those URLs. This is not evidence of search indexing.
+
+Current validation receipts are linked in PR #10. The structural/SEO suite passes
+144 checks; the rig/timeline suite passes 12 and the portrait controller passes 2.
+Local screenshots confirm the 1440x780 full-page bounds (0,72,1440,708), mobile
+bounds (0,60,390,784), complete image proportions and no horizontal overflow.
+The full browser suite also checks modal cancellation, chat and lead handoff.
+
+## Portrait and orbit implementation
 
 The owner explicitly asked to pause the separate human GLB and animate the
 approved portrait. Live now defaults to the same blue-suit visual as the chosen
@@ -23,7 +48,7 @@ Implemented:
   forms or inactive interactive controls. Desktop,
   tablet and mobile layouts keep forms, controls and lower diagrams separate.
 - The owner-requested removal of the ARCHITECT title and 02 number.
-- Stronger gold M logo in both home modes and six supporting pages. The canonical
+- Stronger gold M logo in both home modes and seven supporting pages. The canonical
   master, hashes and cross-platform rule are in brand/BRAND_CANON.md and AGENTS.md.
 - Shared eleven-service catalog, Classic mode, consent and lead context retained.
 - Opt-in Russian browser voice, with a bounded wait for local voices and preference
@@ -35,7 +60,7 @@ Implemented:
 
 ## Verification
 
-Current local revision: 126 desktop/mobile browser assertions passed, including
+Earlier topic-page revision: 126 desktop/mobile browser assertions passed, including
 slow idle rotation, hover/focus/drag holds, resume after closing a topic, a minimum
 12 px clearance at 1440x780, scoped topic contents and unchanged classic sections.
 Visual measurement at 1440x780 gives 24 px clearance and no topic-panel horizontal

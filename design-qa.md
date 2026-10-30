@@ -92,3 +92,33 @@ was found and corrected. HUMANITY_PASS: new labels identify a live image and a
 
 External profile rollout is incomplete: Telegram gateway account is not allowlisted;
 other exact MAESTRO profiles are not currently verified. No profile write is claimed.
+
+## 2026-10-30: applying the seven website review prompts
+
+The owner's seven prompts are review lenses for the existing site, not a reason
+to restart it or replace approved copy and identity. Keep the shared catalog,
+Classic/Live context, gold twin-peak mark and approved blue-suit portrait.
+
+| Review lens | Existing source and acceptance check |
+| --- | --- |
+| Strategy and page structure | The shared catalog and existing brief builder already collect the task, goal, constraints and next action. Each topic must show only its own materials and retain its lead interest. |
+| Identity and voice | `maestro/brand/BRAND_CANON.md` is the brand source. Preserve owner-authored text; review only new labels for a clear action, natural Russian and accurate scope. |
+| Home hierarchy | Topic title, summary, relevant evidence and the existing request action must remain readable in order. Do not invent client logos, testimonials, conversion rates or growth figures. |
+| Copy | Keep authored service text and price values unchanged. A demo, prototype and configured live integration must not be described as equivalent results. |
+| Visual design | Extend the current gold/blue palette and existing typography. Inspect the opened topic beside the portrait and in full-page layout; keep complete image proportions, visible controls and readable contrast. |
+| Responsive implementation | Retain semantic HTML and working links. Check desktop/mobile, keyboard focus, reduced motion, WebGL failure, the form context and return to Classic. |
+| Search basics | Keep distinct existing titles/descriptions and headings. Use absolute canonical URLs consistent with the sitemap; list public pages without mode/query duplicates or the server admin page. |
+
+Search discovery changes: supporting pages now have self-referencing canonical
+URLs; `sitemap.xml` lists the 12 public MAESTRO pages; root `robots.txt` points to
+it without blocking assets or pages. The portfolio's existing social title and
+description remain unchanged, with its canonical URL, site name, locale and type
+added. No fabricated `lastmod` values, keyword stuffing or unverified structured
+data were added. These are local source changes, not proof of indexing or ranking.
+The saved check compares each supporting page's body hash before and after.
+
+Primary references read on 2026-10-30:
+- [Google SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide): descriptive content, useful links and user comprehension come before mechanical SEO work.
+- [Google canonical URL guidance](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls): self-referencing canonical links and consistent preferred URLs.
+- [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap): absolute URLs, canonical pages and accurate optional metadata.
+- [Google robots.txt guidance](https://developers.google.com/crawling/docs/robots-txt/create-robots-txt): the file belongs at the host root; its sitemap directive supports discovery.

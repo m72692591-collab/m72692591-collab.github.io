@@ -198,7 +198,9 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
       centerY += lift * worldPerPixel * (camera.position.z - radiusZ) / camera.position.z;
     }
     flightCube.visible=false;
-    const detailBox = {x:detail.offsetLeft,y:detail.offsetTop,width:detail.offsetWidth,height:detail.offsetHeight};
+    const fullPage = live.dataset.pageLayout === 'full' && Boolean(detail.dataset.sectionOpen);
+    const canvasBox = container.getBoundingClientRect();
+    const detailBox = {x:detail.offsetLeft - (fullPage ? canvasBox.left : 0),y:detail.offsetTop - (fullPage ? canvasBox.top : 0),width:detail.offsetWidth,height:detail.offsetHeight};
     meshes.forEach((mesh, index) => {
       const a = index * TAU / catalog.length + angle, depth = Math.cos(a), front = (depth + 1) / 2;
       mesh.position.set(centerX + Math.sin(a) * radiusX, centerY - depth * radiusY, depth * radiusZ);
@@ -226,17 +228,17 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
         const width = cardWidth;
         const handAnchorX = Math.max(width / 2 + 16, Math.min(container.clientWidth - width / 2 - 16, handX - width / 2 - 24));
         const handAnchorY = handY - 30;
-        const upperDock = container.clientWidth > 1100;
+        const upperDock = container.clientWidth > 1100 || fullPage;
         const dock = upperDock ? THREE.MathUtils.smoothstep(present.carry,.3,1) : THREE.MathUtils.smoothstep(present.carry,.72,1);
-        const dockX=detail.offsetLeft+detail.offsetWidth/2;
-        const landingY=upperDock ? 32 : detail.offsetTop+90;
+        const dockX=detailBox.x+detailBox.width/2;
+        const landingY=upperDock ? Math.max(32,detailBox.y+16) : detailBox.y+90;
         const unfold=present.expand;
         const anchorX=THREE.MathUtils.lerp(handAnchorX,dockX,dock);
         const anchorY=THREE.MathUtils.lerp(handAnchorY,landingY,dock)-Math.sin(dock*Math.PI)*45;
         const grip=present.release>0 ? 1 : present.attach;
         const fold=upperDock ? THREE.MathUtils.smoothstep(present.carry,0,.3)*(1-unfold) : 0;
         button.style.left=`${THREE.MathUtils.lerp(x,anchorX,grip)}px`;
-        button.style.top=`${THREE.MathUtils.lerp(y,THREE.MathUtils.lerp(anchorY,detail.offsetTop+cardHeight/2,unfold),grip)}px`;
+        button.style.top=`${THREE.MathUtils.lerp(y,THREE.MathUtils.lerp(anchorY,detailBox.y+cardHeight/2,unfold),grip)}px`;
         button.style.transform=`translate(-50%,-50%) scale(${(1-fold)*(1+unfold*.12)})`;
         button.style.opacity=String((1-present.reveal)*(1-fold));
         button.style.zIndex='28';
@@ -339,7 +341,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   });
   listen(canvas, 'webglcontextlost', contextLost); listen(window, 'maestro:speech', speech);
   listen(document, 'visibilitychange', visibilityChange); listen(reduced, 'change', reduceChange);
-  listen(live, 'architect:section-close', () => { docked = false; live.dataset.panelPresenting = ''; holdOrbitUntil = performance.now() + 1200; redraw(); });
+  listen(live, 'architect:section-close', () => { selectionVersion++; pendingPresented = null; action = null; docked = false; detail.inert = false; live.dataset.panelPresenting = ''; holdOrbitUntil = performance.now() + 1200; redraw(); });
   resize();
   return {
     setPresentation(value) { clearTimeout(statusTimer); selectionVersion++; presentation = value; action = null; docked = false; live.dataset.panelPresenting = ''; detail.inert = false; if (value === 'model') loadModel(); else if (container.dataset.portraitState === 'loaded') status.hidden = true; redraw(); },

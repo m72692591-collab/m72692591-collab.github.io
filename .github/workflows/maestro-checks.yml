@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'maestro/**'
+      - 'robots.txt'
+      - 'sitemap.xml'
       - 'tests/maestro-smoke.mjs'
       - 'tests/maestro-browser.mjs'
       - 'tests/maestro-leads-api.mjs'
@@ -15,6 +17,8 @@ on:
       - main
     paths:
       - 'maestro/**'
+      - 'robots.txt'
+      - 'sitemap.xml'
       - 'tests/maestro-smoke.mjs'
       - 'tests/maestro-browser.mjs'
       - 'tests/maestro-leads-api.mjs'
