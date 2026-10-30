@@ -19,8 +19,11 @@ Latest owner corrections are implemented in the feature branch:
   public pages have titles, descriptions and canonical URLs; root sitemap.xml
   and robots.txt agree with those URLs. This is not evidence of search indexing.
 
-Current validation receipts are linked in PR #10. The structural/SEO suite passes
-144 checks; the rig/timeline suite passes 12 and the portrait controller passes 2.
+Final local validation on 2026-10-31: 154 desktop/mobile browser assertions pass
+in one run, including full-page chat, both lead handoffs, touch dragging, Escape
+during cube travel, modal focus, reduced motion and fallback. The structural/SEO
+suite passes 144 checks; the rig/timeline suite passes 12 and the portrait
+controller passes 2. Receipts and remote CI status are linked in PR #10.
 Local screenshots confirm the 1440x780 full-page bounds (0,72,1440,708), mobile
 bounds (0,60,390,784), complete image proportions and no horizontal overflow.
 The full browser suite also checks modal cancellation, chat and lead handoff.
