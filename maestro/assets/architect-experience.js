@@ -1,5 +1,5 @@
-import {catalog} from './maestro-next-catalog.js';
-import {createSectionScreen} from './architect-section.js';
+import {catalog} from './maestro-next-catalog.js?v=topic-pages-1';
+import {createSectionScreen} from './architect-section.js?v=topic-pages-1';
 
 const root=document.getElementById('next-experience');
 if(root){
@@ -21,6 +21,7 @@ if(root){
   const select=(item,userSelected=false)=>{
     sectionScreen.restore();
     active=item;document.getElementById('architect-select').value=item.id;title.textContent=item.title;description.textContent=item.description;open.href=item.href;
+    if(userSelected&&document.body.classList.contains('next-mode-live'))sectionScreen.show(item);
     lead.href='#lead';orbit.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===item.id)));
     answer.textContent='';if(userSelected)window.MAESTRO_GENIE?.stopVoice?.();scene?.focus(catalog.indexOf(item),userSelected);
     document.getElementById('architect-counter').textContent=`${String(catalog.indexOf(item)+1).padStart(2,'0')} / ${catalog.length}`;
@@ -29,10 +30,11 @@ if(root){
   };
   live.addEventListener('architect:presented',()=>{
     if(!document.body.classList.contains('next-mode-live'))return;
-    sectionScreen.show(active);
+    if(detail.dataset.sectionOpen!==active.id)sectionScreen.show(active);
     window.MAESTRO_GENIE?.speak?.(`${active.title}. ${active.description}`);
   });
   const classicList=document.getElementById('next-classic-list');
+  open.textContent='Классический сайт';
   const slideIcons={strategy:'strategy',sites:'view',marketing:'marketing',sales:'finance',automation:'automation',ai:'chat',team:'team',analytics:'strategy',cases:'view',pricing:'finance',documents:'view'};
   catalog.forEach((item)=>{
     const option=document.createElement('option');option.value=item.id;option.textContent=item.title;document.getElementById('architect-select').append(option);
@@ -90,7 +92,7 @@ if(root){
   });
   const start=async()=>{
     if(scene||loading)return loading;
-    loading=import('./architect-scene.js?v=manual-cube-4').then(module=>{
+    loading=import('./architect-scene.js?v=topic-pages-1').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.setPresentation(presentation);scene.setMotion(!orbitPaused);scene.focus(catalog.indexOf(active),false);
       if(!document.body.classList.contains('next-mode-live'))scene.pause();

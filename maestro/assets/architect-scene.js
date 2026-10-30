@@ -38,6 +38,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   let presentation = 'portrait', motion = true, loaded = false, modelRequested = false, disposed = false, paused = false, visible = true, docked = false;
   let dragging = false, pointerId = null, pointerTarget = null, downX = 0, downY = 0, lastX = 0, suppressClick = false;
   let selectionVersion = 0, pendingPresented = null;
+  let holdOrbitUntil = 0;
   let chosen = 0, angle = 0, actorYaw = -.30, time = 0, action = null, rig = null, frame = 0, previousTime = performance.now();
   actor.rotation.y = actorYaw;
   let speechActive = false, speechState = null, statusTimer;
@@ -156,6 +157,11 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     const animate = motion && !reduced.matches;
     if (action && !canPresent()) finishPresentation();
     if (animate) time += dt;
+    const orbitTurning = animate && !action && !dragging && !docked && !detail.dataset.sectionOpen
+      && now > holdOrbitUntil && !orbit.contains(document.activeElement)
+      && !buttons.some(button => button.matches(':hover'));
+    if (orbitTurning) angle += dt * .045;
+    container.dataset.orbitMotion = orbitTurning ? 'turning' : dragging ? 'drag' : 'held';
     const picture = presentation === 'portrait';
     const elapsed = action ? Math.max(0, (now - action.started) / 1000) : 0;
     const present = action && picture ? presentationFrame(elapsed) : null;
@@ -174,13 +180,23 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     const photoHand = picture ? portrait.handPosition() : null;
     const portraitCenter = picture ? portrait.orbitCenter?.() : null;
     const centerX = picture ? (portraitCenter?.x ?? (mobile() ? .15 : .65)) : (mobile() ? .15 : .65);
-    const centerY = picture ? (portraitCenter?.y ?? (photoHand?.y ?? .8) + .45) : (modelChest?.y ?? 2.2) - .55;
+    let centerY = picture ? (portraitCenter?.y ?? (photoHand?.y ?? .8) + .45) : (modelChest?.y ?? 2.2) - .55;
     const worldPerPixel = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * Math.abs(camera.position.z) / container.clientHeight;
     const radiusX = Math.min(container.clientWidth * (mobile() ? .78 : .40), mobile() ? 310 : 560) * worldPerPixel;
     const radiusY = (mobile() ? 105 : container.clientWidth <= 1100 ? 125 : 110) * worldPerPixel;
     const radiusZ = mobile() ? 1.15 : 1.55;
     const cardWidth = mobile() ? 260 : container.clientWidth <= 1100 ? 280 : 380;
     const cardHeight = mobile() ? 232 : container.clientWidth <= 1100 ? 240 : 280;
+    // Raise the entire elliptical orbit by its lowest (front) edge. This keeps
+    // every resting screen above the fixed lower diagrams at every rotation.
+    const lowerScreens = live.querySelector('.architect-bottom');
+    if (lowerScreens) {
+      const lowerTop = lowerScreens.getBoundingClientRect().top - container.getBoundingClientRect().top;
+      const front = new THREE.Vector3(centerX, centerY - radiusY, radiusZ).project(camera);
+      const frontBottom = (-front.y * .5 + .5) * container.clientHeight + cardHeight / 2;
+      const lift = Math.max(0, frontBottom - (lowerTop - 24));
+      centerY += lift * worldPerPixel * (camera.position.z - radiusZ) / camera.position.z;
+    }
     flightCube.visible=false;
     const detailBox = {x:detail.offsetLeft,y:detail.offsetTop,width:detail.offsetWidth,height:detail.offsetHeight};
     meshes.forEach((mesh, index) => {
@@ -271,6 +287,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   const down = event => {
     if (event.button !== 0 || !event.isPrimary || pointerId !== null) return;
     pointerId = event.pointerId; pointerTarget = event.currentTarget;
+    holdOrbitUntil = performance.now() + 5000;
     downX = lastX = event.clientX; downY = event.clientY; suppressClick = false;
     pointerTarget.setPointerCapture(pointerId);
   };
@@ -285,6 +302,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     }
     event.preventDefault();
     const dx = event.clientX - lastX;
+    holdOrbitUntil = performance.now() + 5000;
     angle += dx * .006; actorYaw += dx * .004; lastX = event.clientX;
     redraw();
   };
@@ -295,6 +313,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     const click = event.type === 'pointerup' && !dragging && Math.hypot(event.clientX - downX, event.clientY - downY) <= 7;
     const capturedId = pointerId;
     dragging = false; pointerId = null; pointerTarget = null;
+    holdOrbitUntil = performance.now() + 5000;
     if (target.hasPointerCapture(capturedId)) target.releasePointerCapture(capturedId);
     if (click && target === canvas) {
       const rect = canvas.getBoundingClientRect();
@@ -320,6 +339,7 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
   });
   listen(canvas, 'webglcontextlost', contextLost); listen(window, 'maestro:speech', speech);
   listen(document, 'visibilitychange', visibilityChange); listen(reduced, 'change', reduceChange);
+  listen(live, 'architect:section-close', () => { docked = false; live.dataset.panelPresenting = ''; holdOrbitUntil = performance.now() + 1200; redraw(); });
   resize();
   return {
     setPresentation(value) { clearTimeout(statusTimer); selectionVersion++; presentation = value; action = null; docked = false; live.dataset.panelPresenting = ''; detail.inert = false; if (value === 'model') loadModel(); else if (container.dataset.portraitState === 'loaded') status.hidden = true; redraw(); },

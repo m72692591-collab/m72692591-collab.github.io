@@ -1,6 +1,6 @@
 # MAESTRO NEXT — current status
 
-## 2026-10-30: manual orbital screens and articulated portrait
+## 2026-10-30: raised orbit, individual topic pages and articulated portrait
 
 The owner explicitly asked to pause the separate human GLB and animate the
 approved portrait. Live now defaults to the same blue-suit visual as the chosen
@@ -11,11 +11,16 @@ Implemented:
 - A transparent portrait over a separate glass-office backdrop; smaller framing,
   gentle head motion, a rigid shoulder/forearm chain, blinking and subtle mouth
   movement connected to actual speech events.
-- Wide translucent panels (380 x 280 px on desktop). The visitor drags the orbit;
-  idle rotation is disabled. Selection reaches, attaches a card to the hand point,
+- Wide translucent panels (380 x 280 px on desktop). The visitor can drag the orbit;
+  it also rotates slowly in idle, as requested in the latest correction. Hover,
+  keyboard focus, dragging, an open topic, Pause and reduced motion stop rotation.
+  The complete ellipse is raised to leave 24 px above the fixed lower diagrams.
+  Selection reaches, attaches a card to the hand point,
   folds it into a WebGL cube, carries it to the upper left and unfolds the side
-  panel. The actual classic section is moved into that panel and restored on
-  direction/mode changes, preserving its IDs and handlers. Desktop,
+  panel. Each selection opens its own topic page, using only the relevant
+  original card texts. Entire service directories are no longer embedded.
+  Classic sections remain in place; copied presentation content carries no IDs,
+  forms or inactive interactive controls. Desktop,
   tablet and mobile layouts keep forms, controls and lower diagrams separate.
 - The owner-requested removal of the ARCHITECT title and 02 number.
 - Stronger gold M logo in both home modes and six supporting pages. The canonical
@@ -30,9 +35,19 @@ Implemented:
 
 ## Verification
 
-Current local revision: 117 desktop/mobile browser assertions passed, including
-mouse/touch dragging without accidental selection, idle hold, section reuse and
-restoration, hidden-tab completion, reduced motion and fallback. Also passed:
+Current local revision: 126 desktop/mobile browser assertions passed, including
+slow idle rotation, hover/focus/drag holds, resume after closing a topic, a minimum
+12 px clearance at 1440x780, scoped topic contents and unchanged classic sections.
+Visual measurement at 1440x780 gives 24 px clearance and no topic-panel horizontal
+overflow. Independent checks cover all 11 topic sources, original section identity,
+unique IDs, working topic links and form-interest continuity. Short screen labels
+passed independent language review.
+
+The previous revision (982be1d) passed 117 desktop/mobile browser assertions and
+all three GitHub Actions jobs in run 40955267206. That revision covered manual
+dragging, the earlier whole-section panel, hidden-tab completion, reduced motion
+and fallback.
+Also passed:
 86 structural checks, 12 rig/timeline tests, two portrait-controller tests, and
 the speech bridge (25 synthetic events / eight utterances). Browser console
 checks include WebGL shader compilation errors. No such errors were found.
@@ -95,7 +110,7 @@ an unchanged approved portrait, and double virtual-screen height. Completion
 requires joint-pose visual inspection and browser navigation/fallback checks.
 
 Implemented: rigid shoulder and forearm polygons, reconstructed torso underlay,
-manual 3D ellipse with rear screens occluded by the portrait, and 280 px
+draggable 3D ellipse with rear screens occluded by the portrait, and 280 px
 screen height on desktop (240 tablet, 232 mobile). Screen text fades when the
 screen turns edge-on. The selected screen remains
 prominent during a gesture; other orbit screens are dimmed. Existing text is kept.

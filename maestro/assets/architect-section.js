@@ -1,5 +1,5 @@
-// Reuse the actual classic section, preserving IDs, links and event handlers.
-// A marker restores its original position when changing direction or mode.
+// Live topics reuse exact authored text without moving classic sections or
+// cloning IDs, forms, canvases or controls that would lose their handlers.
 export function createSectionScreen(detail) {
   const screen = document.createElement('div');
   screen.className = 'architect-page';
@@ -7,36 +7,145 @@ export function createSectionScreen(detail) {
   const close = document.createElement('button');
   close.type = 'button';
   close.className = 'architect-page-close';
-  close.textContent = 'Свернуть материалы';
+  close.textContent = 'Вернуться к карусели';
   const content = document.createElement('div');
+  content.className = 'architect-topic-content';
   screen.append(close, content);
   detail.append(screen);
-  let section = null, marker = null;
-  function restore() {
-    if (section && marker) {
-      marker.replaceWith(section);
-      section.classList.remove('architect-screen-section');
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+  function keepInterest(item) {
+    const input = document.getElementById('interest');
+    if (input && [...input.options].some(option => option.value === item.interest)) input.value = item.interest;
+  }
+  function bindLink(link, item) {
+    link.addEventListener('click', () => {
+      keepInterest(item);
+      const href = link.getAttribute('href');
+      if (href?.startsWith('#') && href !== '#lead') {
+        document.querySelector('button[data-next-mode="classic"]')?.click();
+      }
+    });
+    return link;
+  }
+  function action(href, label, item, primary = false) {
+    const link = element('a', `architect-topic-link${primary ? ' architect-topic-link-primary' : ''}`, label);
+    link.href = href;
+    return bindLink(link, item);
+  }
+  function copyText(source, className, item) {
+    const copy = source.cloneNode(true);
+    copy.className = className;
+    [copy, ...copy.querySelectorAll('*')].forEach(node => {
+      node.removeAttribute('id');
+      node.removeAttribute('style');
+      node.removeAttribute('aria-labelledby');
+      node.removeAttribute('aria-describedby');
+      for (const attribute of [...node.attributes]) if (attribute.name.startsWith('on')) node.removeAttribute(attribute.name);
+    });
+    copy.querySelectorAll('form,input,button,select,textarea,canvas,script').forEach(node => node.remove());
+    copy.querySelectorAll('a[href]').forEach(link => bindLink(link, item));
+    return copy;
+  }
+  function sourceSection(id) {
+    const section = document.getElementById(id);
+    return section?.tagName === 'SECTION' && section.parentElement?.tagName === 'MAIN' ? section : null;
+  }
+  function sourceCards(topic) {
+    if (topic.collection) return [...(sourceSection(topic.collection.section)?.querySelectorAll(topic.collection.selector) || [])];
+    return (topic.cards || []).map(spec => [...(sourceSection(spec.section)?.querySelectorAll(spec.selector || '.grid3 > .card') || [])]
+      .find(card => card.querySelector('h3,strong,b')?.textContent.trim() === spec.heading)).filter(Boolean);
+  }
+  function renderCard(source, item) {
+    const card = element('section', 'architect-topic-card');
+    const heading = source.querySelector('h3,strong,b');
+    const image = source.querySelector('img[src]');
+    if (image) {
+      const media = element('img', 'architect-topic-image');
+      media.src = image.getAttribute('src');
+      media.alt = image.getAttribute('alt') || '';
+      media.loading = 'lazy';
+      media.decoding = 'async';
+      card.append(media);
     }
-    section = marker = null;
+    if (heading) card.append(element('h3', 'architect-topic-card-title', heading.textContent));
+    const price = source.querySelector('.money');
+    if (price) card.append(element('div', 'architect-topic-price', price.textContent));
+    const paragraphs = [...source.querySelectorAll(':scope > p')];
+    paragraphs.forEach(paragraph => {
+      // Link-only paragraphs become actions; authored prose is copied exactly.
+      if (paragraph.children.length && [...paragraph.childNodes].every(node => node.nodeType === 3 ? !node.textContent.trim() : node.tagName === 'A')) return;
+      card.append(copyText(paragraph, 'architect-topic-copy', item));
+    });
+    if (!paragraphs.length && !price) {
+      const description = source.querySelector(':scope > span:not(.mini)');
+      if (description) card.append(element('p', 'architect-topic-copy', description.textContent));
+    }
+    const list = source.querySelector(':scope > ul');
+    if (list) card.append(copyText(list, 'architect-topic-list', item));
+    const tags = source.querySelector('.tags');
+    if (tags) {
+      const labels = element('div', 'architect-topic-tags');
+      tags.querySelectorAll('.tag').forEach(tag => labels.append(element('span', 'architect-topic-tag', tag.textContent)));
+      card.append(labels);
+    }
+    const links = source.matches('a[href]') ? [source] : [...source.querySelectorAll(':scope > a[href], :scope > p > a[href]')];
+    if (links.length) {
+      const actions = element('div', 'architect-topic-card-actions');
+      links.forEach(link => actions.append(action(link.getAttribute('href'), source === link ? link.querySelector('.mini')?.textContent || heading?.textContent : link.textContent, item)));
+      card.append(actions);
+    }
+    return card;
+  }
+  function restore() {
+    content.replaceChildren();
     screen.hidden = true;
     delete detail.dataset.sectionOpen;
   }
   close.addEventListener('click', () => {
     restore();
     detail.scrollTop = 0;
-    detail.querySelector('#next-open')?.focus({preventScroll:true});
+    detail.dispatchEvent(new CustomEvent('architect:section-close', {bubbles:true}));
+    document.getElementById('architect-select')?.focus({preventScroll:true});
   });
   return {
     show(item) {
       restore();
-      if (!item?.href?.startsWith('#')) return;
-      const target = document.getElementById(item.href.slice(1));
-      if (!target || target.tagName !== 'SECTION' || target.parentElement?.tagName !== 'MAIN') return;
-      marker = document.createComment('MAESTRO section return point');
-      target.before(marker);
-      section = target;
-      section.classList.add('architect-screen-section');
-      content.append(section);
+      if (!item?.topic) return;
+      const topic = item.topic;
+      const article = element('article', 'architect-topic');
+      article.dataset.topic = item.id;
+      const header = element('div', 'architect-topic-header');
+      const icon = element('img', 'architect-topic-icon');
+      icon.src = `assets/icons/${topic.icon}.svg`;
+      icon.alt = '';
+      icon.width = icon.height = 32;
+      header.append(icon, element('span', 'architect-topic-kicker', 'МАЭСТРО BUSINESS'),
+        element('h2', 'architect-topic-title', item.title), element('p', 'architect-topic-summary', item.description));
+      article.append(header);
+      const section = topic.collection && sourceSection(topic.collection.section);
+      if (topic.intro) {
+        const intro = section?.querySelector('.wrap > .lead');
+        if (intro) article.append(copyText(intro, 'architect-topic-intro', item));
+      }
+      const grid = element('div', 'architect-topic-grid');
+      sourceCards(topic).forEach(source => grid.append(renderCard(source, item)));
+      article.append(grid);
+      if (topic.note) {
+        const note = section?.querySelector('.wrap > p:last-child');
+        if (note) article.append(copyText(note, 'architect-topic-note', item));
+      }
+      if (topic.link) {
+        const actions = element('div', 'architect-topic-actions');
+        actions.append(action(topic.link.href, topic.link.label, item));
+        article.append(actions);
+      }
+      content.append(article);
       screen.hidden = false;
       detail.dataset.sectionOpen = item.id;
       detail.scrollTop = 0;

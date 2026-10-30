@@ -265,7 +265,38 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
 .next-orbit.architect-ready:not(.next-static) button:active{cursor:grabbing}
 @media(min-width:1101px){
  .next-live .next-detail[data-section-open]{max-height:calc(100% - var(--detail-top) - 98px)}
- .next-live[data-panel-presenting=moving] .next-detail{box-shadow:0 -8px 30px rgba(145,219,255,var(--panel-impact,0));transform:scaleY(max(.02,var(--panel-reveal,0)));transform-origin:50% 0}
+ .next-live[data-panel-presenting=moving] .next-detail{box-shadow:0 -8px 30px rgba(145,219,255,var(--panel-impact,0));transform:scaleX(max(.12,var(--panel-reveal,0))) scaleY(max(.02,var(--panel-reveal,0)));transform-origin:50% 0}
 }
 @media(max-width:1100px){.next-live .next-detail[data-section-open]{max-height:470px;overflow-y:auto}.next-live:has(.next-detail[data-section-open]){min-height:1440px}}
 @media(prefers-reduced-motion:reduce){.next-live[data-panel-presenting=moving] .next-detail{transform:none;box-shadow:none}}
+
+/* One selected topic unfolds as its own page inside the glass screen. */
+.next-live .next-detail{scrollbar-width:thin;scrollbar-color:#608fa5 transparent;color-scheme:dark}
+.next-live .next-detail[data-section-open]{display:flex;flex-direction:column;padding:22px;background:linear-gradient(145deg,#0b2538ed,#071725e8);border-color:#a8ddff78;box-shadow:0 18px 60px #0005,inset 0 1px #d1efff26}
+.next-detail[data-section-open]>.next-kicker,.next-detail[data-section-open]>#next-title,.next-detail[data-section-open]>#next-description{display:none}
+.next-detail[data-section-open]>.architect-page{order:-1;margin:0;padding:0;border:0}
+.next-detail[data-section-open]>*{flex-shrink:0}
+.next-detail[data-section-open]>.next-detail-actions{border-top:1px solid #a5ddff29;padding-top:18px;margin-top:22px}
+.next-detail[data-section-open]>.architect-question{margin-top:0}
+.architect-page-close{display:block;color:#b9dff3;font:11px/1.4 Arial,sans-serif;letter-spacing:.02em;padding:0 0 20px;text-decoration:none}
+.architect-page-close:before{content:"←";margin-right:8px;color:#7dcaff}
+.architect-topic-header{position:relative;min-height:170px;padding:18px 0 24px;border-top:1px solid #a5ddff29;border-bottom:1px solid #a5ddff29;margin-bottom:18px;background:radial-gradient(ellipse at 100% 0,#71b9ff1a,transparent 65%)}
+.architect-topic-icon{position:absolute;right:4px;top:24px;width:42px;height:42px;filter:brightness(0) saturate(100%) invert(87%) sepia(17%) saturate(1290%) hue-rotate(170deg);opacity:.85}
+.architect-topic-kicker{display:block;color:#87c9ef;font-size:9px;letter-spacing:.18em;margin:0 55px 14px 0}
+.architect-page .architect-topic-title{font:30px/1.12 Georgia,serif;margin:0 52px 14px 0;color:#f3faff}
+.next-live .next-detail .architect-topic-summary{font-size:13px;line-height:1.65;max-width:36ch;margin:0;color:#c6dfea}
+.architect-topic-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.architect-topic-card{padding:18px;background:linear-gradient(130deg,#7abce712,#15384d30);border:1px solid #a8dbff2d;border-radius:3px}
+.next-live .next-detail .architect-topic-card-title{font:18px/1.3 Georgia,serif;margin:0 0 10px}
+.next-live .next-detail .architect-topic-copy,.next-live .next-detail .architect-topic-intro,.next-live .next-detail .architect-topic-note{font-size:12px;line-height:1.65;color:#c2d7e4;margin:0 0 12px}
+.architect-topic-copy:last-child{margin-bottom:0}
+.architect-topic-price{font:27px/1.2 Georgia,serif;color:#daefff;margin:6px 0 16px}
+.architect-topic-list{padding-left:17px;color:#c2d7e4;font-size:12px;line-height:1.7}
+.architect-topic-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.architect-topic-tag{font-size:9px;padding:4px 6px;border:1px solid #9ad5fb2e;color:#b8dcec}
+.architect-topic-card-actions,.architect-topic-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.architect-topic-link{font-size:12px;line-height:1.5;color:#a5dcff;text-underline-offset:4px}
+.architect-topic-link:hover{color:#fff}
+.architect-topic-image{display:block;width:100%;height:120px;object-fit:cover;margin-bottom:14px}
+@media(min-width:1101px){.next-live .next-detail[data-section-open]{width:clamp(320px,31vw,450px)}}
+@media(max-width:1100px){.next-live .next-detail[data-section-open]{padding:18px}.architect-page .architect-topic-title{font-size:27px}}

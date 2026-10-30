@@ -67,6 +67,7 @@ try {
   okay("Builder menu entry", await page.getByRole("link", { name: "Создать ТЗ" }).count() === 1);
   await page.locator("#next-classic-list a").first().waitFor();
   okay("NEXT uses the shared direction catalog", await page.locator("#next-classic-list a").count() === 11);
+  await page.evaluate(() => { window.originalClassicSections = [...document.querySelectorAll('main > section[id]')].filter(section => section.id !== 'next-experience'); });
   await page.locator('[data-next-mode="live"]').click();
   okay("Live mode changes the whole homepage", await page.locator(".hero").isHidden());
   okay("Live announces scene loading", await page.locator("#next-model-status").isVisible());
@@ -87,18 +88,45 @@ try {
   });
   okay("The carousel has visible front and rear paths around the portrait", orbitLayers.display === 'contents' && orbitLayers.canvasZ === '1' && orbitLayers.front && orbitLayers.rear && orbitLayers.frontY > orbitLayers.rearY);
   const strategyCard = page.locator('#next-orbit button[data-id="strategy"]');
-  const orbitStart = await strategyCard.getAttribute('style');
-  await page.waitForTimeout(600);
-  okay("The carousel stays in place while the portrait is alive", await strategyCard.getAttribute('style') === orbitStart);
+  await page.waitForFunction(() => document.querySelector('#next-canvas').dataset.orbitMotion === 'turning');
+  const idleLeft = await strategyCard.evaluate(card => parseFloat(card.style.left));
+  await page.waitForFunction(initial => Math.abs(parseFloat(document.querySelector('#next-orbit button[data-id="strategy"]').style.left) - initial) > .2, idleLeft, {timeout:10000});
+  okay("Idle carousel turns slowly without selecting a direction", await page.locator('#next-canvas').getAttribute('data-orbit-motion') === 'turning' && Math.abs(await strategyCard.evaluate(card => parseFloat(card.style.left)) - idleLeft) < 80 && await page.locator('#architect-select').inputValue() === 'strategy');
   okay("Desktop virtual screen has the requested readable dimensions", await strategyCard.evaluate(card => getComputedStyle(card).width === '380px' && getComputedStyle(card).minHeight === '280px'));
+  await page.setViewportSize({width:1440,height:780});
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  const shortWindow = await page.evaluate(() => {
+    const lower = document.querySelector('.architect-bottom').getBoundingClientRect();
+    const cards = [...document.querySelectorAll('#next-orbit button:not([hidden])')].map(card => card.getBoundingClientRect());
+    return {count:cards.length, lowerBottom:lower.bottom, lowerTop:lower.top, maxCardBottom:Math.max(...cards.map(card => card.bottom)), viewport:innerHeight};
+  });
+  okay("At 1440 by 780 every visible orbit screen clears the lower panels by 12 pixels", shortWindow.count >= 3 && shortWindow.maxCardBottom <= shortWindow.lowerTop - 12);
+  okay("Both lower panels fit entirely in the short desktop window", shortWindow.lowerBottom <= shortWindow.viewport);
+  await page.screenshot({path:artifacts + '/architect-orbit-short-desktop.png',fullPage:false});
+  await page.setViewportSize({width:1400,height:900});
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  const hoverBounds = await strategyCard.boundingBox();
+  await page.mouse.move(hoverBounds.x + hoverBounds.width / 2, hoverBounds.y + 45);
+  await page.waitForFunction(() => document.querySelector('#next-canvas').dataset.orbitMotion === 'held');
+  const hoverPosition = await strategyCard.getAttribute('style');
+  await page.waitForTimeout(350);
+  okay("Hovering a virtual screen holds the carousel for reading", await strategyCard.getAttribute('style') === hoverPosition);
+  await strategyCard.focus(); await page.mouse.move(1,1);
+  const focusPosition = await strategyCard.getAttribute('style');
+  await page.waitForTimeout(350);
+  okay("Keyboard focus holds the carousel independently of hover", await page.locator('#next-canvas').getAttribute('data-orbit-motion') === 'held' && await strategyCard.getAttribute('style') === focusPosition);
+  await strategyCard.evaluate(card => card.blur());
   const cardBounds = await strategyCard.boundingBox();
   const dragStart = { x: cardBounds.x + cardBounds.width / 2, y: cardBounds.y + 45 };
   await page.mouse.move(dragStart.x, dragStart.y); await page.mouse.down();
-  await page.mouse.move(dragStart.x + 120, dragStart.y, { steps: 8 }); await page.mouse.up();
+  const orbitStart = await strategyCard.getAttribute('style');
+  await page.mouse.move(dragStart.x + 120, dragStart.y, { steps: 8 });
+  okay("Manual dragging takes control of the orbit", await page.locator('#next-canvas').getAttribute('data-orbit-motion') === 'drag');
+  await page.mouse.up();
   okay("Dragging a virtual screen rotates the orbit without selecting it", await strategyCard.getAttribute('style') !== orbitStart && await page.locator('#architect-select').inputValue() === 'strategy' && await page.locator('#next-live').getAttribute('data-panel-presenting') !== 'moving');
   const draggedPosition = await strategyCard.getAttribute('style');
   await page.mouse.move(1, 1); await page.waitForTimeout(350);
-  okay("The carousel holds the position chosen by the visitor", await strategyCard.getAttribute('style') === draggedPosition);
+  okay("The carousel holds briefly after the visitor releases a drag", await page.locator('#next-canvas').getAttribute('data-orbit-motion') === 'held' && await strategyCard.getAttribute('style') === draggedPosition);
   const canvasBox = await page.locator('#next-canvas canvas').boundingBox();
   const canvasStart = { x: canvasBox.x + 30, y: canvasBox.y + 240 };
   await page.mouse.move(canvasStart.x, canvasStart.y); await page.mouse.down();
@@ -138,9 +166,20 @@ try {
   okay("Portrait gesture carries and fades the selected card", await page.evaluate(initial => gestureSamples.some(sample => sample.moving && sample.cardOpacity < .8 && Math.abs(sample.left - initial) > 30 && sample.transform.includes('scale(')), sitesStartingLeft));
   okay("Presentation notifies the consultant once after opening", await page.evaluate(() => presentedEvents.length === 1 && presentedEvents[0] === 1));
   okay("Chosen direction opens beside the portrait after the gesture", await page.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1") && await page.locator('#next-orbit button[data-id="sites"]').isHidden());
-  okay("The selected screen contains the real site section", await page.locator('.architect-page #solutions').count() === 1 && await page.locator('#solutions').isVisible());
+  okay("The selected screen opens its own sites topic", await page.locator('.architect-page article.architect-topic[data-topic="sites"]').count() === 1 && await page.locator('.architect-topic-title').innerText() === 'Сайты и дизайн');
+  okay("Opening a topic leaves every original section in the classic page", await page.evaluate(() => originalClassicSections.every(section => section.isConnected && section.parentElement.tagName === 'MAIN')));
   okay("Opening a section preserves unique document IDs", await page.evaluate(() => { const ids = [...document.querySelectorAll('[id]')].map(node => node.id); return new Set(ids).size === ids.length; }));
-  okay("Opened panel stays outside the central portrait area", await page.locator('.next-detail').evaluate(detail => detail.getBoundingClientRect().right < innerWidth * .32));
+  okay("Opened panel stays outside the central portrait area", await page.locator('.next-detail').evaluate(detail => detail.getBoundingClientRect().right < innerWidth * .37));
+  await page.mouse.move(1,1);
+  await page.waitForFunction(() => document.querySelector('#next-canvas').dataset.orbitMotion === 'held');
+  // The completion frame still dims the other screens; the next frame restores
+  // their opacity. Settle that presentation frame, then compare actual orbit
+  // geometry across frames rather than unrelated appearance styles.
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  const readingPositions = await page.locator('#next-orbit button').evaluateAll(cards => JSON.stringify(cards.map(card => [card.style.left,card.style.top,card.style.transform])));
+  await page.waitForTimeout(350);
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  okay("Reading an open topic stops automatic carousel movement", await page.locator('#next-canvas').getAttribute('data-orbit-motion') === 'held' && await page.locator('#next-orbit button').evaluateAll(cards => JSON.stringify(cards.map(card => [card.style.left,card.style.top,card.style.transform]))) === readingPositions);
   const lowerScreensAfter = await page.locator('.architect-bottom').boundingBox();
   okay("Lower screens do not jump while a service opens", ['x','y','width','height'].every(key => Math.abs(lowerScreensAfter[key] - lowerScreensBefore[key]) < 1));
   okay("Carousel advances the detail and form together", await page.locator("#next-title").innerText() === "Сайты и дизайн" && await page.locator("#interest").inputValue() === "Сайт");
@@ -157,7 +196,12 @@ try {
   await page.mouse.move(1, 1);
   const resumedPosition = await strategyCard.getAttribute("style");
   await page.waitForTimeout(350);
-  okay("Resuming the portrait does not start automatic carousel rotation", await page.locator("#architect-pause").getAttribute("aria-pressed") === "false" && await strategyCard.getAttribute("style") === resumedPosition);
+  okay("Resuming animation keeps the carousel still while its topic is open", await page.locator("#architect-pause").getAttribute("aria-pressed") === "false" && await page.locator('#next-canvas').getAttribute('data-orbit-motion') === 'held' && await strategyCard.getAttribute("style") === resumedPosition);
+  await page.locator('.architect-page-close').click(); await page.mouse.move(1,1);
+  await page.waitForFunction(() => document.querySelector('#next-canvas').dataset.orbitMotion === 'turning', null, {timeout:10000});
+  const returnedPosition = await strategyCard.getAttribute('style');
+  await page.waitForFunction(initial => document.querySelector('#next-orbit button[data-id="strategy"]').getAttribute('style') !== initial, returnedPosition, {timeout:10000});
+  okay("Returning from a topic resumes the slow idle carousel", await page.locator('.architect-page').isHidden() && await page.locator('#next-canvas').getAttribute('data-orbit-motion') === 'turning');
   // Keyboard navigation still selects a service after mouse dragging.
   await page.locator('#next-orbit button:not([hidden])').first().focus();
   await page.keyboard.press('ArrowRight');
@@ -170,9 +214,12 @@ try {
   okay("Reduced motion stops the carousel without disabling navigation", await page.locator('#next-orbit button[data-id="strategy"]').getAttribute("style") === reducedPosition && await page.locator("#architect-next").isEnabled());
   await page.locator('#architect-select').selectOption('automation');
   okay("Reduced motion shows selected details immediately without trapping focus", await page.locator("#next-title").innerText() === "Автоматизация" && await page.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1") && await page.locator("#next-live").getAttribute("data-panel-presenting") !== "moving");
-  okay("Reduced motion opens the actual selected products section", await page.locator('.architect-page #products').count() === 1 && await page.locator('main > #solutions').count() === 1);
+  const automationTopic = page.locator('.architect-page article.architect-topic[data-topic="automation"]');
+  okay("Reduced motion opens only the selected automation topic", await automationTopic.count() === 1 && await automationTopic.locator('.architect-topic-title').innerText() === 'Автоматизация');
+  const automationHeadings = await automationTopic.locator('.architect-topic-card-title').allTextContents();
+  okay("Automation contains its document and enquiry workflow cards without sites or HR showcases", automationHeadings.length === 2 && automationHeadings.includes('Авто-КП и документооборот') && automationHeadings.includes('Бот') && await automationTopic.locator('#solutions,#products,.visual-stripe,.hero').count() === 0 && !/Сайты, лендинги|HR и KPI/.test(await automationTopic.innerText()));
   await page.locator('#next-open').click();
-  okay("Open section restores the normal page and its original section", await page.locator('.hero').isVisible() && await page.locator('main > #products').count() === 1 && await page.locator('#products').count() === 1);
+  okay("Classic site link opens the original page section", await page.locator('.hero').isVisible() && await page.locator('main > #products').count() === 1 && await page.locator('#products').count() === 1);
   await page.locator('[data-next-mode="live"]').click();
   await page.locator('#architect-select').selectOption('strategy');
   await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -196,7 +243,7 @@ try {
   okay("Strategy handoff keeps its catalog service", await page.locator("#interest").inputValue() === "Аудит");
   await page.locator('[data-next-mode="classic"]').click();
   okay("Classic site remains available", await page.locator(".hero").isVisible());
-  okay("Returning to Classic restores moved sections without copies", await page.locator('main > #solutions').count() === 1 && await page.locator('main > #products').count() === 1 && await page.locator('#solutions').count() === 1 && await page.locator('#products').count() === 1);
+  okay("Returning to Classic preserves every original section without copies", await page.evaluate(() => originalClassicSections.every(section => section.isConnected && section.parentElement.tagName === 'MAIN' && document.querySelectorAll(`[id="${section.id}"]`).length === 1)));
 
   const interrupted = await desktop.newPage();
   await goto(interrupted, 'index.html?mode=live');
@@ -216,8 +263,8 @@ try {
     delete document.hidden;
     document.dispatchEvent(new Event('visibilitychange'));
   });
-  await interrupted.waitForFunction(() => document.querySelector('.architect-page #products'));
-  okay('Returning to the tab opens the chosen section exactly once', await interrupted.evaluate(() => presentedCount === 1) && await interrupted.locator('.next-detail').getAttribute('data-section-open') === 'automation');
+  await interrupted.waitForFunction(() => document.querySelector('.architect-page article.architect-topic[data-topic="automation"]') && document.querySelector('#next-live').dataset.panelPresenting === 'open');
+  okay('Returning to the tab presents the chosen topic exactly once', await interrupted.evaluate(() => presentedCount === 1) && await interrupted.locator('.next-detail').getAttribute('data-section-open') === 'automation');
   await interrupted.close();
 
   const fallbackPage = await desktop.newPage();
