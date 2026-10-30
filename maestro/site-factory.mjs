@@ -178,6 +178,7 @@ function runBrowser() {
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     report("Черновик подготовлен для сохранения на устройстве.");
   });
+  form.addEventListener("submit", event => event.preventDefault());
   form.addEventListener("input", render);
   form.addEventListener("change", render);
   render();
