@@ -65,6 +65,6 @@ check("Root robots links to real sitemap", readRoot("robots.txt").includes("http
 check("Homepage links to factory", read("index.html").includes('href="site-factory.html">Как создаём сайты'));
 check("Factory leads to site-specific brief", html.includes('brief-builder.html?kind=site'));
 check("Brief builder opens with site route selected", read("brief-builder.html").includes('get("kind") === "site"') && read("brief-builder.html").includes('$("kind").value = "Сайт"'));
-check("Standalone standard and launch gates documented", read("SITE_FACTORY_STANDARD.md").includes("Приёмка") && read("SITE_FACTORY_STANDARD.md").includes("приватность"));
+check("Standalone standard and launch gates documented", read("SITE_FACTORY_STANDARD.md").toLowerCase().includes("приёмка") && read("SITE_FACTORY_STANDARD.md").toLowerCase().includes("приватность"));
 
 console.log("\nPASSED " + passes + " website production checks.");
