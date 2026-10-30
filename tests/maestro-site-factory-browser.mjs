@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
+import fs from "node:fs";
 
 const port = 8767;
 const origin = "http://127.0.0.1:" + port;
@@ -59,9 +60,12 @@ try {
   check("Browser downloads a local site brief", file.suggestedFilename() === "MAESTRO_site_brief.txt");
   const mobile = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: window.innerWidth }));
   check("Mobile viewport has no horizontal overflow", mobile.width <= mobile.viewport + 1);
+  fs.mkdirSync("test-artifacts/maestro", { recursive: true });
+  await page.screenshot({ path: "test-artifacts/maestro/site-factory-mobile.png", fullPage: true });
   await page.setViewportSize({ width: 1440, height: 900 });
   const desktop = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: window.innerWidth }));
   check("Desktop viewport has no horizontal overflow", desktop.width <= desktop.viewport + 1);
+  await page.screenshot({ path: "test-artifacts/maestro/site-factory-desktop.png", fullPage: true });
   await page.goto(origin + "/maestro/brief-builder.html?kind=site");
   check("Factory handoff selects website in existing brief builder", await page.locator("#kind").inputValue() === "Сайт");
   check("No external user-input transmission", external.length === 0);
