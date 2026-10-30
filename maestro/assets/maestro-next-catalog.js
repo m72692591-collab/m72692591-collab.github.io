@@ -16,7 +16,7 @@ export const catalog = [
 // Live screens read only their topic's exact authored copy from the classic cards.
 const topicSources = {
   strategy: {icon:'strategy', cards:[{section:'solutions', heading:'Стратегия и предложение', selector:'.palette article'}, {section:'products', heading:'Аудит рекламы и обращений'}]},
-  sites: {icon:'view', cards:[{section:'solutions', heading:'Сайты, лендинги, блоги и цифровые витрины'}, {section:'products', heading:'Лендинг'}, {section:'products', heading:'Блог'}]},
+  sites: {icon:'view', cards:[{section:'solutions', heading:'Сайты, лендинги, блоги и цифровые витрины'}, {section:'products', heading:'Лендинг'}, {section:'products', heading:'Блог'}], link:{href:'site-factory.html', label:'Составить план сайта'}},
   marketing: {icon:'marketing', cards:[{section:'solutions', heading:'Маркетинг и аналитика'}, {section:'products', heading:'Аудит рекламы и обращений'}]},
   sales: {icon:'finance', cards:[{section:'solutions', heading:'CRM и продажи'}]},
   automation: {icon:'automation', cards:[{section:'solutions', heading:'Авто-КП и документооборот'}, {section:'products', heading:'Бот'}]},

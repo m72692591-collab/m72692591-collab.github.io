@@ -13,17 +13,20 @@ Latest owner corrections are implemented in the feature branch:
   focus containment, background inert state and reduced-motion support.
 - The consultant stays inside the full page. Both the common CTA and the
   consultant's enquiry action release the modal before reaching the shared form.
-- Current main portfolio changes through ac1909c were merged, preserving both
-  the new project links and the approved gold logo, including portfolio.html.
-- The seven owner-supplied review prompts are applied in design-qa.md. All 12
+- Current main changes through 84027cf were merged, preserving the portfolio
+  and the eight-stage site factory. The live Sites topic links to that factory.
+  The approved gold logo is applied to portfolio.html and site-factory.html.
+- The seven owner-supplied review prompts are applied in design-qa.md and the
+  existing SITE_FACTORY_STANDARD.md, including acceptance checks. All 13
   public pages have titles, descriptions and canonical URLs; root sitemap.xml
   and robots.txt agree with those URLs. This is not evidence of search indexing.
 
 Final local validation on 2026-10-31: 154 desktop/mobile browser assertions pass
 in one run, including full-page chat, both lead handoffs, touch dragging, Escape
 during cube travel, modal focus, reduced motion and fallback. The structural/SEO
-suite passes 144 checks; the rig/timeline suite passes 12 and the portrait
-controller passes 2. Receipts and remote CI status are linked in PR #10.
+suite passes 150 checks; the rig/timeline suite passes 12 and the portrait
+controller passes 2. The merged factory passes 31 structural and 12 browser
+checks. Receipts and remote CI status are linked in PR #10.
 Local screenshots confirm the 1440x780 full-page bounds (0,72,1440,708), mobile
 bounds (0,60,390,784), complete image proportions and no horizontal overflow.
 The full browser suite also checks modal cancellation, chat and lead handoff.
@@ -51,7 +54,7 @@ Implemented:
   forms or inactive interactive controls. Desktop,
   tablet and mobile layouts keep forms, controls and lower diagrams separate.
 - The owner-requested removal of the ARCHITECT title and 02 number.
-- Stronger gold M logo in both home modes and seven supporting pages. The canonical
+- Stronger gold M logo in both home modes and eight supporting pages. The canonical
   master, hashes and cross-platform rule are in brand/BRAND_CANON.md and AGENTS.md.
 - Shared eleven-service catalog, Classic mode, consent and lead context retained.
 - Opt-in Russian browser voice, with a bounded wait for local voices and preference

@@ -52,7 +52,8 @@ footer{border-top:1px solid var(--edge);padding:25px 0 40px;color:var(--muted);f
 <header><div class="wrap"><a href="index.html" class="brand maestro-brand-lockup"><img class="maestro-brand-mark" src="assets/architect/architect-mark.webp?v=gold-1" alt="" width="38" height="38">МАЭСТРО</a><a href="maestro-lab.html" style="font-size:13px">Лаборатория ↗</a></div></header>
 <main class="wrap">
 <section class="intro"><span class="eyebrow">MAESTRO / PROJECT DESIGNER</span><h1>Превратите идею в <em>понятное ТЗ.</em></h1>
-<p>Опишите задачу. Система сформирует структурированный черновик требований, который можно скопировать, сохранить или перенести в заявку. Без регистрации и оплаты.</p></section>
+<p>Опишите задачу. Система сформирует структурированный черновик требований, который можно скопировать, сохранить или перенести в заявку. Без регистрации и оплаты.</p>
+<p>Нужен именно сайт? <a href="site-factory.html">Посмотрите восемь этапов производства и получите рабочие запросы</a>.</p></section>
 <div class="layout">
 <form id="builder" class="panel">
 <h2>Параметры проекта</h2><p class="desc">Изменения мгновенно отражаются в документе справа. Поля с личными данными необязательны.</p>
@@ -100,6 +101,8 @@ footer{border-top:1px solid var(--edge);padding:25px 0 40px;color:var(--muted);f
 "use strict";
 const $=id=>document.getElementById(id);
 const ids=["kind","industry","goal","process","volume","deadline","budget","approval","notes"];
+// Direct links from website production route select the correct project type.
+if (new URLSearchParams(location.search).get("kind") === "site") $("kind").value = "Сайт";
 const escapeText=s=>String(s||"").replace(/\r/g," ").trim();
 const v=id=>escapeText($(id).value);
 const selected=()=>[...document.querySelectorAll("#integrations input:checked")].map(el=>el.value);

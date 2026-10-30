@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Как мы создаём сайты: 8 этапов и конструктор плана — МАЭСТРО</title>
+<meta name="description" content="Фабрика сайтов МАЭСТРО: от задачи и структуры до дизайна, кода, поисковой оптимизации и проверки качества. Составьте план без регистрации, бесплатно.">
+<meta name="theme-color" content="#f7f9ff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://m72692591-collab.github.io/maestro/site-factory.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:title" content="Фабрика сайтов МАЭСТРО — от идеи до проверенного результата">
+<meta property="og:description" content="Восемь этапов разработки и бесплатный конструктор рабочих запросов. Не шаблон ради шаблона, а сайт под задачу бизнеса.">
+<meta property="og:url" content="https://m72692591-collab.github.io/maestro/site-factory.html">
+<style>
+:root{color-scheme:light;--ink:#18243f;--muted:#53617b;--blue:#2859cc;--blue2:#e8efff;--orange:#f56c3d;--mint:#0c806e;--line:#dce5f5;--paper:#f7f9ff;--white:#fff;--shadow:0 22px 60px rgba(31,55,110,.1)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}body{margin:0;font:16px/1.6 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--paper)}
+a{color:inherit}button,input,textarea,select{font:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid #1465ca;outline-offset:3px}
+.skip{position:absolute;top:-100px;left:12px;z-index:100;padding:12px 18px;background:white;border:2px solid var(--blue);border-radius:12px}.skip:focus{top:12px}
+.wrap{width:min(1180px,calc(100% - 36px));margin-inline:auto}
+.topbar{background:#fff;border-bottom:1px solid var(--line);position:relative;z-index:4}.nav{display:flex;align-items:center;justify-content:space-between;min-height:78px;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;font-size:16px;font-weight:900;letter-spacing:.08em}.logo b{display:grid;place-items:center;background:var(--blue);border-radius:14px;color:white;width:42px;height:42px;font-size:23px}.logo span small{display:block;font-size:9px;letter-spacing:.18em;line-height:1}
+.links{display:flex;flex-wrap:wrap;gap:8px}.links a{padding:9px 13px;text-decoration:none;border-radius:12px;font-size:14px;font-weight:700;color:#324769}.links a:hover{background:var(--blue2)}.links a.action{background:var(--blue);color:white}
+.hero{overflow:hidden;position:relative;background:radial-gradient(circle at 80% 15%,#d1dcff,transparent 43%),linear-gradient(160deg,#fefdf8,#eef4ff)}
+.hero:before{content:"";position:absolute;width:400px;height:400px;right:-250px;bottom:-260px;border-radius:50%;background:#ffe1c9;opacity:.75}
+.hero-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:52px;align-items:center;padding:74px 0 78px;position:relative}
+.eyebrow{display:inline-flex;gap:9px;align-items:center;font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:900;color:#2c53a5}.eyebrow:before{content:"";width:27px;height:3px;border-radius:2px;background:var(--orange)}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(38px,5.2vw,68px);line-height:1.06;letter-spacing:-.058em;margin:17px 0 20px;max-width:15ch}h1 em{color:var(--orange);font-style:normal}
+.lead{font-size:clamp(17px,2vw,20px);color:#3c4e72;max-width:54ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 19px;border-radius:13px;border:1px solid transparent;font-weight:800;text-decoration:none;line-height:1.25}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 14px 25px #2859cc24}.btn-light{background:white;border-color:#cdd8ee;color:#244780}.btn-orange{background:var(--orange);color:#231610}
+.hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin:26px 0}.micro{font-size:12px;color:#566789}
+.stack{max-width:400px;margin:auto;position:relative;padding:18px}
+.stack:before,.stack:after{content:"";position:absolute;inset:22px 10px;border-radius:30px;background:#e7a85c;transform:rotate(-10deg)}.stack:after{background:#8dd7cc;transform:rotate(8deg);inset:10px}
+.stack-inner{position:relative;z-index:2;padding:30px;border-radius:28px;background:#1d376f;color:white;box-shadow:var(--shadow);transform:rotate(-2deg)}
+.stack-inner p{color:#e0e9ff;font-size:14px}.stack-inner strong{display:block;font-size:24px;line-height:1.15;letter-spacing:-.03em;margin-bottom:16px}
+.stack-inner ol{list-style:none;padding:0;margin:0;display:grid;gap:11px}.stack-inner li{display:flex;align-items:center;gap:11px;font-size:14px}.stack-inner li b{display:grid;place-items:center;background:#ffad6e;color:#172d5c;width:32px;height:32px;border-radius:10px;font-size:13px;flex:none}
+section{scroll-margin-top:20px}.section{padding:68px 0}.section-head{max-width:760px;margin-bottom:28px}.section-head h2{font-size:clamp(29px,3.8vw,48px);letter-spacing:-.04em;line-height:1.13;margin:9px 0}.section-head p{color:var(--muted)}
+.rule-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.rule{padding:20px;border:1px solid var(--line);border-radius:19px;background:white;min-height:150px}.rule strong{display:block;font-size:17px;line-height:1.2;margin:10px 0}.rule span{font-size:13px;color:var(--muted)}.rule .bubble{border-radius:14px;width:40px;height:40px;display:grid;place-items:center;font-size:23px;background:#e9efff}.rule:nth-child(2) .bubble{background:#ffe8da}.rule:nth-child(3) .bubble{background:#e4f7f0}.rule:nth-child(4) .bubble{background:#f0e9ff}
+.factory{background:#eaf1ff;border-block:1px solid #d5e1fa}.factory-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:20px;align-items:start}.panel{background:white;border:1px solid #d2dff3;box-shadow:var(--shadow);padding:26px;border-radius:23px}.panel h3{font-size:23px;letter-spacing:-.03em;margin-bottom:8px}.panel p{color:var(--muted)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{min-width:0}.field.wide{grid-column:1/-1}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;background:#f8faff;border:1px solid #b9cbea;border-radius:12px;color:#233451;padding:12px 13px;min-height:46px}
+.field textarea{min-height:80px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{outline:3px solid #2d60ca55;outline-offset:1px}
+.private{padding:14px 15px;background:#e8f6f1;border:1px solid #b2dcd0;border-radius:14px;color:#185747;font-size:13px;margin-top:20px}
+.preview{position:sticky;top:18px}.preview pre,.stage pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;color:#263955;background:#f6f8fe;padding:18px;border:1px solid var(--line);border-radius:13px;max-height:390px;overflow:auto}
+.panel-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.panel-actions button{min-height:44px}
+.status{font-size:13px;color:#116c4d;font-weight:750;min-height:22px;margin:12px 0 0}
+.stages{display:grid;grid-template-columns:1fr 1fr;gap:14px}.stage{background:white;border:1px solid var(--line);border-radius:22px;padding:22px;min-width:0;box-shadow:0 8px 30px #1529510a}
+.stage.final{background:linear-gradient(145deg,#e3f8f0,#fff);border-color:#9bd6bb}.stage-top{display:flex;align-items:start;gap:14px}.step-number{flex:none;display:grid;place-items:center;width:43px;height:43px;color:#fff;background:var(--blue);border-radius:13px;font-weight:900}.stage:nth-child(3n+2) .step-number{background:var(--orange);color:#241917}.stage:nth-child(3n) .step-number{background:#148576}.stage h3{font-size:20px;margin:0 0 6px;letter-spacing:-.03em;line-height:1.2}.stage p{font-size:14px;color:var(--muted);margin-bottom:18px}
+.stage details{margin-top:auto}.stage summary{cursor:pointer;font-size:14px;font-weight:850;color:var(--blue);padding:8px 0}.stage pre{max-height:280px}.copy-step{border:1px solid #c9d5eb;background:#f2f6ff;color:#1a438c;border-radius:10px;padding:10px 13px;font-size:13px;font-weight:850;margin-top:12px}
+.note{color:#53617b;font-size:14px;line-height:1.7;max-width:880px;margin:28px 0 0}
+.end{background:#1a376e;color:white;padding:48px 0}.end-grid{display:flex;gap:18px;align-items:center;justify-content:space-between}.end h2{font-size:clamp(24px,3.2vw,40px);line-height:1.15;margin:0 0 10px}.end p{color:#e2ebff;margin:0}
+footer{background:#122852;color:#e3e9f5;padding:24px 0;font-size:13px}footer .wrap{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}footer a{color:#fff}
+@media(max-width:980px){.hero-grid{gap:22px}.rule-grid{grid-template-columns:1fr 1fr}.factory-grid{grid-template-columns:1fr}.preview{position:static}.links a{font-size:12px;padding:9px}}
+@media(max-width:740px){.nav{align-items:start;padding:13px 0;flex-direction:column}.links{width:100%}.hero-grid{grid-template-columns:1fr;padding:48px 0}.stack{max-width:330px}.section{padding:46px 0}.stages{grid-template-columns:1fr}.end-grid{align-items:flex-start;flex-direction:column}}
+@media(max-width:510px){.wrap{width:calc(100% - 24px)}.form-grid,.rule-grid{grid-template-columns:1fr}.field.wide{grid-column:auto}.panel{padding:19px}.hero-actions{display:grid}.hero-actions .btn{width:100%}.stage{padding:18px}.stack-inner{padding:25px}.stack{max-width:300px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<link rel="icon" type="image/webp" href="assets/architect/architect-mark.webp?v=gold-1">
+<link rel="stylesheet" href="assets/maestro-brand.css?v=gold-1">
+<script type="module" src="site-factory.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#main">Перейти к содержимому</a>
+<header class="topbar"><div class="wrap nav"><a class="logo maestro-brand-lockup" href="index.html"><img class="maestro-brand-mark" src="assets/architect/architect-mark.webp?v=gold-1" alt="" width="38" height="38"><span>МАЭСТРО<small>BUSINESS</small></span></a>
+<nav class="links" aria-label="Основные разделы"><a href="index.html">Главная</a><a href="portfolio.html">Наши работы</a><a href="brief-builder.html?kind=site">Составить ТЗ</a><a href="index.html#lead" class="action">Обсудить сайт</a></nav></div></header>
+<main id="main">
+<section class="hero" aria-labelledby="hero-title"><div class="wrap hero-grid"><div><span class="eyebrow">МАЭСТРО / производство сайтов</span><h1 id="hero-title">От идеи до сайта, который <em>решает задачу.</em></h1>
+<p class="lead">Красивого макета недостаточно. Мы начинаем с потребностей посетителя, выстраиваем понятный путь к обращению, создаём дизайн, подключаем нужные возможности и проверяем результат.</p>
+<div class="hero-actions"><a class="btn btn-primary" href="#generator">Составить план сайта</a><a class="btn btn-light" href="#steps">Узнать этапы</a></div>
+<p class="micro">Конструктор бесплатный. Он готовит запросы и черновик задания, но сам по себе не размещает сайт и не отправляет заявки.</p></div>
+<div class="stack" aria-hidden="true"><div class="stack-inner"><p>От черновика до проверки</p><strong>Сначала смысл.<br>Потом дизайн.<br>Затем код.</strong><ol><li><b>01</b> Задача и структура</li><li><b>03</b> Главная страница</li><li><b>05</b> Внешний вид</li><li><b>08</b> Проверка и запуск</li></ol></div></div>
+</div></section>
+<section class="section" aria-labelledby="principles"><div class="wrap"><div class="section-head"><span class="eyebrow">Четыре принципа</span><h2 id="principles">Сайт должен быть удобным, понятным и настоящим.</h2><p>Используем лучшие идеи последовательной разработки, но не выдаём семь запросов к нейросети за готовый коммерческий продукт.</p></div>
+<div class="rule-grid">
+<article class="rule"><div class="bubble" aria-hidden="true">◎</div><strong>Действие посетителя</strong><span>Для каждой страницы заранее определяем задачу и понятный следующий шаг.</span></article>
+<article class="rule"><div class="bubble" aria-hidden="true">✦</div><strong>Честные доказательства</strong><span>Никаких выдуманных отзывов, кейсов и обещаний роста продаж.</span></article>
+<article class="rule"><div class="bubble" aria-hidden="true">▣</div><strong>Телефон и слабая сеть</strong><span>Содержимое и ключевые действия доступны без тяжёлых эффектов.</span></article>
+<article class="rule"><div class="bubble" aria-hidden="true">✓</div><strong>Реальная проверка</strong><span>Формы, ссылки, скорость, поисковая видимость и безопасность проверяются до сдачи.</span></article>
+</div></div></section>
+<section class="section factory" id="generator" aria-labelledby="generator-title"><div class="wrap"><div class="section-head"><span class="eyebrow">Бесплатный инструмент</span><h2 id="generator-title">Создайте план своего сайта</h2><p>Заполните известное. Восемь рабочих запросов обновятся автоматически: их можно раскрыть, скопировать по одному или все сразу.</p></div>
+<div class="factory-grid">
+<form class="panel" id="site-form" autocomplete="off"><h3>Что нужно знать о проекте</h3><p>Необязательные поля можно оставить пустыми. Вместо догадок конструктор отметит, что нужно уточнить.</p>
+<div class="form-grid">
+<div class="field"><label for="business">Компания или название проекта</label><input id="business" name="business" maxlength="100" placeholder="Например, СтройПроект"></div>
+<div class="field"><label for="siteType">Какой сайт нужен</label><select id="siteType" name="siteType"><option value="">Пока не знаю</option><option>Одностраничный сайт</option><option>Многостраничный сайт</option><option>Каталог с товарами или услугами</option><option>Сайт с личным кабинетом</option></select></div>
+<div class="field wide"><label for="product">Продукты или услуги</label><textarea id="product" name="product" maxlength="600" placeholder="Что именно предлагаете?"></textarea></div>
+<div class="field wide"><label for="audience">Кто будет посещать сайт</label><textarea id="audience" name="audience" maxlength="600" placeholder="Кому полезно ваше предложение и что люди хотят решить?"></textarea></div>
+<div class="field wide"><label for="advantage">Почему посетитель выберет вас</label><textarea id="advantage" name="advantage" maxlength="600" placeholder="Польза и реальные отличия"></textarea></div>
+<div class="field wide"><label for="evidence">Что можно подтвердить</label><textarea id="evidence" name="evidence" maxlength="600" placeholder="Готовые примеры работ, документы, условия, цифры с источником"></textarea></div>
+<div class="field"><label for="action">Главная цель страницы</label><select id="action" name="action"><option>Получить заявку</option><option>Записать на консультацию</option><option>Показать каталог</option><option>Оформить заказ</option><option>Зарегистрировать пользователя</option></select></div>
+<div class="field"><label for="mood">Характер оформления</label><select id="mood" name="mood"><option>Яркий и современный</option><option>Светлый и спокойный</option><option>Строгий и деловой</option><option>Тёплый и дружелюбный</option></select></div>
+<div class="field wide"><label for="region">Город, регион и язык</label><input id="region" name="region" maxlength="120" placeholder="Например, Россия, вся страна, русский язык"></div>
+</div>
+<div class="private"><strong>Личные данные не нужны.</strong> Введённые сведения обрабатываются только в вашем браузере. На сервер МАЭСТРО они не отправляются. Для обсуждения проекта вы сами решаете, чем поделиться.</div>
+</form>
+<div class="panel preview"><h3>Черновик задания</h3><p>Единая исходная информация для всех этапов, чтобы нейросеть не начинала каждый шаг с нуля.</p>
+<pre id="brief-preview" aria-label="Предварительное задание">Включите JavaScript для формирования задания. Общие этапы доступны ниже.</pre>
+<div class="panel-actions"><button class="btn btn-primary" type="button" id="copy-all">Копировать все запросы</button><button class="btn btn-light" type="button" id="save-brief">Сохранить задание</button></div>
+<p class="status" id="factory-status" role="status" aria-live="polite"></p>
+<a class="btn btn-light" href="brief-builder.html?kind=site">Перейти к подробному ТЗ</a></div>
+</div></div></section>
+<section class="section" id="steps" aria-labelledby="steps-title"><div class="wrap"><div class="section-head"><span class="eyebrow">Маршрут разработки</span><h2 id="steps-title">Семь этапов работы + обязательная приёмка</h2><p>Каждый запрос развивает предыдущий. Раскройте этап, чтобы увидеть готовый текст с учётом введённых сведений.</p></div>
+<div class="stages" id="prompt-list">
+<article class="stage"><div class="stage-top"><span class="step-number">01</span><div><h3>Структура и цель</h3><p>Аудитория, путь посетителя, набор страниц и нужные действия.</p></div></div><details><summary>Посмотреть запрос</summary><pre data-prompt="01">Укажите данные выше, чтобы сформировать запрос.</pre></details><button class="copy-step" data-copy="01" type="button">Копировать этап 1</button></article>
+<article class="stage"><div class="stage-top"><span class="step-number">02</span><div><h3>Голос и образ бренда</h3><p>Позиционирование, манера речи и сообщение клиенту.</p></div></div><details><summary>Посмотреть запрос</summary><pre data-prompt="02">Укажите данные выше, чтобы сформировать запрос.</pre></details><button class="copy-step" data-copy="02" type="button">Копировать этап 2</button></article>
+<article class="stage"><div class="stage-top"><span class="step-number">03</span><div><h3>Главная страница</h3><p>Первый экран, доверие и логика обращения.</p></div></div><details><summary>Посмотреть запрос</summary><pre data-prompt="03">Укажите данные выше, чтобы сформировать запрос.</pre></details><button class="copy-step" data-copy="03" type="button">Копировать этап 3</button></article>
+<article class="stage"><div class="stage-top"><span class="step-number">04</span><div><h3>Тексты всех страниц</h3><p>Литературный русский язык и проверяемые утверждения.</p></div></div><details><summary>Посмотреть запрос</summary><pre data-prompt="04">Укажите данные выше, чтобы сформировать запрос.</pre></details><button class="copy-step" data-copy="04" type="button">Копировать этап 4</button></article>
+<article class="stage"><div class="stage-top"><span class="step-number">05</span><div><h3>Система дизайна</h3><p>Графика, композиция, читаемость и мобильная версия.</p></div></div><details><summary>Посмотреть запрос</summary><pre data-prompt="05">Укажите данные выше, чтобы сформировать запрос.</pre></details><button class="copy-step" data-copy="05" type="button">Копировать этап 5</button></article>
+<article class="stage"><div class="stage-top"><span class="step-number">06</span><div><h3>Разработка</h3><p>Программирование, формы, интеграции и безопасность.</p></div></div><details><summary>Посмотреть запрос</summary><pre data-prompt="06">Укажите данные выше, чтобы сформировать запрос.</pre></details><button class="copy-step" data-copy="06" type="button">Копировать этап 6</button></article>
+<article class="stage"><div class="stage-top"><span class="step-number">07</span><div><h3>Поиск и видимость</h3><p>Заголовки, описание страниц и перелинковка.</p></div></div><details><summary>Посмотреть запрос</summary><pre data-prompt="07">Укажите данные выше, чтобы сформировать запрос.</pre></details><button class="copy-step" data-copy="07" type="button">Копировать этап 7</button></article>
+<article class="stage final"><div class="stage-top"><span class="step-number">08</span><div><h3>Контроль качества</h3><p>Без работающих сценариев и проверок сайт не считается готовым.</p></div></div><details><summary>Посмотреть запрос</summary><pre data-prompt="08">Укажите данные выше, чтобы сформировать запрос.</pre></details><button class="copy-step" data-copy="08" type="button">Копировать этап 8</button></article>
+</div>
+<p class="note">Важно: нейросеть может помочь создать структуру, тексты, дизайн и программный код, но результат зависит от исходных данных и проверки. Для сложных сайтов, оплаты и личных кабинетов нужны дополнительные инженерные и правовые работы. Мы не обещаем фиксированную цену или срок до оценки задачи.</p>
+</div></section>
+<section class="end" aria-labelledby="last-title"><div class="wrap end-grid"><div><h2 id="last-title">План есть. Теперь сделаем сайт.</h2><p>Поможем превратить черновик в рабочий проект с понятными этапами и приёмкой.</p></div><a class="btn btn-orange" href="brief-builder.html?kind=site">Подготовить задание для МАЭСТРО</a></div></section>
+</main>
+<footer><div class="wrap"><span>МАЭСТРО BUSINESS · ИП Григоров Михаил Владимирович</span><div><a href="privacy.html">Конфиденциальность</a> · <a href="consent.html">Обработка данных</a> · <a href="index.html">Главная</a></div></div></footer>
+</body>
+</html>

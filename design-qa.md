@@ -110,7 +110,8 @@ Classic/Live context, gold twin-peak mark and approved blue-suit portrait.
 | Search basics | Keep distinct existing titles/descriptions and headings. Use absolute canonical URLs consistent with the sitemap; list public pages without mode/query duplicates or the server admin page. |
 
 Search discovery changes: supporting pages now have self-referencing canonical
-URLs; `sitemap.xml` lists the 12 public MAESTRO pages; root `robots.txt` points to
+URLs; `sitemap.xml` lists the 13 public MAESTRO pages, including the site factory
+merged from main; root `robots.txt` points to
 it without blocking assets or pages. The portfolio's existing social title and
 description remain unchanged, with its canonical URL, site name, locale and type
 added. No fabricated `lastmod` values, keyword stuffing or unverified structured

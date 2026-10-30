@@ -11,6 +11,8 @@ on:
       - 'tests/maestro-speech.mjs'
       - 'tests/architect-rig.mjs'
       - 'tests/architect-portrait.mjs'
+      - 'tests/maestro-site-factory.mjs'
+      - 'tests/maestro-site-factory-browser.mjs'
       - '.github/workflows/maestro-checks.yml'
   push:
     branches:
@@ -25,6 +27,8 @@ on:
       - 'tests/maestro-speech.mjs'
       - 'tests/architect-rig.mjs'
       - 'tests/architect-portrait.mjs'
+      - 'tests/maestro-site-factory.mjs'
+      - 'tests/maestro-site-factory-browser.mjs'
       - '.github/workflows/maestro-checks.yml'
   workflow_dispatch:
 permissions:
@@ -46,6 +50,8 @@ jobs:
         run: |
           node tests/architect-rig.mjs
           node tests/architect-portrait.mjs
+      - name: Verify website production prompts, links and metadata
+        run: node tests/maestro-site-factory.mjs
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
@@ -69,6 +75,8 @@ jobs:
         run: node tests/maestro-speech.mjs
       - name: Run desktop and mobile browser journeys
         run: node tests/maestro-browser.mjs
+      - name: Run website factory copy, download and handoff journeys
+        run: node tests/maestro-site-factory-browser.mjs
       - name: Save visual QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
