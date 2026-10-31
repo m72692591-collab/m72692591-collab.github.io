@@ -230,6 +230,12 @@ export function createPortrait(scene, { onReady, onError } = {}) {
       mesh.updateMatrixWorld(true);
       return new THREE.Vector3(880-768,512-530,0).multiply(mesh.scale).add(mesh.position);
     },
+    chinPosition(){
+      if(disposed||!ready||!laidOut)return null;
+      // A stable line below the photographed chin (source y=324). The safety
+      // margin covers idle/head motion without making resting screens drift.
+      return new THREE.Vector3(785-768,512-345,0).multiply(mesh.scale).add(mesh.position);
+    },
     setVisible(value) {
       wantedVisible = Boolean(value);
       mesh.visible = !disposed && ready && wantedVisible;

@@ -113,7 +113,7 @@ if(root){
   });
   const start=async()=>{
     if(scene||loading)return loading;
-    loading=import('./architect-scene.js?v=service-stories-1').then(module=>{
+    loading=import('./architect-scene.js?v=chin-clear-1').then(module=>{
       scene=module.createScene(document.getElementById('next-canvas'),orbit,catalog,reduce,index=>select(catalog[index],true));
       scene.setPresentation(presentation);scene.setMotion(!orbitPaused);scene.focus(catalog.indexOf(active),false);
       if(!document.body.classList.contains('next-mode-live'))scene.pause();

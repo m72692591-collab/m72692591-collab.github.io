@@ -55,6 +55,8 @@ test('approved raster cutout fits the stage and its fingertip follows only the g
       close((center.x * .5 + .5) * width, left + imageWidth / 2, 'image center x');
       close((-center.y * .5 + .5) * height, expectedTop + imageHeight / 2, 'image center y');
       close(mesh.geometry.parameters.width * mesh.scale.x / (mesh.geometry.parameters.height * mesh.scale.y), 1.5, 'source aspect ratio');
+      const clearance = portrait.chinPosition().project(camera);
+      close((-clearance.y * .5 + .5) * height, expectedTop + imageHeight * 345 / 1024, 'chin clearance follows the portrait layout');
     };
     checkCenter(800, 650, 60);
     portrait.update({time: 0, animate: false});
@@ -69,6 +71,15 @@ test('approved raster cutout fits the stage and its fingertip follows only the g
     assert.deepEqual(Array.from(parts.forearm.geometry.attributes.position.array),originalVertices,'gesture rotates rigid forearm without deforming sleeve vertices');
     assert.deepEqual(parts.forearm.scale.toArray(),[1,1,1],'gesture never stretches photographed hand or sleeve');
     close(portrait.orbitCenter().distanceTo(restOrbit),0,'orbit anchor stays independent of the gesture');
+    const clearance = portrait.chinPosition();
+    for (let frame=0;frame<=100;frame++) {
+      const time=frame*.06;
+      portrait.update({time,animate:true,gesture:presentationFrame(time)});
+      mesh.updateMatrixWorld(true);
+      const actualChin=mesh.localToWorld(new THREE.Vector3(785-768,512-324,0)).project(camera);
+      assert.ok(actualChin.y>clearance.clone().project(camera).y,'photographed chin stays above clearance through the complete gesture');
+      close(portrait.chinPosition().distanceTo(clearance),0,'reading boundary does not follow idle or gesture movement');
+    }
     portrait.update({time: 3, animate: true, gesture: presentationFrame(3)});
     const returned=portrait.handPosition();
     portrait.update({time:3,animate:true});

@@ -2,7 +2,7 @@ import * as THREE from './vendor/three.module.min.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 import { MeshoptDecoder } from './vendor/meshopt_decoder.mjs';
 import { createRig } from './architect-rig.js';
-import { createPortrait } from './architect-portrait.js?v=manual-cube-4';
+import { createPortrait } from './architect-portrait.js?v=chin-clear-1';
 import { TAU, gestureFrame, presentationFrame, nearestAngle } from './architect-motion.js';
 
 export function createScene(container, orbit, catalog, reduced, onSelect) {
@@ -187,10 +187,22 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     const radiusZ = mobile() ? 1.15 : 1.55;
     const cardWidth = mobile() ? 260 : container.clientWidth <= 1100 ? 280 : 380;
     const cardHeight = mobile() ? 232 : container.clientWidth <= 1100 ? 240 : 280;
-    // Raise the entire elliptical orbit by its lowest (front) edge. This keeps
-    // every resting screen above the fixed lower diagrams at every rotation.
+    // Fit the portrait orbit between the chin and the lower diagrams, including
+    // the perspective-expanded edges. The optional model keeps its chest orbit.
     const lowerScreens = live.querySelector('.architect-bottom');
-    if (lowerScreens) {
+    const chin = picture ? portrait.chinPosition?.() : null;
+    let orbitBand = null;
+    if (chin && lowerScreens) {
+      const projectedChin = chin.clone().project(camera);
+      const top = (-projectedChin.y * .5 + .5) * container.clientHeight + 12;
+      const bottom = lowerScreens.getBoundingClientRect().top - container.getBoundingClientRect().top - 24;
+      const maxTurn = mobile() ? 54 : 48;
+      // CSS perspective makes a tilted near edge taller than its flat rectangle.
+      const perspectiveAllowance = 1 - cardWidth * Math.sin(THREE.MathUtils.degToRad(maxTurn)) / 2400;
+      orbitBand = {top, bottom, fit:Math.min(1, Math.max(.1, (bottom - top - 4) * perspectiveAllowance / cardHeight))};
+      container.dataset.portraitChinY = String(top - 12);
+    } else delete container.dataset.portraitChinY;
+    if (lowerScreens && !orbitBand) {
       const lowerTop = lowerScreens.getBoundingClientRect().top - container.getBoundingClientRect().top;
       const front = new THREE.Vector3(centerX, centerY - radiusY, radiusZ).project(camera);
       const frontBottom = (-front.y * .5 + .5) * container.clientHeight + cardHeight / 2;
@@ -207,9 +219,18 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
       mesh.rotation.y = -Math.sin(a) * .95;
       const projected = mesh.position.clone().project(camera), button = buttons[index];
       const x = (projected.x * .5 + .5) * container.clientWidth;
-      const y = (-projected.y * .5 + .5) * container.clientHeight;
-      const scale = .74 + front * .26;
+      let y = (-projected.y * .5 + .5) * container.clientHeight;
+      const scale = (.74 + front * .26) * (orbitBand?.fit ?? 1);
       const turn = -Math.sin(a) * (mobile() ? 54 : 48);
+      if (orbitBand) {
+        const halfHeight = cardHeight * scale / (2 * (1 - cardWidth * scale * Math.abs(Math.sin(THREE.MathUtils.degToRad(turn))) / 2400));
+        const middle = (orbitBand.top + orbitBand.bottom) / 2;
+        const travel = Math.max(0, (orbitBand.bottom - orbitBand.top) / 2 - halfHeight);
+        y = middle + depth * travel;
+        // Keep actual WebGL planes on the same shallow orbit as their readable UI.
+        projected.y = 1 - 2 * y / container.clientHeight;
+        mesh.position.copy(projected.unproject(camera));
+      }
       const apparentWidth = cardWidth * scale * Math.max(.24, Math.abs(Math.cos(THREE.MathUtils.degToRad(turn))));
       const apparentHeight = cardHeight * scale;
       button.hidden = x + apparentWidth / 2 < 0 || x - apparentWidth / 2 > container.clientWidth ||

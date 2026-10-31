@@ -1,5 +1,27 @@
 # MAESTRO NEXT — current status
 
+## 2026-10-31: clear face throughout the carousel orbit
+
+Acceptance: every resting virtual screen stays below the chin and above the lower
+information panels throughout a full turn, on desktop and mobile. The approved
+portrait, subtle glass treatment and manual/slow automatic rotation stay intact.
+
+The carousel now fits its projected, perspective-expanded rectangles into that
+safe vertical band. A stable portrait anchor prevents drifting while reading.
+The lower desktop panels use a narrower 780px group and a compact two-column
+composition (123px measured height), with all their text and links preserved.
+
+Independent browser review measured 49 positions at each of 1583x772, 1440x780,
+1366x768 and 390x844: minimum face clearance 11.98px and lower-panel clearance
+24.00px, no clipping and no script errors. Screenshots were inspected. The
+complete-turn check is retained in `tests/maestro-face-clearance.mjs` and CI.
+The portrait test also checks the photographed chin against the stable boundary
+through 101 gesture frames. Existing 157 scene and 49 service browser assertions
+pass; a first audio test timed out during simultaneous local browser runs, while
+its isolated rerun passed without an audio-code change. No production deployment.
+Gemini review: ROUTE_UNAVAILABLE (no verified active review session in this turn);
+an independent local visual/code critic checked the rendered result instead.
+
 ## 2026-10-31: one MAESTRO entry and substantive service pages
 
 Current owner correction supersedes the factory description in the dated record

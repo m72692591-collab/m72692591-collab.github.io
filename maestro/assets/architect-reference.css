@@ -191,7 +191,19 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
  .next-live[data-panel-presenting=moving] .next-detail,.next-live[data-panel-presenting=open] .next-detail{--detail-top:24px;transform-origin:50% 0}
  .next-live .next-detail:has(.maestro-genie-panel:not([hidden])){overflow:visible}
  .next-live[data-panel-presenting=moving] .architect-intro,.next-live[data-panel-presenting=open] .architect-intro{opacity:0;pointer-events:none}
- .architect-bottom{left:max(38%,420px);right:4%;bottom:20px;max-width:900px}
+ .architect-bottom{left:max(40%,420px);right:4%;bottom:16px;max-width:780px}
+ .architect-glass{display:grid;grid-template-columns:minmax(0,1fr) minmax(105px,.9fr);grid-template-rows:auto auto 1fr auto;column-gap:12px;row-gap:4px;min-height:118px;padding:10px 13px}
+ .architect-card-label{grid-column:1/-1;font-size:10px}
+ .architect-glass strong{grid-column:1;grid-row:2;font-size:14px;line-height:1.25}
+ .architect-glass>span:not([class]){grid-column:1;grid-row:3;font-size:10px;line-height:1.4}
+ .architect-glass em{grid-column:1;grid-row:4;font-size:10px;margin:0}
+ .architect-glass .architect-plan-diagram{grid-column:2;grid-row:2/4;height:44px;align-self:center}
+ .architect-glass>span.architect-plan-stages{grid-column:2;grid-row:4;font-size:8px;margin:0}
+ .architect-glass>span.architect-process-diagram{grid-column:2;grid-row:2/5;min-height:0;padding:0;align-self:center;gap:3px}
+ .architect-process-diagram img{width:28px;height:28px;padding:7px}
+ .architect-process-diagram>span{gap:5px}
+ .architect-process-diagram small{font-size:8px}
+ .architect-process-diagram i{font-size:12px;margin-top:-14px}
  .architect-carousel-controls{left:clamp(24px,4vw,64px);right:auto;bottom:20px;transform:none;width:300px;max-width:calc(38% - 48px)}
  .architect-carousel-controls select{flex-basis:100%;width:100%;margin-bottom:0}
 }
@@ -199,12 +211,12 @@ body.next-mode-live .next-detail:has(.maestro-genie-panel:not([hidden])){z-index
  .architect-intro{top:30px}
  .next-live .next-detail{--detail-top:clamp(210px,31svh,270px);padding:16px 18px}
  .architect-bottom{bottom:12px;gap:10px}
- .architect-glass{min-height:165px;padding:12px 15px;gap:5px;font-size:10px}
- .architect-glass strong{font-size:15px}
+ .architect-glass{min-height:118px;padding:10px 13px;column-gap:10px;row-gap:4px;font-size:10px}
+ .architect-glass strong{font-size:14px}
  .architect-card-label{font-size:10px}
  .architect-plan-diagram{height:42px}
- .architect-glass>span.architect-process-diagram{min-height:58px;padding:0 5px}
- .architect-process-diagram img{width:34px;height:34px;padding:8px}
+ .architect-glass>span.architect-process-diagram{min-height:0;padding:0}
+ .architect-process-diagram img{width:28px;height:28px;padding:7px}
  .architect-process-diagram>span{gap:5px}
  .architect-glass em{font-size:10px}
  .architect-carousel-controls{bottom:12px}
