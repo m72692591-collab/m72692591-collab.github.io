@@ -208,16 +208,17 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
       const projected = mesh.position.clone().project(camera), button = buttons[index];
       const x = (projected.x * .5 + .5) * container.clientWidth;
       const y = (-projected.y * .5 + .5) * container.clientHeight;
-      const scale = .56 + front * .44;
-      const turn = -Math.sin(a) * (mobile() ? 68 : 64);
+      const scale = .74 + front * .26;
+      const turn = -Math.sin(a) * (mobile() ? 54 : 48);
       const apparentWidth = cardWidth * scale * Math.max(.24, Math.abs(Math.cos(THREE.MathUtils.degToRad(turn))));
       const apparentHeight = cardHeight * scale;
       button.hidden = x + apparentWidth / 2 < 0 || x - apparentWidth / 2 > container.clientWidth ||
         y + apparentHeight / 2 < 0 || y - apparentHeight / 2 > container.clientHeight;
       button.style.left = `${x}px`;
       button.style.top = `${y}px`;
-      button.style.opacity = String((.22 + .78 * Math.pow(front, 5)) * (present && index !== chosen ? .12 : 1));
-      button.style.setProperty('--slide-label-opacity', String(THREE.MathUtils.smoothstep(Math.abs(Math.cos(THREE.MathUtils.degToRad(turn))), .46, .77)));
+      // Depth comes from position, scale and portrait occlusion, not disappearing text.
+      button.style.opacity = String((.88 + .12 * front) * (present && index !== chosen ? .12 : 1));
+      button.style.setProperty('--slide-label-opacity', '1');
       button.style.transform = `translate(-50%,-50%) perspective(1200px) rotateY(${turn}deg) scale(${scale})`;
       button.style.zIndex = depth < 0 ? '0' : '3';
       button.style.pointerEvents = depth < 0 ? 'none' : '';

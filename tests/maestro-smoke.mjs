@@ -57,7 +57,7 @@ const publicOrigin = "https://m72692591-collab.github.io";
 const publicBase = publicOrigin + "/maestro/";
 const sitemap = fs.readFileSync(path.resolve("sitemap.xml"), "utf8");
 const sitemapURLs = [...sitemap.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map(match => match[1]);
-const publicFiles = fs.readdirSync(root).filter(name => name.endsWith(".html"));
+const publicFiles = fs.readdirSync(root).filter(name => name.endsWith(".html") && !/name="robots" content="noindex/.test(read(name)));
 const expectedURLs = publicFiles.map(name => publicBase + (name === "index.html" ? "" : name));
 check("Sitemap declares the standard XML namespace", /<urlset\s[^>]*xmlns="http:\/\/www.sitemaps.org\/schemas\/sitemap\/0.9"/.test(sitemap));
 check("Sitemap has unique URLs", new Set(sitemapURLs).size === sitemapURLs.length);

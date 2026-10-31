@@ -1,5 +1,43 @@
 # MAESTRO NEXT — current status
 
+## 2026-10-31: one MAESTRO entry and substantive service pages
+
+Current owner correction supersedes the factory description in the dated record
+below. The standalone factory UI and generator are removed; its legacy URL is a
+noindex redirect to the Sites topic within MAESTRO. The production checklist is
+internal, and the existing brief builder remains available.
+
+- "Позвать Маэстро" opens the approved live portrait from Classic. The live
+  question action stays separate. Current service context survives the mode
+  change, while a general new enquiry does not inherit a stale locked category.
+- All eleven topics now have a relevant existing local illustration, examples of
+  customer tasks, working stages, deliverables, preparation and a relevant CTA.
+  Both modes use one shared source. Existing authored cards and prices remain.
+- Strategy explains launch, positioning, growth choices and advertising audit.
+  Sites explains landing pages, company sites, catalogues, blogs, design approaches
+  and the choice of a content editing system in ordinary language.
+- Rear screens retain at least .88 opacity, with full label opacity and a larger
+  minimum scale. A subtle 2px background blur and transparent blue tint soften the
+  glass without fading its text. The 24px clearance above lower diagrams remains.
+
+Current local evidence: 157 original-scene browser assertions, 49 service journey
+assertions, 147 structural/SEO checks, 38 service content checks, 12 rig and two
+portrait checks pass. Browser screenshots were inspected on desktop and mobile.
+Separate reviewers found and helped resolve heading contrast, side text sizing
+and stale enquiry context. Eleven prepared Russian neural introductions replace
+the old system voice. Audio loads only after opt-in; other consultant answers stay
+in text. Speech checks cover 17 lifecycle assertions, all eleven MP3 decodes,
+text/hash agreement and advancing playback. The service journey also verifies
+unmuted playback after the actual visitor button click. Clip URLs include content
+hashes to prevent stale cached narration after a text update.
+
+Listening quality remains unverified: the available runtime cannot hear audio.
+The new voice is a working trial, not approved natural speech. Licensing and
+generation evidence are in `assets/audio/maestro/README.md`.
+
+The feature branch is not a production release. Natural movement, exact lip-sync,
+live application delivery and generative consultant integration are not claimed.
+
 ## 2026-10-30: wide topic pages and full-page cube preview
 
 Latest owner corrections are implemented in the feature branch:
@@ -57,8 +95,9 @@ Implemented:
 - Stronger gold M logo in both home modes and eight supporting pages. The canonical
   master, hashes and cross-platform rule are in brand/BRAND_CANON.md and AGENTS.md.
 - Shared eleven-service catalog, Classic mode, consent and lead context retained.
-- Opt-in Russian browser voice, with a bounded wait for local voices and preference
-  for Pavel. Cancellation, switching modes and reduced motion clear mouth movement.
+- Opt-in prepared Russian neural narration for each topic, replacing the former
+  Pavel browser voice. Cancellation and switching modes clear mouth movement;
+  reduced motion keeps the portrait still. Individual answers remain text-only.
 - Pause, reduced motion, offscreen/tab suspension, no GLB request on the default
   image path, and static portrait plus all eleven slides when WebGL is unavailable.
 - The previous rigged GLB remains an optional sketch, loaded on explicit selection;

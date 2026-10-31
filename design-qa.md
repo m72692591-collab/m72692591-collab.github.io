@@ -123,3 +123,44 @@ Primary references read on 2026-10-30:
 - [Google canonical URL guidance](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls): self-referencing canonical links and consistent preferred URLs.
 - [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap): absolute URLs, canonical pages and accurate optional metadata.
 - [Google robots.txt guidance](https://developers.google.com/crawling/docs/robots-txt/create-robots-txt): the file belongs at the host root; its sitemap directive supports discovery.
+
+## 2026-10-31: service explanations and one MAESTRO entry
+
+Owner correction supersedes the standalone factory rollout above. Site production
+remains a MAESTRO service; the old URL redirects into its shared service directory.
+The eight-stage production checklist stays internal. Existing prices, authored
+cards and legal documents are preserved. The sitemap now contains 12 public pages.
+
+New visitor copy explains each of the 11 topics with a local illustration, concrete
+tasks, working stages, deliverables and preparation. Classic and Live read the same
+`maestro-service-details.js`. Strategy includes launch, positioning, development and
+advertising audit; websites explain formats, design approaches and how the editing
+system is chosen. Technical names are explained without requiring a customer to
+choose a stack. No client results, testimonials, guaranteed growth or new prices
+were invented.
+
+Independent code review caught a light heading on a light Classic panel, a side
+page font cascade and a stale enquiry category after summoning MAESTRO. All three
+were repaired. Independent visual review inspected the orbit, full Strategy,
+work steps and mobile Sites page. Rear labels no longer fade with distance;
+position, size and portrait occlusion preserve depth. Glass blur is limited to 2px.
+
+Gemini: ROUTE_UNAVAILABLE for this revision; no currently verified Gemini review
+session was available. The earlier dated Gemini review remains historical evidence,
+not participation in these changes. Separate local agents supplied code and visual
+criticism; Codex integrated their findings.
+
+HUMANITY_PASS: all eleven new explanations independently reviewed under HV2.
+Accepted concrete process descriptions, customer-facing terminology and bounded
+deliverables. Removed an unverified assumption about willingness to pay; clarified
+sales guidance, incomplete AI answers, pilot wording, mentor appointment and report
+use. Narration lead paragraphs were frozen after review. Codex performed the final
+integration; no original owner-authored prose or prices were rewritten.
+
+Speech review: the former system fallback is removed. Eleven local neural
+introductions match the reviewed title/lead text. Independent code review found
+a stale-audio cache risk; audio URLs now contain their content hash and the manifest
+is revalidated. Browser tests exercise the actual unmuted opt-in button, playback
+progress and stop, in addition to lifecycle races and all eleven decoded files.
+Naturalness and pronunciation remain unreviewed because this runtime cannot
+listen. This is a voice trial, not a claim of human speech or full lip-sync.

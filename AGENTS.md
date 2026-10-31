@@ -13,3 +13,10 @@
 - Keep Classic and Live modes, the shared catalog, lead context, consent and
   existing prices. Do not claim a connected AI backend or application receiver
   while they remain unconfigured. Budget is 0 RUB; no Yandex or Amvera work.
+- The owner removed the standalone public site factory on 2026-10-31. Website
+  development belongs in the shared MAESTRO service catalog; keep the production
+  checklist internal. The legacy URL redirects to the Sites topic.
+- "Позвать Маэстро" opens the approved live portrait. Text consultation remains a
+  separate "Задать вопрос" action. Service explanations are shared between modes.
+- Old system speech is rejected. Use opt-in prepared topic narration; do not
+  silently fall back to browser voices or claim listening QA without listening.

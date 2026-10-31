@@ -1,3 +1,4 @@
+import {createServiceStory} from './maestro-service-view.js?v=service-stories-1';
 // Live topics reuse exact authored text without moving classic sections or
 // cloning IDs, forms, canvases or controls that would lose their handlers.
 export function createSectionScreen(detail) {
@@ -204,6 +205,7 @@ export function createSectionScreen(detail) {
       header.append(icon, element('span', 'architect-topic-kicker', 'МАЭСТРО BUSINESS'),
         element('h2', 'architect-topic-title', item.title), element('p', 'architect-topic-summary', item.description));
       article.append(header);
+      article.append(createServiceStory(item));
       const section = topic.collection && sourceSection(topic.collection.section);
       if (topic.intro) {
         const intro = section?.querySelector('.wrap > .lead');

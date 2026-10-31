@@ -396,15 +396,18 @@ try {
   okay('Context loss restores the static approved portrait', await lostContext.locator('.architect-art').isVisible() && await lostContext.locator('button[data-presentation=model]').getAttribute('aria-pressed') === 'false' && await lostContext.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true');
   await lostContext.close();
 
-  const call = page.getByRole("button", { name: "Вызвать консультанта МАЭСТРО" });
+  const call = page.locator('.maestro-genie-launcher');
   await page.locator('[data-next-mode="live"]').click();
   await page.locator('#architect-select').selectOption('automation');
   await page.locator('[data-next-mode="classic"]').click();
   await call.click();
+  okay('Calling Maestro from Classic opens the approved live portrait', await page.locator('#next-live').isVisible() && await page.locator('#next-live').getAttribute('data-presentation') === 'portrait' && await page.locator('.hero').isHidden());
+  okay('Calling Maestro does not open the text panel before a question is requested', await page.locator('#maestro-genie-panel').isHidden());
+  await page.locator('#architect-orb').click();
   await page.locator('[data-mg-question="Нужен сайт"]').click();
   await page.getByRole("button", { name: /Перейти к заявке/ }).click();
   okay("Classic consultant is not bound to a stale NEXT choice", await page.locator("#interest").inputValue() === "Сайт");
-  await call.click();
+  await page.locator('#architect-orb').click();
   okay("Genie appeared", await page.locator("#maestro-genie-panel").isVisible());
   await page.locator('[data-mg-question="Нужен ИИ-оператор для заявок"]').click();
   okay("Genie answers AI service", await page.locator(".maestro-genie-msg.assistant").last().innerText().then(s => s.includes("ИИ-оператор")));
@@ -412,7 +415,7 @@ try {
   okay("Genie moved topic to form", await page.locator("#interest").inputValue() === "ИИ-оператор");
 
   // Real visitor journey: build a brief through the conversational advisor.
-  await page.locator(".maestro-genie-launcher").click();
+  await page.locator('#architect-orb').click();
   await page.locator('[data-mg="brief-start"]').click();
   const questions = [
     "Нужен бот для обработки заявок",
@@ -518,6 +521,8 @@ try {
   await goto(m, "index.html");
   okay("Mobile genie launcher visible", await m.locator(".maestro-genie-launcher").isVisible());
   await m.locator(".maestro-genie-launcher").click();
+  okay('Mobile summons the approved live portrait instead of a chat overlay', await m.locator('#next-live').isVisible() && await m.locator('#next-live').getAttribute('data-presentation') === 'portrait' && await m.locator('.maestro-genie-panel').isHidden());
+  await m.locator('#architect-orb').click();
   okay("Mobile genie panel visible", await m.locator(".maestro-genie-panel").isVisible());
   const bounds = await m.locator(".maestro-genie-panel").boundingBox();
   okay("Genie panel fits mobile width", Boolean(bounds && bounds.x >= -1 && bounds.x + bounds.width <= 391));

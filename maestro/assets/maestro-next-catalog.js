@@ -1,3 +1,4 @@
+import {serviceDetails} from './maestro-service-details.js?v=service-stories-1';
 // Shared navigation and description data for both presentations of MAESTRO NEXT.
 export const catalog = [
   {id:'strategy', title:'Стратегия', description:'Разберём задачу, клиентов и предложение, чтобы выбрать первый шаг.', href:'#solutions', interest:'Аудит'},
@@ -16,7 +17,7 @@ export const catalog = [
 // Live screens read only their topic's exact authored copy from the classic cards.
 const topicSources = {
   strategy: {icon:'strategy', cards:[{section:'solutions', heading:'Стратегия и предложение', selector:'.palette article'}, {section:'products', heading:'Аудит рекламы и обращений'}]},
-  sites: {icon:'view', cards:[{section:'solutions', heading:'Сайты, лендинги, блоги и цифровые витрины'}, {section:'products', heading:'Лендинг'}, {section:'products', heading:'Блог'}], link:{href:'site-factory.html', label:'Составить план сайта'}},
+  sites: {icon:'view', cards:[{section:'solutions', heading:'Сайты, лендинги, блоги и цифровые витрины'}, {section:'products', heading:'Лендинг'}, {section:'products', heading:'Блог'}], link:{href:'brief-builder.html?kind=site', label:'Подготовить задание на сайт'}},
   marketing: {icon:'marketing', cards:[{section:'solutions', heading:'Маркетинг и аналитика'}, {section:'products', heading:'Аудит рекламы и обращений'}]},
   sales: {icon:'finance', cards:[{section:'solutions', heading:'CRM и продажи'}]},
   automation: {icon:'automation', cards:[{section:'solutions', heading:'Авто-КП и документооборот'}, {section:'products', heading:'Бот'}]},
@@ -27,4 +28,4 @@ const topicSources = {
   pricing: {icon:'finance', collection:{section:'pricing', selector:'.pricing > .price'}, note:true},
   documents: {icon:'view', collection:{section:'documents', selector:'.docs > .doc'}, intro:true}
 };
-catalog.forEach(item => { item.topic = topicSources[item.id]; });
+catalog.forEach(item => { item.topic = topicSources[item.id]; item.details = serviceDetails[item.id]; });

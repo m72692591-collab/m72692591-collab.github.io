@@ -1,0 +1,48 @@
+/* Shared service pages: calm editorial layout in Classic and inside the live screen. */
+.maestro-service-story{--service-ink:#e8f4ff;--service-muted:#c3d8e7;--service-line:#9edcff35;--service-surface:#659dc510;--service-accent:#99dbff;color:var(--service-ink);font-family:Arial,sans-serif;text-align:left}
+.maestro-service-story *{box-sizing:border-box}
+.service-intro{display:grid;gap:22px;margin:0 0 32px}
+.service-visual{margin:0;overflow:hidden;border:1px solid var(--service-line);border-radius:8px;background:#122c41}
+.service-image{display:block;width:100%;height:auto;max-height:380px;object-fit:contain;margin:0 auto}
+.maestro-service-story .service-lead,.next-live .next-detail .service-lead{font-size:16px;line-height:1.75;color:var(--service-ink);margin:0}
+.maestro-service-story .service-section-title{font:400 24px/1.22 Georgia,serif;color:var(--service-ink);margin:0 0 20px;max-width:30ch}
+.service-choices,.service-process,.service-result,.service-start{margin:0 0 32px}
+.service-offers{display:grid;gap:12px}
+.service-offer{padding:22px;background:var(--service-surface);border:1px solid var(--service-line);border-radius:7px}
+.maestro-service-story .service-offer-title,.maestro-service-story .service-step-title{font:600 16px/1.45 Arial,sans-serif;color:var(--service-ink);margin:0 0 9px}
+.maestro-service-story .service-copy,.next-live .next-detail .service-copy{font:14px/1.75 Arial,sans-serif;color:var(--service-muted);margin:0}
+.service-steps{list-style:none;padding:0;margin:0;display:grid;gap:0}
+.service-step{display:grid;grid-template-columns:40px minmax(0,1fr);gap:16px;padding:20px 0;border-top:1px solid var(--service-line)}
+.service-step-number{font:28px/1.15 Georgia,serif;color:var(--service-accent)}
+.service-result{padding:24px;background:var(--service-surface);border-left:2px solid var(--service-accent);border-radius:0 7px 7px 0}
+.service-deliverables{margin:0;padding-left:19px;font:14px/1.7 Arial,sans-serif;color:var(--service-muted)}
+.service-deliverables li+li{margin-top:10px}
+.service-cta{display:inline-flex;align-items:center;justify-content:center;margin-top:20px;padding:13px 18px;min-height:46px;border:1px solid #a2dfff77;border-radius:5px;background:#9bdbfa;color:#082237;font:600 14px/1.45 Arial,sans-serif;text-decoration:none;text-align:center;max-width:100%}
+.service-cta:hover{background:#c4edff;color:#082237}
+.service-cta:focus-visible{outline:3px solid var(--service-accent);outline-offset:4px}
+.maestro-service-story+.architect-topic-grid{border-top:1px solid var(--service-line);padding-top:28px}
+#next-classic-detail{margin-top:30px;padding:clamp(20px,4vw,48px);background:#f4f8fd;border:1px solid #c4d9e9;border-radius:18px}
+#next-classic-detail[hidden]{display:none}
+#next-classic-detail>h2{font:clamp(28px,4vw,44px)/1.15 Georgia,serif;margin:0 0 24px;color:#153347}
+#next-classic-detail .maestro-service-story{--service-ink:#153347;--service-muted:#3c5669;--service-line:#789bb64f;--service-surface:#ffffffc7;--service-accent:#247399}
+.next-live[data-page-layout=full] .service-intro,#next-classic-detail .service-intro{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;gap:36px}
+.next-live[data-page-layout=full] .service-offers,#next-classic-detail .service-offers{grid-template-columns:repeat(2,minmax(0,1fr))}
+.next-live[data-page-layout=full] .service-section-title{font-size:32px;max-width:none}
+.next-live[data-page-layout=full] .next-detail .service-lead{font-size:19px;line-height:1.7}
+.next-live[data-page-layout=full] .next-detail .service-copy{font-size:16px}
+.next-live[data-page-layout=full] .service-choices,.next-live[data-page-layout=full] .service-process,.next-live[data-page-layout=full] .service-result,.next-live[data-page-layout=full] .service-start{margin-bottom:44px}
+@media(max-width:700px){
+ .next-live[data-page-layout=full] .service-intro,#next-classic-detail .service-intro{grid-template-columns:minmax(0,1fr);gap:20px}
+ .next-live[data-page-layout=full] .service-offers,#next-classic-detail .service-offers{grid-template-columns:minmax(0,1fr)}
+ .next-live[data-page-layout=full] .next-detail .service-lead{font-size:16px}
+ .next-live[data-page-layout=full] .service-section-title{font-size:26px}
+ .service-offer{padding:18px}.service-result{padding:20px}.service-step{gap:10px;grid-template-columns:30px minmax(0,1fr)}
+}
+
+/* A small amount of frosted glass, with readable rear screens. */
+.next-live .next-orbit button{background:linear-gradient(135deg,rgba(24,60,81,.30),rgba(6,25,40,.40));backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);border-color:#b5e4ff69;box-shadow:inset 0 1px 0 #d8f3ff12}
+.next-live .next-orbit button[aria-pressed=true]{background:linear-gradient(135deg,rgba(36,78,104,.38),rgba(9,34,53,.46));border-color:#d3f1ffa1}
+.next-live .next-orbit button strong{font-size:27px;line-height:1.18;text-shadow:0 1px 4px #00101f}
+.next-live .next-orbit button .architect-slide-text{font-size:15px;line-height:1.55;color:#f1f8ff;text-shadow:0 1px 4px #00101f}
+.architect-slide-number{color:#c3e7ff}
+@media(max-width:700px){.next-live .next-orbit button strong{font-size:23px}.next-live .next-orbit button .architect-slide-text{font-size:14px}}
