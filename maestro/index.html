@@ -50,7 +50,7 @@ body{background:#fffaf4;color:var(--text)}.hero{background:radial-gradient(circl
       <img class="architect-room" src="assets/architect/architect-office-empty.webp" width="1536" height="1024" alt="" loading="lazy" decoding="async" aria-hidden="true">
       <img class="architect-art" src="assets/architect/architect-office.webp" width="1536" height="1024" alt="Архитектор в полупрозрачном голубом костюме в стеклянном офисе" loading="lazy" decoding="async">
       <div class="architect-intro"><p class="architect-motto">Анализирует. Структурирует.<br>Проектирует рост.</p><p class="architect-about">Ваша задача, возможности бизнеса<br>и следующий шаг — в одной сцене.</p></div>
-      <div class="architect-view" role="group" aria-label="Вид персонажа"><button type="button" data-presentation="portrait" aria-pressed="true">Живой образ</button><button type="button" data-presentation="model" aria-pressed="false">3D-эскиз</button><span id="architect-view-note">Потяните экраны мышью и выберите направление</span></div>
+      <div class="architect-view" role="group" aria-label="Живой образ Маэстро"><button type="button" data-presentation="portrait" aria-pressed="true">Живой образ</button><span id="architect-view-note">Потяните экраны мышью и выберите направление</span></div>
       <div class="next-stage"><div id="next-canvas" class="next-canvas" aria-label="Объёмная карусель направлений. Потяните, чтобы повернуть."></div><div id="next-model-status" class="next-loading" aria-live="polite">Загружаем 3D-сцену…</div><div id="next-orbit" class="next-orbit" role="group" aria-label="Карусель направлений"></div><div id="next-fallback" class="next-fallback" hidden>3D-сцена недоступна. Направления можно выбрать кнопками.</div></div>
       <div class="architect-directory" aria-label="Быстрый выбор направления"></div>
       <aside class="next-detail" aria-live="polite"><span class="next-kicker">Давайте начнём с вашей задачи</span><h3 id="next-title"></h3><p id="next-description"></p><div class="next-detail-actions"><a id="next-open" class="btn ghost" href="#solutions">Открыть раздел</a><a id="next-lead" class="btn primary" href="#lead">Разобрать вашу ситуацию</a></div><details class="architect-question"><summary>Задать вопрос Маэстро</summary><label for="next-question">О чём хотите спросить?</label><textarea id="next-question" placeholder="Напишите вашу задачу…"></textarea><button type="button" id="next-ask" class="btn ghost">Спросить Маэстро</button><div id="next-answer" class="next-answer" aria-live="polite"></div></details><small>Консультант отвечает по материалам сайта.</small></aside>
@@ -133,5 +133,5 @@ document.getElementById('leadForm').addEventListener('submit',async e=>{e.preven
 <script src="assets/maestro-leads.js?v=1" defer></script>
 <script src="assets/visual-fit.js?v=1" defer></script>
 <script src="assets/home-demo.js?v=1" defer></script>
-<script type="module" src="assets/architect-experience.js?v=chin-clear-1"></script>
+<script type="module" src="assets/architect-experience.js?v=portrait-only-1"></script>
 </body></html>

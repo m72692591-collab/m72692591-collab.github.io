@@ -137,14 +137,7 @@ try {
     const image = document.querySelector(".architect-art");
     return image?.complete && image.naturalWidth > 500;
   });
-  const desktopModel = page.waitForResponse(response => new URL(response.url()).pathname.endsWith("architect-human.glb") && response.status() === 200);
-  await page.locator('button[data-presentation="model"]').click();
-  await desktopModel;
-  await page.waitForFunction(() => document.querySelector("#next-canvas")?.dataset.modelState === "loaded", null, { timeout: 30000 });
-  okay("Visitor can choose the optional rigged 3D sketch", await page.locator("#next-live").getAttribute("data-presentation") === "model" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "true" && await page.locator('#next-canvas').getAttribute('data-body-rig') === 'true' && await page.locator('#next-canvas').getAttribute('data-face-rig') === 'true' && desktopModelRequests.length === 1);
-  await page.screenshot({ path: artifacts + "/architect-model-desktop.png", fullPage: false });
-  await page.locator('button[data-presentation="portrait"]').click();
-  okay("Visitor can return to the loaded portrait composition", await page.locator("#next-live").getAttribute("data-presentation") === "portrait" && await page.locator('button[data-presentation="model"]').getAttribute("aria-pressed") === "false" && await page.locator("#next-live").getAttribute("data-portrait-ready") === "true");
+  okay("Desktop keeps the approved portrait without a 3D sketch switch", await page.locator('button[data-presentation="model"]').count() === 0 && desktopModelRequests.length === 0 && await page.locator('#next-live').getAttribute('data-presentation') === 'portrait');
   const sitesStartingLeft = await page.locator('#next-orbit button[data-id="sites"]').evaluate(button => {
     const value = button.style.left;
     return value.endsWith('%') ? parseFloat(value) / 100 * button.closest('.next-orbit').clientWidth : parseFloat(value);
@@ -376,24 +369,13 @@ try {
   okay("Older cached markup can still load the Architect scene", await compatPage.locator('#next-canvas canvas').count() === 1 && await compatPage.locator('#next-model-status').count() === 1 && compatErrors.length === 0);
   await compatPage.close();
 
-  const failedModel = await desktop.newPage();
-  await failedModel.route('**/architect-human.glb*', route => route.abort());
-  await goto(failedModel, 'index.html?mode=live');
-  await failedModel.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.portraitState === 'loaded', null, { timeout: 30000 });
-  await failedModel.locator('button[data-presentation="model"]').click();
-  await failedModel.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.modelState === 'failed');
-  okay('A failed optional 3D sketch returns to the approved portrait', await failedModel.locator('#next-live').getAttribute('data-presentation') === 'portrait' && await failedModel.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true' && !await failedModel.locator('button[data-presentation=model]').isEnabled());
-  await failedModel.locator('#architect-select').selectOption('automation');
-  okay('Model failure preserves service and lead context', await failedModel.locator('#interest').inputValue() === 'Автоматизация');
-  await failedModel.close();
-
   const lostContext = await desktop.newPage();
   await goto(lostContext, 'index.html?mode=live');
   await lostContext.waitForFunction(() => document.querySelector('#next-canvas')?.dataset.portraitState === 'loaded', null, { timeout: 30000 });
   await lostContext.locator('#next-canvas canvas').evaluate(canvas => canvas.getContext('webgl2').getExtension('WEBGL_lose_context').loseContext());
   await lostContext.locator('#next-fallback').waitFor({ state: 'visible' });
   okay('Context loss disposes the renderer and reveals all eleven static slides', await lostContext.locator('#next-canvas canvas').count() === 0 && await lostContext.locator('#next-orbit button:not([hidden])').count() === 11);
-  okay('Context loss restores the static approved portrait', await lostContext.locator('.architect-art').isVisible() && await lostContext.locator('button[data-presentation=model]').getAttribute('aria-pressed') === 'false' && await lostContext.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true');
+  okay('Context loss restores the static approved portrait', await lostContext.locator('.architect-art').isVisible() && await lostContext.locator('button[data-presentation=model]').count() === 0 && await lostContext.locator('button[data-presentation=portrait]').getAttribute('aria-pressed') === 'true');
   await lostContext.close();
 
   const call = page.locator('.maestro-genie-launcher');
@@ -576,14 +558,7 @@ try {
   okay("Mobile carousel updates the selected service", await m.locator("#next-title").innerText() === "Сайты и дизайн" && await m.locator("#interest").inputValue() === "Сайт");
   await m.waitForFunction(() => document.querySelector("#next-live")?.dataset.panelPresenting === "open", null, { timeout: 15000 });
   okay("Mobile gesture reveals the selected consultation", await m.locator(".next-detail").evaluate(detail => !detail.inert && getComputedStyle(detail).opacity === "1"));
-  const mobileModel = m.waitForResponse(response => new URL(response.url()).pathname.endsWith("architect-human-mobile.glb") && response.status() === 200);
-  await m.locator('button[data-presentation="model"]').click();
-  await mobileModel;
-  await m.waitForFunction(() => document.querySelector("#next-canvas")?.dataset.modelState === "loaded", null, { timeout: 30000 });
-  okay("Mobile can choose the smaller optional 3D sketch", await m.locator("#next-live").getAttribute("data-presentation") === "model" && await m.locator('#next-canvas').getAttribute('data-body-rig') === 'true' && await m.locator('#next-canvas').getAttribute('data-face-rig') === 'true' && mobileModelRequests.length === 1);
-  await m.screenshot({ path: artifacts + '/architect-human-mobile.png', fullPage: true });
-  await m.locator('button[data-presentation="portrait"]').click();
-  okay("Mobile returns to the loaded portrait", await m.locator("#next-live").getAttribute("data-presentation") === "portrait" && await m.locator("#next-live").getAttribute("data-portrait-ready") === "true");
+  okay("Mobile keeps the approved portrait without a 3D sketch switch", await m.locator('button[data-presentation="model"]').count() === 0 && mobileModelRequests.length === 0 && await m.locator('#next-live').getAttribute('data-presentation') === 'portrait');
   okay("Mobile reference layout has no horizontal overflow", await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
   okay("Mobile carousel controls do not cover the consultation panel", await carouselClearsConsultation(m));
   await m.locator(".architect-question summary").click();

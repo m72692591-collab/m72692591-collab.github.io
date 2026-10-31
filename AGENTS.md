@@ -10,6 +10,8 @@
 - The current visual direction is the approved blue-suit portrait, animated as
   an image with an actual WebGL carousel. The owner paused separate human GLB
   development. Never describe the animated raster portrait as a volumetric human.
+- The owner removed the public "3D-эскиз" switch on 2026-11-01. Keep only the
+  approved portrait in the visitor interface; do not restore the sketch control.
 - Keep Classic and Live modes, the shared catalog, lead context, consent and
   existing prices. Do not claim a connected AI backend or application receiver
   while they remain unconfigured. Budget is 0 RUB; no Yandex or Amvera work.

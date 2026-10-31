@@ -1,5 +1,12 @@
 # MAESTRO NEXT — current status
 
+## 2026-11-01: remove the public 3D sketch switch
+
+The owner removed the "3D-эскиз" button. The visitor interface keeps the approved
+live portrait; the dormant model assets are not loaded. The fallback no longer
+dereferences the removed button. Existing desktop/mobile journeys now verify
+absence of that switch and preserve WebGL-loss/static-portrait coverage.
+
 ## 2026-10-31: clear face throughout the carousel orbit
 
 Acceptance: every resting virtual screen stays below the chin and above the lower
