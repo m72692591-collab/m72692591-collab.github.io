@@ -37,3 +37,130 @@ The portrait is a generated 2D backdrop and differs in face/pose/crop from the s
 Gemini visual review: `ROUTE_UNAVAILABLE` (`Debugger unattached` in the authorized browser route). Independent local code, copy and visual review were used; no Gemini contribution is claimed.
 
 HUMANITY_PASS: existing catalog/service copy retained; new view labels describe the actual portrait/GLB distinction, the consultant's source and the manual application. No invented outcomes or growth figures. Codex performed final editing after independent review.
+
+## Human-rig revision — 2026-10-28, draft / PARTIAL
+
+Acceptance requested: the exact illustrated Architect, chest-level wide carousel,
+real gestures, expression and speech. Technical acceptance passed; exact visual
+identity and lifelike performance remain unfulfilled. This revision is not deployed.
+
+Source: supplied central triptych panel, SHA-256
+952ba078a675cea37fa2253875934155d6e6aea7e9722692ea431222a2c6134b.
+The source is a single illustrated view, not an existing rigged model.
+
+Independent Gemini reference review was actually completed at
+https://gemini.google.com/app/45f310fc5a677316 : defined jaw/cheekbones, light
+stubble, swept wavy brown hair, opaque face/neck, blue translucent jacket,
+shoulder/head width around 2.7–3.0, clear face above the chest cards. These are
+visual guidance, not measured biometric reconstruction. The earlier unavailable
+Gemini route above is historical and does not describe this run.
+
+Implemented: CC0-based MPFB human, 52 joints including fingers, 67 facial targets,
+separate detailed face texture, arm IK, timed selection/contact, genuine browser
+speech callbacks, chest orbit, smaller mobile GLB. Corrected eye alpha, cloth
+intersections and a shoulder cut identified in the prototype renders.
+
+76 structural / 90 browser assertions, 9 rig tests and speech lifecycle tests
+passed locally. Browser coverage now also tests failed GLB and lost WebGL context.
+Desktop/mobile final screenshots are produced in test-artifacts/maestro and CI.
+No uncaught page errors or horizontal overflow were observed. The source GLB
+read-back confirms real morph deformation; it does not certify natural movement.
+
+HUMANITY_PASS: retained catalog and owner copy; new controls/statuses independently
+reviewed and corrected so failed speech does not claim an active fallback, and
+model failure describes the automatic portrait switch. Senior edit: Codex.
+
+Open visual gap: another face/hairstyle, procedural motion, approximate mouth
+poses. The head texture improves detail without establishing exact identity.
+This gap blocks a claim of 100% match and blocks automatic production replacement.
+
+
+## 2026-10-28: approved portrait animation supersedes GLB appearance work
+
+Owner-directed pivot: pause human GLB work, animate the approved portrait. The new
+alpha cutout and empty office are separate imagegen-derived assets. Real WebGL
+carousel panels follow the deformed hand point, expand, then reveal the shared
+consultation. The image layer is explicitly 2.5D, not a new 3D human. Removed
+ARCHITECT/02; brighter gold M is the canonical project logo.
+
+Current validation: 97 browser assertions, 86 structural checks, 12 rig/timeline
+checks, two portrait checks, speech lifecycle 25 events/eight utterances. Independent
+review resolved static fallback portrait loss, moving-panel focus and status-timer
+defects. Three responsive viewport screenshots inspected; panel/control overlap
+was found and corrected. HUMANITY_PASS: new labels identify a live image and a
+3D sketch; diagrams describe project stages without fabricated growth metrics.
+
+External profile rollout is incomplete: Telegram gateway account is not allowlisted;
+other exact MAESTRO profiles are not currently verified. No profile write is claimed.
+
+## 2026-10-30: applying the seven website review prompts
+
+The owner's seven prompts are review lenses for the existing site, not a reason
+to restart it or replace approved copy and identity. Keep the shared catalog,
+Classic/Live context, gold twin-peak mark and approved blue-suit portrait.
+
+| Review lens | Existing source and acceptance check |
+| --- | --- |
+| Strategy and page structure | The shared catalog and existing brief builder already collect the task, goal, constraints and next action. Each topic must show only its own materials and retain its lead interest. |
+| Identity and voice | `maestro/brand/BRAND_CANON.md` is the brand source. Preserve owner-authored text; review only new labels for a clear action, natural Russian and accurate scope. |
+| Home hierarchy | Topic title, summary, relevant evidence and the existing request action must remain readable in order. Do not invent client logos, testimonials, conversion rates or growth figures. |
+| Copy | Keep authored service text and price values unchanged. A demo, prototype and configured live integration must not be described as equivalent results. |
+| Visual design | Extend the current gold/blue palette and existing typography. Inspect the opened topic beside the portrait and in full-page layout; keep complete image proportions, visible controls and readable contrast. |
+| Responsive implementation | Retain semantic HTML and working links. Check desktop/mobile, keyboard focus, reduced motion, WebGL failure, the form context and return to Classic. |
+| Search basics | Keep distinct existing titles/descriptions and headings. Use absolute canonical URLs consistent with the sitemap; list public pages without mode/query duplicates or the server admin page. |
+
+Search discovery changes: supporting pages now have self-referencing canonical
+URLs; `sitemap.xml` lists the 13 public MAESTRO pages, including the site factory
+merged from main; root `robots.txt` points to
+it without blocking assets or pages. The portfolio's existing social title and
+description remain unchanged, with its canonical URL, site name, locale and type
+added. No fabricated `lastmod` values, keyword stuffing or unverified structured
+data were added. These are local source changes, not proof of indexing or ranking.
+The saved check compares each supporting page's body hash before and after.
+
+Primary references read on 2026-10-30:
+- [Google SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide): descriptive content, useful links and user comprehension come before mechanical SEO work.
+- [Google canonical URL guidance](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls): self-referencing canonical links and consistent preferred URLs.
+- [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap): absolute URLs, canonical pages and accurate optional metadata.
+- [Google robots.txt guidance](https://developers.google.com/crawling/docs/robots-txt/create-robots-txt): the file belongs at the host root; its sitemap directive supports discovery.
+
+## 2026-10-31: service explanations and one MAESTRO entry
+
+Owner correction supersedes the standalone factory rollout above. Site production
+remains a MAESTRO service; the old URL redirects into its shared service directory.
+The eight-stage production checklist stays internal. Existing prices, authored
+cards and legal documents are preserved. The sitemap now contains 12 public pages.
+
+New visitor copy explains each of the 11 topics with a local illustration, concrete
+tasks, working stages, deliverables and preparation. Classic and Live read the same
+`maestro-service-details.js`. Strategy includes launch, positioning, development and
+advertising audit; websites explain formats, design approaches and how the editing
+system is chosen. Technical names are explained without requiring a customer to
+choose a stack. No client results, testimonials, guaranteed growth or new prices
+were invented.
+
+Independent code review caught a light heading on a light Classic panel, a side
+page font cascade and a stale enquiry category after summoning MAESTRO. All three
+were repaired. Independent visual review inspected the orbit, full Strategy,
+work steps and mobile Sites page. Rear labels no longer fade with distance;
+position, size and portrait occlusion preserve depth. Glass blur is limited to 2px.
+
+Gemini: ROUTE_UNAVAILABLE for this revision; no currently verified Gemini review
+session was available. The earlier dated Gemini review remains historical evidence,
+not participation in these changes. Separate local agents supplied code and visual
+criticism; Codex integrated their findings.
+
+HUMANITY_PASS: all eleven new explanations independently reviewed under HV2.
+Accepted concrete process descriptions, customer-facing terminology and bounded
+deliverables. Removed an unverified assumption about willingness to pay; clarified
+sales guidance, incomplete AI answers, pilot wording, mentor appointment and report
+use. Narration lead paragraphs were frozen after review. Codex performed the final
+integration; no original owner-authored prose or prices were rewritten.
+
+Speech review: the former system fallback is removed. Eleven local neural
+introductions match the reviewed title/lead text. Independent code review found
+a stale-audio cache risk; audio URLs now contain their content hash and the manifest
+is revalidated. Browser tests exercise the actual unmuted opt-in button, playback
+progress and stop, in addition to lifecycle races and all eleven decoded files.
+Naturalness and pronunciation remain unreviewed because this runtime cannot
+listen. This is a voice trial, not a claim of human speech or full lip-sync.

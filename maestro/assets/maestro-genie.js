@@ -1,7 +1,9 @@
 /* MAESTRO GENIE ENGINE v0.1 — progressive enhancement on a static site.
  * No tokens, cookies, trackers, paid services or server-side AI claims.
- * Optional future private TTS adapter: window.MAESTRO_GENIE_VOICE = { speak(text): Promise<void>, stop(): void }.
- * The voice adapter must be implemented on a trusted server, never put API keys or consent recordings in the public repo.
+ * Prepared narration adapter: window.MAESTRO_GENIE_VOICE = { speak(text, hooks): Promise<void>, stop(): void }.
+ * hooks.onStart/onBoundary/onEnd may report actual playback timing. An adapter without hooks still plays,
+ * but does not claim timed speech events for the 3D scene.
+ * Public narration files are generated offline. Never put API keys or consent recordings in the public repo.
  */
 (function () {
   "use strict";
@@ -35,7 +37,7 @@
     '<button type="button" class="maestro-genie-launcher" aria-controls="maestro-genie-panel" aria-expanded="false" aria-label="Вызвать консультанта МАЭСТРО">' + lamp + '<span>Позвать МАЭСТРО</span></button>' +
     '<aside id="maestro-genie-panel" class="maestro-genie-panel" aria-label="Консультант МАЭСТРО" hidden>' +
       '<div class="maestro-genie-head"><div class="maestro-genie-title"><strong>МАЭСТРО · ЦИФРОВОЙ СОВЕТНИК</strong><small>Бесплатная консультация · сценарный режим</small></div>' +
-      '<div class="maestro-genie-controls"><button type="button" data-mg="voice" aria-label="Включить озвучивание ответов" aria-pressed="false" title="Включить голос">♫</button>' +
+      '<div class="maestro-genie-controls"><button type="button" data-mg="voice" aria-label="Включить озвучивание направлений" aria-pressed="false" title="Включить голос">♫</button>' +
       '<button type="button" data-mg="mic" aria-label="Продиктовать вопрос" title="Продиктовать вопрос">🎙</button>' +
       '<button type="button" data-mg="close" aria-label="Закрыть консультанта">×</button></div></div>' +
       '<div class="maestro-genie-stage">' + avatar +
@@ -49,7 +51,7 @@
       '<form class="maestro-genie-form"><input name="question" type="text" maxlength="400" autocomplete="off" aria-label="Ваш вопрос" placeholder="Расскажите, что нужно бизнесу" required><button type="submit">Отправить</button></form>' +
       '<button type="button" class="maestro-genie-go" data-mg="lead">Перейти к заявке →</button>' +
       '<button type="button" class="maestro-genie-go" data-mg="brief-go" hidden>Открыть готовый черновик ТЗ →</button>' +
-      '<p class="maestro-genie-note">Первый этап: ответы по направлениям услуг, без подключения нейросети. Голос браузера может обрабатываться его провайдером. Контакты не отправляются без вашего действия.</p>' +
+      '<p class="maestro-genie-note">Первый этап: ответы по направлениям услуг, без подключения нейросети. Направления озвучены заранее; ответы в диалоге доступны текстом. Контакты не отправляются без вашего действия.</p>' +
     '</aside>';
   document.body.append(root);
 
@@ -61,6 +63,7 @@
   const voiceButton = root.querySelector('[data-mg="voice"]');
   const micButton = root.querySelector('[data-mg="mic"]');
   const state = { voice: false, topic: 'general', lastQuestion: '', leadInterest: null, recognition: null, speaking: false, wizard: null };
+  let activeSpeech = null;
 
   const knowledge = {
     general: 'Здравствуйте! Я МАЭСТРО. Помогаю выбрать подходящее направление: сайты, боты, ИИ-операторы, CRM, маркетинг, команда и аналитика. Расскажите, что вы хотите улучшить. Я могу помочь сформулировать заявку.',
@@ -97,7 +100,39 @@
     for (const entry of intentChecks) if (entry[1].some(word => q.includes(word))) return entry[0];
     return 'general';
   }
+  function speechEvent(run, phase, charIndex = 0, charLength = 0) {
+    try { window.dispatchEvent(new CustomEvent('maestro:speech', {
+      detail: { phase, text: run.text, charIndex, charLength }
+    })); } catch (_) { /* A scene listener must never break the consultant. */ }
+  }
+  function beginSpeech(run) {
+    if (activeSpeech !== run || run.ended || run.started) return;
+    run.started = true;
+    state.speaking = true;
+    panel.classList.add('is-talking');
+    setStatus('МАЭСТРО рассказывает о направлении');
+    speechEvent(run, 'start');
+  }
+  function boundarySpeech(run, charIndex, charLength) {
+    if (activeSpeech !== run || run.ended) return;
+    beginSpeech(run);
+    const index = Number.isFinite(charIndex) ? Math.max(0, Math.min(run.text.length, charIndex)) : 0;
+    const length = Number.isFinite(charLength) ? Math.max(0, Math.min(run.text.length - index, charLength)) : 0;
+    run.lastIndex = index;
+    speechEvent(run, 'boundary', index, length);
+  }
+  function endSpeech(run) {
+    if (activeSpeech !== run || run.ended) return;
+    run.ended = true;
+    run.stopWaiting?.();
+    activeSpeech = null;
+    state.speaking = false;
+    panel.classList.remove('is-talking');
+    setStatus('Готов к вашему вопросу');
+    speechEvent(run, 'end', run.lastIndex || 0);
+  }
   function cancelSpeech() {
+    if (activeSpeech) endSpeech(activeSpeech);
     try { window.speechSynthesis?.cancel(); } catch (_) {}
     try { window.MAESTRO_GENIE_VOICE?.stop?.(); } catch (_) {}
     panel.classList.remove('is-talking');
@@ -106,26 +141,45 @@
   async function say(text) {
     if (!state.voice) return;
     cancelSpeech();
+    const run = { text: String(text), started: false, ended: false, lastIndex: 0 };
+    activeSpeech = run;
     const custom = window.MAESTRO_GENIE_VOICE;
-    if (custom && typeof custom.speak === 'function') {
-      try {
-        panel.classList.add('is-talking');
-        state.speaking = true;
-        await custom.speak(text);
-        panel.classList.remove('is-talking');
-        state.speaking = false;
-        return;
-      } catch (_) { setStatus('Персональный голос недоступен — включён резервный'); }
+    if (!custom || typeof custom.speak !== 'function') {
+      endSpeech(run);
+      setStatus('Ответ доступен текстом. Озвучивание сейчас недоступно.');
+      return;
     }
-    if (!('speechSynthesis' in window)) { setStatus('В этом браузере нет синтеза речи'); return; }
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'ru-RU'; u.rate = 0.98; u.pitch = 0.96;
-    const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find(v => v.lang?.toLowerCase() === 'ru-ru') || voices.find(v => v.lang?.toLowerCase().startsWith('ru'));
-    if (voice) u.voice = voice;
-    u.onstart = () => { state.speaking = true; panel.classList.add('is-talking'); setStatus('МАЭСТРО говорит'); };
-    u.onend = u.onerror = () => { state.speaking = false; panel.classList.remove('is-talking'); setStatus('Готов к вашему вопросу'); };
-    window.speechSynthesis.speak(u);
+    try {
+      const result = await custom.speak(run.text, {
+        onStart: detail => {
+          if (activeSpeech !== run || run.ended) return;
+          if (detail && typeof detail.text === 'string') run.text = detail.text;
+          beginSpeech(run);
+        },
+        onBoundary: (charIndex, charLength) => boundarySpeech(run, charIndex, charLength),
+        onEnd: () => endSpeech(run)
+      });
+      if (activeSpeech !== run) return;
+      endSpeech(run);
+      if (result?.reason === 'text-only') setStatus('Ответ доступен текстом. Голосом озвучены направления услуг.');
+    } catch (_) {
+      if (activeSpeech !== run) return;
+      endSpeech(run);
+      setStatus('Не удалось воспроизвести запись. Описание доступно текстом.');
+    }
+  }
+  function setVoiceEnabled(enabled) {
+    const next = Boolean(enabled), changed = state.voice !== next;
+    state.voice = next;
+    voiceButton.setAttribute('aria-pressed', String(state.voice));
+    voiceButton.title = state.voice ? 'Отключить озвучивание направлений' : 'Включить озвучивание направлений';
+    voiceButton.setAttribute('aria-label', voiceButton.title);
+    if (!state.voice) cancelSpeech();
+    setStatus(state.voice ? 'Озвучивание включено' : 'Озвучивание выключено');
+    if (changed) {
+      try { window.dispatchEvent(new CustomEvent('maestro:voice', { detail: { enabled: state.voice } })); }
+      catch (_) { /* The scene must not break the consultant's voice control. */ }
+    }
   }
   const wizardPrompts = [
     'Какую услугу или систему хотите получить? Например: бот для сайта, CRM или автоматизация обработки заявок.',
@@ -208,6 +262,7 @@
     launcher.setAttribute('aria-expanded', 'false');
     state.leadInterest = null;
     launcher.focus();
+    window.dispatchEvent(new CustomEvent('maestro:consultant-closed'));
   }
   function setLeadInterest(value) {
     const select = document.getElementById('interest');
@@ -220,6 +275,7 @@
     const values = { ai: 'ИИ-оператор', web: 'Сайт', crm: 'CRM', marketing: 'Другое', hr: 'HR', audit: 'Аудит', price: 'Другое', general: 'Другое', lead: 'Другое' };
     if (select) select.value = state.leadInterest || values[state.topic] || 'Другое';
     if (details && !details.value.trim() && state.lastQuestion) details.value = 'Обсуждали с консультантом: ' + state.lastQuestion;
+    window.dispatchEvent(new CustomEvent('maestro:lead-request'));
     close();
     if (form) form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
     setTimeout(() => document.getElementById('name')?.focus({ preventScroll: true }), 400);
@@ -240,19 +296,27 @@
     try { recognition.start(); } catch (_) { state.recognition = null; setStatus('Не удалось включить микрофон'); }
   }
 
-  launcher.addEventListener('click', open);
+  function summonOrOpen() {
+    if (document.body.classList.contains('next-mode-live')) { open(); return; }
+    const request = new CustomEvent('maestro:summon', { cancelable: true });
+    if (window.dispatchEvent(request)) window.location.href = 'index.html?mode=live';
+  }
+  function updateLauncher() {
+    const live = document.body.classList.contains('next-mode-live');
+    launcher.querySelector('span').textContent = live ? 'Задать вопрос' : 'Позвать Маэстро';
+    launcher.setAttribute('aria-label', live ? 'Задать вопрос Маэстро' : 'Позвать Маэстро');
+    if (live) launcher.setAttribute('aria-controls', 'maestro-genie-panel');
+    else if (document.getElementById('next-live')) launcher.setAttribute('aria-controls', 'next-live');
+    else launcher.removeAttribute('aria-controls');
+  }
+  updateLauncher();
+  window.addEventListener('maestro:mode', updateLauncher);
+  launcher.addEventListener('click', summonOrOpen);
   root.querySelector('[data-mg="close"]').addEventListener('click', close);
   root.querySelector('[data-mg="lead"]').addEventListener('click', fillLead);
   root.querySelector('[data-mg="brief-start"]').addEventListener('click', startWizard);
   root.querySelector('[data-mg="brief-go"]').addEventListener('click', () => { window.location.href = 'brief-builder.html'; });
-  voiceButton.addEventListener('click', () => {
-    state.voice = !state.voice;
-    voiceButton.setAttribute('aria-pressed', String(state.voice));
-    voiceButton.title = state.voice ? 'Отключить голос' : 'Включить голос';
-    voiceButton.setAttribute('aria-label', voiceButton.title);
-    if (!state.voice) cancelSpeech();
-    setStatus(state.voice ? 'Озвучивание включено' : 'Озвучивание выключено');
-  });
+  voiceButton.addEventListener('click', () => setVoiceEnabled(!state.voice));
   micButton.addEventListener('click', dictate);
   root.querySelectorAll('[data-mg-question]').forEach(button => button.addEventListener('click', () => ask(button.getAttribute('data-mg-question'))));
   root.querySelector('.maestro-genie-form').addEventListener('submit', event => {
@@ -263,17 +327,18 @@
   });
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && !panel.hidden) close(); });
   const nav = document.getElementById('links');
-  if (nav) {
+  if (nav && !document.getElementById('next-header-toggle')) {
     const navButton = document.createElement('button');
     navButton.type = 'button';
     navButton.className = 'maestro-genie-nav';
-    navButton.textContent = '✦ Позвать МАЭСТРО';
+    navButton.textContent = 'Позвать Маэстро';
     navButton.addEventListener('click', () => {
-      open();
+      summonOrOpen();
       nav.classList.remove('open');
       document.getElementById('menu')?.setAttribute('aria-expanded', 'false');
     });
     nav.append(navButton);
   }
-  window.MAESTRO_GENIE = Object.freeze({ open, close, ask, setLeadInterest, stopVoice: cancelSpeech });
+  window.MAESTRO_GENIE = Object.freeze({ open, close, ask, speak: say, setVoiceEnabled,
+    get voiceEnabled() { return state.voice; }, setLeadInterest, stopVoice: cancelSpeech });
 })();

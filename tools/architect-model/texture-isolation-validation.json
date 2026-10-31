@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "outside_head_mask_max_pixel_delta": 0.0,
+  "mesh_accessor_buffers_identical": 400,
+  "mesh_difference_count": 0,
+  "base_sha256": "a821c5aca4a36ec798aa1ff386057ef29def226333130103908dbfaed7e73ef8",
+  "textured_sha256": "7ae82b92e1dad5b69a60b72e19df9bdd3f69c17524b6eaab612b07b2cb7b9b4f",
+  "texture_sha256": "a103661ea1f80051fb1e167e27385c45165e5f28cad6a7ffb193acf5d96b7a22",
+  "source": "CC0 MakeHuman middleage skin; head-only generated contribution; 0.85 blend, feathered mask",
+  "visual_status": "Root viewed and accepted for prototype; exact reference likeness not claimed"
+}

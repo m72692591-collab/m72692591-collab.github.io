@@ -1,0 +1,29 @@
+{
+  "archives": [
+    {
+      "sha256": "ada7c4ff11e79cf6ed9b441bccabc52c9359f2848b988f66e89c14c30b21fed7",
+      "file": "mpfb2-v2.0.18-full.zip",
+      "bytes": 45601989
+    },
+    {
+      "sha256": "b542127a8e25547c7c29c19f2d1d2adb9a664c80396ecd694095dbc8028a0107",
+      "file": "makehuman_system_assets_cc0.zip",
+      "bytes": 280737770
+    },
+    {
+      "sha256": "d113107bd7eb59f3af4df6fc0ec29bfcc593f496d0b336aec14f086a80ce7146",
+      "file": "faceunits01.zip",
+      "bytes": 257821
+    },
+    {
+      "sha256": "a69ab6fb95ddd5f56f70acc7e859f5f9c6ae613c527d577ea1571eff2183d29e",
+      "file": "visemes02.zip",
+      "bytes": 130733
+    }
+  ],
+  "limitations": [
+    "Manual phenotype; exact likeness not achieved",
+    "Standalone skeletal and morph validation; site verification separate"
+  ],
+  "status": "DOWNLOADED_OFFICIAL_SOURCES"
+}

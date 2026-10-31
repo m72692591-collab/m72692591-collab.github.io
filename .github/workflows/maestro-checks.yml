@@ -3,26 +3,34 @@ on:
   pull_request:
     paths:
       - 'maestro/**'
+      - 'robots.txt'
+      - 'sitemap.xml'
       - 'tests/maestro-smoke.mjs'
       - 'tests/maestro-browser.mjs'
       - 'tests/maestro-leads-api.mjs'
-      - 'tests/maestro-site-factory.mjs'
-      - 'tests/maestro-site-factory-browser.mjs'
-      - 'robots.txt'
-      - 'sitemap.xml'
+      - 'tests/maestro-speech.mjs'
+      - 'tests/architect-rig.mjs'
+      - 'tests/architect-portrait.mjs'
+      - 'tests/maestro-service-details.mjs'
+      - 'tests/maestro-services-browser.mjs'
+      - 'tests/maestro-face-clearance.mjs'
       - '.github/workflows/maestro-checks.yml'
   push:
     branches:
       - main
     paths:
       - 'maestro/**'
+      - 'robots.txt'
+      - 'sitemap.xml'
       - 'tests/maestro-smoke.mjs'
       - 'tests/maestro-browser.mjs'
       - 'tests/maestro-leads-api.mjs'
-      - 'tests/maestro-site-factory.mjs'
-      - 'tests/maestro-site-factory-browser.mjs'
-      - 'robots.txt'
-      - 'sitemap.xml'
+      - 'tests/maestro-speech.mjs'
+      - 'tests/architect-rig.mjs'
+      - 'tests/architect-portrait.mjs'
+      - 'tests/maestro-service-details.mjs'
+      - 'tests/maestro-services-browser.mjs'
+      - 'tests/maestro-face-clearance.mjs'
       - '.github/workflows/maestro-checks.yml'
   workflow_dispatch:
 permissions:
@@ -40,8 +48,12 @@ jobs:
           node-version: '22'
       - name: Verify JavaScript syntax, static links and integration invariants
         run: node tests/maestro-smoke.mjs
-      - name: Verify website production prompts, links and metadata
-        run: node tests/maestro-site-factory.mjs
+      - name: Verify portrait motion and hand gesture
+        run: |
+          node tests/architect-rig.mjs
+          node tests/architect-portrait.mjs
+      - name: Verify shared service content and local illustrations
+        run: node tests/maestro-service-details.mjs
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
@@ -61,10 +73,14 @@ jobs:
         run: |
           npm install --no-save --no-audit --no-fund playwright@1.56.1
           npx playwright install --with-deps chromium
+      - name: Verify speech lifecycle and cancellation
+        run: node tests/maestro-speech.mjs
       - name: Run desktop and mobile browser journeys
         run: node tests/maestro-browser.mjs
-      - name: Run website factory copy, download and handoff journeys
-        run: node tests/maestro-site-factory-browser.mjs
+      - name: Run service pages, summon and legacy redirect journeys
+        run: node tests/maestro-services-browser.mjs
+      - name: Verify face and lower-panel clearance through a complete carousel turn
+        run: node tests/maestro-face-clearance.mjs
       - name: Save visual QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
