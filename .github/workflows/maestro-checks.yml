@@ -1,29 +1,6 @@
 name: MAESTRO smoke checks
+# Runs by manual dispatch only; native Pages remains active.
 on:
-  pull_request:
-    paths:
-      - 'maestro/**'
-      - 'tests/maestro-smoke.mjs'
-      - 'tests/maestro-browser.mjs'
-      - 'tests/maestro-leads-api.mjs'
-      - 'tests/maestro-site-factory.mjs'
-      - 'tests/maestro-site-factory-browser.mjs'
-      - 'robots.txt'
-      - 'sitemap.xml'
-      - '.github/workflows/maestro-checks.yml'
-  push:
-    branches:
-      - main
-    paths:
-      - 'maestro/**'
-      - 'tests/maestro-smoke.mjs'
-      - 'tests/maestro-browser.mjs'
-      - 'tests/maestro-leads-api.mjs'
-      - 'tests/maestro-site-factory.mjs'
-      - 'tests/maestro-site-factory-browser.mjs'
-      - 'robots.txt'
-      - 'sitemap.xml'
-      - '.github/workflows/maestro-checks.yml'
   workflow_dispatch:
 permissions:
   contents: read
