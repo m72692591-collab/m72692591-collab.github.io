@@ -46,7 +46,7 @@ services:
     secrets: [db_password, db_root_password]
     volumes:
       - maestro-data:/var/lib/mysql
-      - ../../maestro/server/lead_schema.sql:/docker-entrypoint-initdb.d/001.sql:ro
+      - ../../infra/runtime/lead_schema_v2.sql:/docker-entrypoint-initdb.d/001.sql:ro
     networks: [backend]
     mem_limit: 768m
     pids_limit: 150
