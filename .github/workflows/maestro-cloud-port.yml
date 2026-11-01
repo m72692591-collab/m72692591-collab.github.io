@@ -1,0 +1,61 @@
+name: MAESTRO isolated cloud runtime
+on:
+  pull_request:
+    paths:
+      - "infra/runtime/**"
+      - "maestro/assets/maestro-leads-v2.js"
+      - "tools/package_maestro.py"
+      - "tests/test_maestro_package.py"
+      - "tests/test_site_channel.py"
+      - "tests/maestro-stack.mjs"
+      - ".github/workflows/maestro-cloud-port.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      MAESTRO_ORIGIN: https://maestro.example
+      MAESTRO_SECRET_DIR: /tmp/maestro-ci-secrets
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Unit checks and isolated package
+        run: |
+          python -m unittest discover -s tests -p 'test_maestro_package.py' -v
+          python -m unittest discover -s tests -p 'test_site_channel.py' -v
+          php -l infra/runtime/lead-api-v2.php
+          php -l infra/runtime/receiver.php
+          node --check tests/maestro-stack.mjs
+          python tools/package_maestro.py --origin "$MAESTRO_ORIGIN"
+          test -f dist/maestro/assets/models/architect-rigged.glb
+          test -f dist/maestro/assets/models/architect-mobile.glb
+          test -f dist/maestro/site-factory.mjs
+          grep -q 'maestro-leads-v2.js' dist/maestro/index.html
+          ! find dist/maestro -type f \( -name '*.php' -o -name '*.sql' -o -name '.env' \) | grep -q .
+      - name: Synthetic secret fixtures outside repository
+        run: |
+          python - <<'PY'
+          import os,secrets
+          from pathlib import Path
+          root=Path(os.environ['MAESTRO_SECRET_DIR'])
+          root.mkdir(mode=0o700, exist_ok=True)
+          for name in ('db_password','db_root_password','admin_token','ip_pepper'):
+              path=root/name
+              path.write_text(secrets.token_hex(32))
+              path.chmod(0o600)
+          PY
+      - name: End-to-end Docker smoke with synthetic lead
+        run: |
+          docker compose -f infra/runtime/compose.yaml config --quiet
+          docker compose -f infra/runtime/compose.yaml up -d --build --wait --wait-timeout 180
+          node tests/maestro-stack.mjs
+      - name: Remove disposable CI resources only
+        if: always()
+        run: |
+          docker compose -f infra/runtime/compose.yaml down -v --remove-orphans || true
+          rm -rf "$MAESTRO_SECRET_DIR"
