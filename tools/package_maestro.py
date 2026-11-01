@@ -4,7 +4,7 @@ from urllib.parse import urlsplit
 import argparse, hashlib, json, re, shutil
 
 ROOT=Path(__file__).resolve().parents[1]
-ALLOWED={'.html','.css','.js','.svg','.png','.webp','.jpg','.jpeg','.ico','.txt','.mp3','.m4a','.wav','.ogg'}
+ALLOWED={'.html','.css','.js','.svg','.png','.webp','.jpg','.jpeg','.ico','.txt','.mp3','.m4a','.wav','.ogg','.glb','.mjs'}
 
 def origin(value):
     url=urlsplit(value)
@@ -30,6 +30,11 @@ def package(root, target, public_origin):
         if item.suffix=='.html':
             text=item.read_text(encoding='utf-8')
             text=re.sub(r'(<meta\s+name="maestro-lead-endpoint"\s+content=")[^"]*(")',lambda m:m[1]+public_origin+'/api/leads'+m[2],text)
+            if relative.as_posix() == 'index.html' and (source/'assets'/'maestro-leads-v2.js').is_file():
+                snippet='<script src="assets/maestro-leads-v2.js" defer></script>'
+                if snippet not in text:
+                    if '</body>' not in text: raise ValueError('Closing body tag missing')
+                    text=text.replace('</body>',snippet+'</body>')
             destination.write_text(text,encoding='utf-8')
         else:
             shutil.copyfile(item,destination)
