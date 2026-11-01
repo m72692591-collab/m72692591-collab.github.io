@@ -47,7 +47,7 @@ jobs:
           for name in ('db_password','db_root_password','admin_token','ip_pepper'):
               path=root/name
               path.write_text(secrets.token_hex(32))
-              path.chmod(0o600)
+              path.chmod(0o644)
           PY
       - name: End-to-end Docker smoke with synthetic lead
         run: |
