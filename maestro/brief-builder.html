@@ -45,9 +45,10 @@ footer{border-top:1px solid var(--edge);padding:25px 0 40px;color:var(--muted);f
 @media(max-width:850px){.layout{grid-template-columns:1fr}.preview{position:static}}
 @media(max-width:520px){.intro{padding:38px 0 18px}.panel{padding:17px}.two,.checks{grid-template-columns:1fr}.wrap{width:calc(100% - 22px)}}
 </style>
+<link rel="stylesheet" href="assets/maestro-identity.css?v=1">
 </head>
 <body>
-<header><div class="wrap"><a href="index.html" class="brand"><b>◈</b> МАЭСТРО</a><a href="maestro-lab.html" style="font-size:13px">Лаборатория ↗</a></div></header>
+<header><div class="wrap"><a href="index.html" class="brand maestro-brand" aria-label="МАЭСТРО — главная"><span class="maestro-mark" aria-hidden="true">М</span><span class="maestro-name">МАЭСТРО<small>BUSINESS</small></span></a><a href="maestro-lab.html" style="font-size:13px">Лаборатория ↗</a></div></header>
 <main class="wrap">
 <section class="intro"><span class="eyebrow">MAESTRO / PROJECT DESIGNER</span><h1>Превратите идею в <em>понятное ТЗ.</em></h1>
 <p>Опишите задачу. Система сформирует структурированный черновик требований, который можно скопировать, сохранить или перенести в заявку. Без регистрации и оплаты.</p>
@@ -85,7 +86,8 @@ footer{border-top:1px solid var(--edge);padding:25px 0 40px;color:var(--muted);f
 <button type="button" id="download" class="primary">Сохранить ТЗ (.txt)</button>
 <button type="button" id="copy" class="secondary">Копировать</button>
 <button type="button" id="lead" class="secondary">Перейти к заявке →</button>
-</div><span class="status" role="status" id="state"></span>
+<a id="telegram" class="telegram-brief" href="https://t.me/maestro_business_ai_bot" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+</div><p class="telegram-hint">При нажатии полный текст ТЗ копируется в буфер обмена, а чат бота открывается отдельно. Вставьте и отправьте текст самостоятельно — сайт ничего не отправляет без вас.</p><span class="status" role="status" id="state"></span>
 </form>
 <section class="panel preview" aria-labelledby="preview-title"><span class="eyebrow">LIVE DOCUMENT</span><h2 id="preview-title" style="margin-top:8px">Предварительное техническое задание</h2>
 <p class="desc">Документ формируется локально в вашем браузере. Пока вы не нажмёте «Перейти к заявке», он никуда не отправляется.</p>
@@ -147,6 +149,11 @@ ids.forEach(id=>$(id).addEventListener("input",render));
 document.querySelectorAll("#integrations input").forEach(el=>el.addEventListener("change",render));
 function notify(message){$("state").textContent=message}
 $("copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(build());notify("Документ скопирован.");}catch(e){notify("Копирование недоступно. Можно выделить текст справа.");}});
+$("telegram").addEventListener("click",()=>{
+  const text=build();
+  if(!navigator.clipboard || !navigator.clipboard.writeText){notify("Чат открыт. Автоматическое копирование недоступно — выделите ТЗ справа и скопируйте вручную.");return;}
+  navigator.clipboard.writeText(text).then(()=>notify("ТЗ скопировано. Вставьте его в открывшийся чат Telegram и отправьте самостоятельно."),()=>notify("Чат открыт, но копирование заблокировано. Скопируйте ТЗ вручную."));
+});
 $("download").addEventListener("click",()=>{
 const file=new Blob(["\ufeff",build()],{type:"text/plain;charset=utf-8"});
 const link=document.createElement("a"),url=URL.createObjectURL(file);
