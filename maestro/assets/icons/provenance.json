@@ -1,0 +1,61 @@
+{
+  "library": "Phosphor Icons",
+  "weight": "thin",
+  "license": "MIT",
+  "upstream": "https://github.com/phosphor-icons/core",
+  "revision": "2b75f3ad12b420c9504ef05df8d2564a28f8500e",
+  "retrieved": "2026-10-28",
+  "modifications": "None; original upstream SVG files renamed by interface role.",
+  "icons": [
+    {
+      "file": "strategy.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/chart-line-up-thin.svg",
+      "sha256": "CA6373F702063B85CFD1CCBCE7BA79318681B953F387D61417776932E2E5EC6C"
+    },
+    {
+      "file": "finance.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/currency-circle-dollar-thin.svg",
+      "sha256": "57EE79BFBB7D10F9BB73F4908F9218AFCB9AFDA607E863744938669C269D2042"
+    },
+    {
+      "file": "automation.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/gear-six-thin.svg",
+      "sha256": "4918DE2E044FB15D5431F732DBC623EF1690AD3CC5A8B4BDEB314A6B7B00EF18"
+    },
+    {
+      "file": "marketing.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/megaphone-thin.svg",
+      "sha256": "6F177288B791CDDA87955754DB2FCD2B25F635F6CD89AC8FFB3B643D6FB45CD5"
+    },
+    {
+      "file": "team.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/users-three-thin.svg",
+      "sha256": "DFB63F076FE489691781325AFD4C592D28DE62D214C0A0E69E747090D5EC886C"
+    },
+    {
+      "file": "chevron-left.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/caret-left-thin.svg",
+      "sha256": "C50E48818069516396414775B1161C7C154DF2F11C43E543C17ACF2751B2C6D7"
+    },
+    {
+      "file": "chevron-right.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/caret-right-thin.svg",
+      "sha256": "C49929DF35AB15D2C072B71BEE45B7D18F0BEE69878832E9F94E4A7003A2CB5C"
+    },
+    {
+      "file": "view.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/cube-thin.svg",
+      "sha256": "DC47290EF3E9306C796BBF90303B3350D444CE54BF0FC1420A61B50351489C9C"
+    },
+    {
+      "file": "chat.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/chat-circle-dots-thin.svg",
+      "sha256": "D7445FDF94E70F25D1A8BC8CBB3674DE14AB8FF9CBD53DBAE5A4441E6E591646"
+    },
+    {
+      "file": "menu.svg",
+      "source": "https://raw.githubusercontent.com/phosphor-icons/core/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/thin/list-thin.svg",
+      "sha256": "1E0C16FB8E0B1C4443056B59598AFFBA486B3AB869C28CD6F56FA18AFC521740"
+    }
+  ]
+}
