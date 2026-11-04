@@ -1,24 +1,25 @@
-/* Scoped polish of the existing live composition. The portrait and 3D engine stay intact. */
-body.next-mode-live .next-detail .next-kicker,
-body.next-mode-live .next-detail small,
-body.next-mode-live .architect-slide-number,
-body.next-mode-live .architect-card-label,
-body.next-mode-live .architect-glass em {
+/* Readability changes are scoped to the observed static fallback.
+   The working 3D layout stays intact; keyboard focus is improved in both modes. */
+body.next-mode-live .next-live:has(.next-static) .next-detail .next-kicker,
+body.next-mode-live .next-live:has(.next-static) .next-detail small,
+body.next-mode-live .next-live:has(.next-static) .architect-slide-number,
+body.next-mode-live .next-live:has(.next-static) .architect-card-label,
+body.next-mode-live .next-live:has(.next-static) .architect-glass em {
   font-size: 12px;
   line-height: 1.5;
   letter-spacing: .02em;
 }
-body.next-mode-live .next-detail p,
-body.next-mode-live .architect-slide-text { font-size: 14px; line-height: 1.5; }
-body.next-mode-live .next-detail .btn,
-body.next-mode-live .architect-carousel-controls button,
-body.next-mode-live .architect-carousel-controls select {
+body.next-mode-live .next-live:has(.next-static) .next-detail p,
+body.next-mode-live .next-live:has(.next-static) .architect-slide-text { font-size: 14px; line-height: 1.5; }
+body.next-mode-live .next-live:has(.next-static) .next-detail .btn,
+body.next-mode-live .next-live:has(.next-static) .architect-carousel-controls button,
+body.next-mode-live .next-live:has(.next-static) .architect-carousel-controls select {
   min-height: 44px;
   padding: 10px 12px;
   font-size: 13px;
 }
-body.next-mode-live .next-detail textarea { font-size: 16px; }
-body.next-mode-live .architect-question summary {
+body.next-mode-live .next-live:has(.next-static) .next-detail textarea { font-size: 16px; }
+body.next-mode-live .next-live:has(.next-static) .architect-question summary {
   min-height: 44px;
   padding-block: 12px;
   font-size: 13px;
@@ -73,8 +74,8 @@ body.next-mode-live .next-orbit.next-static button {
   }
 }
 @media (max-width: 700px) {
-  body.next-mode-live .architect-about { font-size: 12px; line-height: 1.5; }
-  body.next-mode-live .architect-view span { font-size: 10px; line-height: 1.4; }
+  body.next-mode-live .next-live:has(.next-static) .architect-about { font-size: 12px; line-height: 1.5; }
+  body.next-mode-live .next-live:has(.next-static) .architect-view span { font-size: 10px; line-height: 1.4; }
   body.next-mode-live .next-live:has(.next-static) {
     display: flex;
     flex-direction: column;
