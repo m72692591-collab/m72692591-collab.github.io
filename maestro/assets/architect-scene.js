@@ -57,6 +57,8 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     if (disposed) return;
     const width = container.clientWidth, height = container.clientHeight;
     if (!width || !height) return;
+    // Browser zoom can change pixel density as well as CSS viewport dimensions.
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, mobile() ? 1.25 : 1.75));
     renderer.setSize(width, height, false); camera.aspect = width / height;
     camera.position.set(0, mobile() ? 1.15 : 1.5, mobile() ? 11.4 : 8.9);
     camera.lookAt(0, camera.position.y, 0); camera.updateProjectionMatrix();
@@ -130,7 +132,10 @@ export function createScene(container, orbit, catalog, reduced, onSelect) {
     if (chin && lowerScreens) {
       const projectedChin = chin.clone().project(camera);
       const top = (-projectedChin.y * .5 + .5) * container.clientHeight + 12;
-      const bottom = lowerScreens.getBoundingClientRect().top - container.getBoundingClientRect().top - 24;
+      const lowerLimit = lowerScreens.getBoundingClientRect().top - container.getBoundingClientRect().top - 24;
+      // Keep the orbit near the portrait even in a tall, zoomed-out viewport.
+      // The lower panels are a collision limit, not a target to stretch toward.
+      const bottom = Math.min(lowerLimit, top + cardHeight + 2 * radiusY / worldPerPixel);
       const maxTurn = mobile() ? 54 : 48;
       // CSS perspective makes a tilted near edge taller than its flat rectangle.
       const perspectiveAllowance = 1 - cardWidth * Math.sin(THREE.MathUtils.degToRad(maxTurn)) / 2400;
