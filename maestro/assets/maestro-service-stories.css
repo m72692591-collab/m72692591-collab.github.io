@@ -46,3 +46,6 @@
 .next-live .next-orbit button .architect-slide-text{font-size:15px;line-height:1.55;color:#f1f8ff;text-shadow:0 1px 4px #00101f}
 .architect-slide-number{color:#c3e7ff}
 @media(max-width:700px){.next-live .next-orbit button strong{font-size:23px}.next-live .next-orbit button .architect-slide-text{font-size:14px}}
+
+/* Keep paragraphs readable when the outer page uses the available width. */
+.maestro-service-story .service-copy,.maestro-service-story .service-lead{max-width:75ch}
