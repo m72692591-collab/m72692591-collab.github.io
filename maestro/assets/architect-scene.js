@@ -1,2 +1,320 @@
-/*! (c) 2026 ИП Григоров Михаил Владимирович. MAESTRO. Все права защищены. Копирование и использование кода запрещено. */
-(function(_0x4884cc,_0x5cafc6){const _0x538f1e=a0_0x2632,_0x391c0f=_0x4884cc();while(!![]){try{const _0x2e9d2b=parseInt(_0x538f1e(0x142))/0x1*(-parseInt(_0x538f1e(0xa6))/0x2)+-parseInt(_0x538f1e(0xc6))/0x3*(-parseInt(_0x538f1e(0x112))/0x4)+-parseInt(_0x538f1e(0x114))/0x5*(parseInt(_0x538f1e(0xd7))/0x6)+parseInt(_0x538f1e(0xa7))/0x7*(parseInt(_0x538f1e(0xc5))/0x8)+parseInt(_0x538f1e(0x135))/0x9*(-parseInt(_0x538f1e(0xaf))/0xa)+parseInt(_0x538f1e(0xa3))/0xb+-parseInt(_0x538f1e(0x12a))/0xc*(-parseInt(_0x538f1e(0x116))/0xd);if(_0x2e9d2b===_0x5cafc6)break;else _0x391c0f['push'](_0x391c0f['shift']());}catch(_0x507e1c){_0x391c0f['push'](_0x391c0f['shift']());}}}(a0_0x16fd,0x8a845));import*as a0_0x243166 from'./vendor/three.module.min.js';function a0_0x16fd(){const _0x8e4fb3=['otr1vuffwvC','mtrjwM14Eu8','thrdAhi','B3bHy2L0Eq','DMLZAwjPBgL0EwnOyw5Nzq','tgvMDefYBq','zM9UDa','C2LNBG','sMTxsMi','nJu3mdGWz1zpBu9I','uKTprxC','r0TUtg8','Bwf4','v2vIr0Xszw5KzxjLCG','yM1Vuxm','z2v0q2vUDgvY','wfDHuKu','uMLNAhriyw5K','qw1IAwvUDeXPz2H0','uLPvvuO','r3jVDxa','twvZAejHC2LJtwf0zxjPywW','CxvLCNLtzwXLy3rVCG','tgvMDeHHBMq','ugPUAgm','ywjZ','C2v0rNjVBuv1BgvY','DxbKyxrLuhjVAMvJDgLVBK1HDhjPEa','C3rYB2TLu3r5Bgu','vg9YDxnhzw9TzxrYEq','BgvYCa','mZGXotuXmLr3D1D1uG','otq4ntqZqunTB3HW','Cg9PBNrLCMvUDgvY','Cu9xALO','uMf5y2fZDgvY','C2v0u2nHBgfY','u0nfDxy','y1H6Ave','i2u4zMfMzG','EKvYCKq','zujwt3G','rw53t0m','lI9HC3nLDhmVBw9KzwXZl2fYy2HPDgvJDc1TB2jPBguUz2XIp3y9Bw9KzwWTCte','y2XVBMu','CLfsy3C','m0qT0lZqVTc00lxqU9gminc90luG0lFqSncZ0ydrG9c30lJqU9cW0yhrJc4G0j/qVTga0ylrGnc10ylqVDcW0y8G0yhrHTc10l3qScdqTnc+0yhrGTgd0l/qVDcWlG','twvZAfbOExnPy2fStwf0zxjPywW','ruz5zgu','mJi4nZj1DgHnv20','BwfW','i25LEhqTBw9KzwWTC3rHDhvZ','zMLSBfn0EwXL','zengte8','y29SB3jtCgfJzq','y3jLyxrLrwXLBwvUDa','C2v0sgv4','vMvJDg9YmG','BMv4Dc1SB2fKAw5N','Bg9VA0f0','BezgEgS','y2fUDMfZ','AenhBMi','EKLUzgv4','Bg9Hza','DMLZAwjSzq','BgvUz3rO','s1HKswS','CMDpwha','ywrKrxzLBNrmAxn0zw5LCG','rK5RANy','wfPuBhC','C2v0rNjVBu9IAMvJDa','twvZAfn0yw5KyxjKtwf0zxjPywW','C3bSAxq','twvZAa','ugvYC3bLy3rPDMvdyw1LCMe','B2jZzxj2zq','zgL2','DgL0Bgu','Dgv4DejHC2vSAw5L','y2XPzw50v2LKDgG','z2v0v29YBgrqB3nPDgLVBG','0jFqSncZ0ydrG9c20ldqTDc8inc+0lhrITgr0lZqVDgd0y4G0lZqVTc00lxqU9gm4OcM','uMLNAhrbCM0','BwLU','AgvPz2H0','uvvduLO','zgLZy29UBMvJDa','z2v0t2jQzwn0qNLoyw1L','0j7qSDgk0zhqVnc90ldrJYdqVnc+0ltqTDc70yWG0lFqSncZ0ydrG9c20lxqVDcW','sNnKuKe','Cg9PBNrLCM1VDMu','C3rYB2TLuMvJDa','twr3zK0','B0jnzNG','C2LU','DMfJwKe','D3nxtuy','EMH1wu8','iZDIztjMzG','qM94r2vVBwv0CNK','C2nHBgu','AxngAw5PDgu','ywrK','uKTMr3q','mNWWFdr8mxWZ','txz0u1G','ngfoDeH3Aq','BM9YBwfStwfW','nte1vfv2qxPT','Cg9ZAxrPB24','ndi3otzOs1L3zLK','rejRteG','Bwf0zxjPywW','CgfYzw50rwXLBwvUDa','rxvSzxi','sgLQswi','rLbQqKK','yM9SzcaZmhb4ihn5C3rLBs11Aq','zM9YrwfJAa','Dg9W','Au1gvu8','vMvJDg9YmW','u0f2rxC','yMfZzvK','u3bOzxjLr2vVBwv0CNK','thLsEu8','DhjHBNnMB3jT','EwjItKK','z2v0u2L6zq','B2jQzwn0','mtqWngftsKXQqW','AxnnzxnO','y29WEq','v3jvtKC','z0ruBwG','y29Z','DxnLCKrHDge','C2v0qxr0CMLIDxrL','BM93','CMvTB3zLrxzLBNrmAxn0zw5LCG','AxnjBNrLCNnLy3rPBMC','mtuZqLffvwLI','s0nMsMi','y2XPzw50sgvPz2H0','y2XPzw50wa','BgvMDa','Aw5KzxG','yxjPys1SAxzL','rg91yMXLu2LKzq','yxnWzwn0','BMv4Dc1TB2rLBc1ZDgf0Dxm','s2PMzuq','yMX1CG','yxbWzw5K','nJa5mxz0CefyvG','C2v0ugL4zwXsyxrPBW','ug9PBNrmAwDODa','DhjHDMvYC2u','ChvZAa','BxvSDgLWBhK','kg1HEc13Awr0AdO2ntbWEcK','Cg9PBNrLCKLK','z2v0qM91BMrPBMDdBgLLBNrszwn0','q2fUDMfZvgv4DhvYzq','zM9JDxm','yKnztg0','y2HHBMDL','y29SB3i','C2v0u2L6zq','qM94mW','y2vUDgvY','Bwf0y2HLCW','AePrBu8','CxvHDgvYBMLVBG','sfvAA3K','u2nLBMu','zMLSBfjLy3q','BKvKzNa','tffnCK0','C2v0','CM90yxrPB24','CMvTB3zL','BwLKzgXL','Dgv4DenVBNrLBNq','C3r5Bgu','DwnSrvG','q1fJseq','D2LKDgG','DxbKyxrLtwf0CML4v29YBgq','AgLKzgvU','Bg93lxbVD2vY','zMLSBfrLEhq','Bw9KzwW','nZC3odaWmuXcDK9qtW','ChjVAMvJDa','q3LSAw5Kzxjhzw9TzxrYEq'];a0_0x16fd=function(){return _0x8e4fb3;};return a0_0x16fd();}function a0_0x2632(_0x1884fa,_0x1f6212){_0x1884fa=_0x1884fa-0x94;const _0x16fda1=a0_0x16fd();let _0x2632fb=_0x16fda1[_0x1884fa];if(a0_0x2632['DXrTXo']===undefined){var _0x4f71ce=function(_0x588325){const _0xe75b1e='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x5392fd='',_0x6b9221='';for(let _0x3402f5=0x0,_0x4178ed,_0x985409,_0x42b9ff=0x0;_0x985409=_0x588325['charAt'](_0x42b9ff++);~_0x985409&&(_0x4178ed=_0x3402f5%0x4?_0x4178ed*0x40+_0x985409:_0x985409,_0x3402f5++%0x4)?_0x5392fd+=String['fromCharCode'](0xff&_0x4178ed>>(-0x2*_0x3402f5&0x6)):0x0){_0x985409=_0xe75b1e['indexOf'](_0x985409);}for(let _0x102cd8=0x0,_0x2ad75c=_0x5392fd['length'];_0x102cd8<_0x2ad75c;_0x102cd8++){_0x6b9221+='%'+('00'+_0x5392fd['charCodeAt'](_0x102cd8)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x6b9221);};a0_0x2632['LZKlxs']=_0x4f71ce,a0_0x2632['OkBzvJ']={},a0_0x2632['DXrTXo']=!![];}const _0x950cd8=_0x16fda1[0x0],_0x4c2e32=_0x1884fa+_0x950cd8,_0x38d978=a0_0x2632['OkBzvJ'][_0x4c2e32];return!_0x38d978?(_0x2632fb=a0_0x2632['LZKlxs'](_0x2632fb),a0_0x2632['OkBzvJ'][_0x4c2e32]=_0x2632fb):_0x2632fb=_0x38d978,_0x2632fb;}import{GLTFLoader}from'./vendor/GLTFLoader.js';export function createScene(_0x45997f,_0x3ec9bc,_0x78cdb9,_0x438eb0,_0x103729){const _0x31cab3=a0_0x2632,_0x2922da={'oBMfx':_0x31cab3(0xfa),'JsdRA':'model','GKnLo':function(_0x236034,_0x4cb14a,_0x390a6f){return _0x236034(_0x4cb14a,_0x390a6f);},'DBkLH':function(_0x5ded1a){return _0x5ded1a();},'HijIb':function(_0x3e5d5c,_0x27e86b){return _0x3e5d5c===_0x27e86b;},'IhMmw':_0x31cab3(0xd4),'iMFUO':_0x31cab3(0xcd),'uVpIG':_0x31cab3(0x152),'wsWMF':function(_0x519a05,_0x4199d4){return _0x519a05/_0x4199d4;},'hCGnb':function(_0x226704,_0x58326e){return _0x226704<_0x58326e;},'LyRyO':function(_0x2fc6e6){return _0x2fc6e6();},'nEdfp':function(_0x353d49,_0x2a59c0){return _0x353d49+_0x2a59c0;},'MdwfM':function(_0x4e9305,_0x26869a){return _0x4e9305+_0x26869a;},'gDTmh':function(_0x1e0c19,_0x3ba888){return _0x1e0c19-_0x3ba888;},'lKHOm':function(_0x2a4c42,_0x773e08){return _0x2a4c42===_0x773e08;},'qOWjZ':function(_0x3923a4,_0x5ac4c1){return _0x3923a4+_0x5ac4c1;},'eBVOx':function(_0x4b44dc,_0x220909){return _0x4b44dc*_0x220909;},'lFFxk':function(_0x2d546e,_0x44a3bf){return _0x2d546e*_0x44a3bf;},'KXdIk':function(_0x9ed12a,_0x2c9b61){return _0x9ed12a*_0x2c9b61;},'QUCRZ':function(_0x3ab5b4,_0x3e856d){return _0x3ab5b4&&_0x3e856d;},'FUNVm':function(_0x4218b2,_0x26e27e){return _0x4218b2*_0x26e27e;},'DJaAn':function(_0x46e0fc,_0x331b6a){return _0x46e0fc*_0x331b6a;},'RKOEw':_0x31cab3(0xb7),'bmoQs':_0x31cab3(0xbd),'rgOXp':function(_0x49a5b0,_0x4399b7){return _0x49a5b0>_0x4399b7;},'Pjnhc':function(_0x39d846){return _0x39d846();},'KjfeD':function(_0x3b8271,_0x37d887){return _0x3b8271(_0x37d887);},'LQMrM':function(_0x11d6ed,_0x23fb0a){return _0x11d6ed-_0x23fb0a;},'uclEX':function(_0x3f5cab,_0x27c3a5){return _0x3f5cab+_0x27c3a5;},'FPjBI':function(_0x3ce848,_0x409584){return _0x3ce848-_0x409584;},'XZTlw':_0x31cab3(0xc7),'WrUNG':'pointerleave','zBeci':function(_0x55d425){return _0x55d425();},'aKCHC':function(_0x30e634,_0x1f4c7d){return _0x30e634(_0x1f4c7d);},'FNkjv':_0x31cab3(0xa0),'CQcHD':'(max-width:640px)','EnwOC':function(_0x3e0430,_0x39d358){return _0x3e0430(_0x39d358);},'zErrD':_0x31cab3(0x13b),'vacZA':_0x31cab3(0xe0),'cXziQ':_0x31cab3(0xf9),'zhuYO':'./assets/models/architect-rigged.glb?v=model-q1','KCfJb':_0x31cab3(0xaa)},_0x1dcd63=_0x78cdb9[_0x31cab3(0xe8)];let _0x47207c='portrait',_0x2969e4=!![],_0x2163e6=![],_0x5c6a9a=![];const _0x39cc30=document[_0x31cab3(0xdd)](_0x31cab3(0xe3));_0x45997f['append'](_0x39cc30);const _0x488d93=new a0_0x243166[(_0x31cab3(0xb3))]({'canvas':_0x39cc30,'alpha':!![],'antialias':!![],'powerPreference':_0x2922da[_0x31cab3(0xec)]});_0x488d93[_0x31cab3(0x143)](Math[_0x31cab3(0xfb)](devicePixelRatio||0x1,matchMedia(_0x2922da[_0x31cab3(0x9c)])['matches']?1.25:1.75));const _0x1633ec=new a0_0x243166[(_0x31cab3(0x157))](),_0x1664eb=new a0_0x243166[(_0x31cab3(0xf2))](0x28,0x1,0.1,0x64);_0x1664eb[_0x31cab3(0x115)][_0x31cab3(0x95)](0x0,1.2,0xa),_0x1664eb[_0x31cab3(0xe1)](0x0,0.3,0x0),_0x1633ec['add'](new a0_0x243166[(_0x31cab3(0xb8))](0x77c9ff,1.5));const _0x265306=new a0_0x243166[(_0x31cab3(0x144))](0xb6ecff,0x6e);_0x265306[_0x31cab3(0x115)][_0x31cab3(0x95)](-0x3,0x4,0x4),_0x1633ec['add'](_0x265306);const _0x234d15=new a0_0x243166['PointLight'](0x279dff,0x73);_0x234d15['position'][_0x31cab3(0x95)](0x3,0x1,-0x3),_0x1633ec[_0x31cab3(0x10e)](_0x234d15);const _0x13ec35=new a0_0x243166[(_0x31cab3(0xba))]();_0x13ec35[_0x31cab3(0xe7)]=![],_0x1633ec[_0x31cab3(0x10e)](_0x13ec35);const _0x444ea1=new a0_0x243166[(_0x31cab3(0xd5))]({'color':0x58bfff,'transparent':!![],'opacity':0.38,'metalness':0.48,'roughness':0.2,'side':a0_0x243166[_0x31cab3(0x13c)],'depthWrite':![]}),_0x4eb3a4=new a0_0x243166[(_0x31cab3(0xbb))]({'color':0x91eaff,'wireframe':!![],'transparent':!![],'opacity':0.22,'depthWrite':![]}),_0x485c5d=new a0_0x243166['Mesh'](new a0_0x243166[(_0x31cab3(0x124))](0.42,0x18,0x12),_0x444ea1);_0x485c5d[_0x31cab3(0x10c)][_0x31cab3(0x95)](0.8,1.16,0.86),_0x485c5d[_0x31cab3(0x115)]['y']=1.45,_0x13ec35[_0x31cab3(0x10e)](_0x485c5d);const _0x584376=new a0_0x243166[(_0x31cab3(0xf1))](new a0_0x243166[(_0x31cab3(0xa5))](0.55,0.78,1.45,0xc,0x1),_0x444ea1);_0x584376[_0x31cab3(0x115)]['y']=0.34,_0x13ec35['add'](_0x584376);const _0x37267d=_0x584376[_0x31cab3(0xd2)]();_0x37267d[_0x31cab3(0x118)]=_0x4eb3a4,_0x13ec35[_0x31cab3(0x10e)](_0x37267d);const _0x562f3e=new a0_0x243166[(_0x31cab3(0xf1))](new a0_0x243166[(_0x31cab3(0xa5))](0.16,0.18,0.26,0xc),_0x444ea1);_0x562f3e[_0x31cab3(0x115)]['y']=1.04,_0x13ec35['add'](_0x562f3e);const _0x3d19c3=_0x444ea1[_0x31cab3(0xd2)]();_0x3d19c3[_0x31cab3(0xa9)]=0.48;function _0x187b6a(_0x2b5f8c){const _0x413909=_0x31cab3,_0x4b9599=new a0_0x243166['Group']();_0x4b9599[_0x413909(0x115)][_0x413909(0x95)](_0x2b5f8c,0.82,0x0);const _0x54f8cc=new a0_0x243166['Mesh'](new a0_0x243166[(_0x413909(0xa5))](0.16,0.13,0.95,0xc),_0x3d19c3);_0x54f8cc['position'][_0x413909(0x95)](_0x2b5f8c>0x0?0.21:-0.21,-0.42,0x0),_0x54f8cc[_0x413909(0x96)]['z']=_0x2b5f8c>0x0?-0.4:0.4,_0x4b9599['add'](_0x54f8cc);const _0x17f8d7=new a0_0x243166['Mesh'](new a0_0x243166[(_0x413909(0xa5))](0.12,0.09,0.84,0xc),_0x3d19c3);return _0x17f8d7[_0x413909(0x115)][_0x413909(0x95)](_0x2b5f8c>0x0?0.48:-0.48,-1.12,0.25),_0x17f8d7[_0x413909(0x96)]['z']=_0x2b5f8c>0x0?-0.25:0.25,_0x4b9599[_0x413909(0x10e)](_0x17f8d7),_0x13ec35[_0x413909(0x10e)](_0x4b9599),_0x4b9599;}_0x2922da[_0x31cab3(0xd0)](_0x187b6a,-0.58);const _0x9067bd=_0x187b6a(0.58);let _0x264503=_0x13ec35,_0x560ada=null,_0x564012=null,_0x26fd29=null,_0x12debc=null,_0x3bad44=![],_0x27a4ec=_0x45997f[_0x31cab3(0x119)][_0x31cab3(0xbc)](_0x31cab3(0xd9));if(!_0x27a4ec){const _0x58860e=_0x31cab3(0x110)[_0x31cab3(0xf0)]('|');let _0x23a223=0x0;while(!![]){switch(_0x58860e[_0x23a223++]){case'0':_0x27a4ec['id']=_0x31cab3(0x13e);continue;case'1':_0x27a4ec[_0x31cab3(0x131)](_0x2922da[_0x31cab3(0xce)],'polite');continue;case'2':_0x27a4ec=document[_0x31cab3(0xdd)](_0x31cab3(0xf4));continue;case'3':_0x45997f[_0x31cab3(0x119)][_0x31cab3(0x141)](_0x27a4ec);continue;case'4':_0x27a4ec['className']=_0x2922da[_0x31cab3(0x107)];continue;}break;}}_0x27a4ec[_0x31cab3(0x9f)]=![],_0x27a4ec['textContent']=_0x2922da[_0x31cab3(0xcc)];const _0xc7bac=matchMedia(_0x31cab3(0x148))[_0x31cab3(0x153)]?_0x31cab3(0xd1):_0x2922da[_0x31cab3(0x109)];new GLTFLoader()[_0x31cab3(0xe6)](_0xc7bac,_0x5f18bc=>{const _0x4e24d9=_0x31cab3;if(_0x3bad44)return;const _0x5ce691=_0x5f18bc['scene'],_0x80bbf2=new a0_0x243166[(_0x4e24d9(0x151))]()[_0x4e24d9(0xee)](_0x5ce691),_0x1b929d=_0x80bbf2[_0x4e24d9(0x128)](new a0_0x243166[(_0x4e24d9(0x121))]());if(!Number[_0x4e24d9(0x10d)](_0x1b929d['y'])||_0x1b929d['y']<=0x0)throw new Error('Invalid\x20character\x20dimensions');_0x5ce691['scale'][_0x4e24d9(0xca)](6.4/_0x1b929d['y']),_0x5ce691[_0x4e24d9(0x9e)](!![]);const _0x138e2e=new a0_0x243166[(_0x4e24d9(0x151))]()[_0x4e24d9(0xee)](_0x5ce691),_0x29638f=_0x138e2e[_0x4e24d9(0xb5)](new a0_0x243166[(_0x4e24d9(0x121))]());_0x5ce691[_0x4e24d9(0x115)]['x']-=_0x29638f['x'],_0x5ce691[_0x4e24d9(0x115)]['y']+=-2.6-_0x138e2e['min']['y'],_0x5ce691[_0x4e24d9(0x115)]['z']-=_0x29638f['z'],_0x5ce691['userData'][_0x4e24d9(0x123)]=_0x5ce691['position']['y'],_0x5ce691[_0x4e24d9(0x145)](_0x30a228=>{const _0x22d39c=_0x4e24d9;if(_0x30a228[_0x22d39c(0x12b)]){const _0x4c1a85=Array['isArray'](_0x30a228[_0x22d39c(0x118)])?_0x30a228['material'][0x0]:_0x30a228[_0x22d39c(0x118)];_0x30a228[_0x22d39c(0x118)]=new a0_0x243166[(_0x22d39c(0xd5))]({'map':_0x4c1a85?.[_0x22d39c(0xd8)]||null,'normalMap':_0x4c1a85?.[_0x22d39c(0x113)]||null,'color':0xb9e9ff,'emissive':0x1675ae,'emissiveIntensity':0.75,'transparent':!![],'opacity':0.84,'metalness':0.26,'roughness':0.36,'side':a0_0x243166[_0x22d39c(0x13c)],'depthWrite':![]});}}),_0x560ada=_0x5ce691[_0x4e24d9(0xff)](_0x2922da[_0x4e24d9(0x105)]),_0x564012=_0x560ada?.['quaternion'][_0x4e24d9(0xd2)]()||null,_0x26fd29=_0x5ce691[_0x4e24d9(0xff)](_0x4e24d9(0xab)),_0x12debc=_0x26fd29?.[_0x4e24d9(0x155)][_0x4e24d9(0xd2)]()||null,_0x13ec35[_0x4e24d9(0xe7)]=![],_0x1633ec['add'](_0x5ce691),_0x264503=_0x5ce691,_0x2163e6=!![],_0x5ce691[_0x4e24d9(0xe7)]=_0x47207c===_0x2922da[_0x4e24d9(0x101)],_0x27a4ec[_0x4e24d9(0x99)]=_0x4e24d9(0x100),_0x2922da[_0x4e24d9(0xb1)](setTimeout,()=>{const _0x34b1e8=_0x4e24d9;_0x27a4ec[_0x34b1e8(0x9f)]=!![];},0x578),_0x2922da['DBkLH'](_0x3682d4);},undefined,()=>{const _0x87fcff=_0x31cab3;_0x5c6a9a=!![],_0x13ec35['visible']=_0x2922da[_0x87fcff(0x11b)](_0x47207c,_0x87fcff(0xa2)),_0x27a4ec[_0x87fcff(0x99)]=_0x2922da['IhMmw'],setTimeout(()=>{const _0x191551=_0x87fcff;_0x27a4ec[_0x191551(0x9f)]=!![];},0x1388),_0x3682d4();});const _0x381895=new a0_0x243166['Mesh'](new a0_0x243166[(_0x31cab3(0xa5))](1.35,1.55,0.12,0x40),new a0_0x243166[(_0x31cab3(0xef))]({'color':0x6243b,'metalness':0.8,'roughness':0.25}));_0x381895['position']['y']=-1.42,_0x1633ec[_0x31cab3(0x10e)](_0x381895);const _0x1a2d37=[];for(const _0x494d9f of[1.43,2.48]){const _0x2ec9ff=new a0_0x243166[(_0x31cab3(0xf1))](new a0_0x243166[(_0x31cab3(0xc3))](_0x494d9f,0.014,0x5,0x60),new a0_0x243166[(_0x31cab3(0xbb))]({'color':0x53d8ff,'transparent':!![],'opacity':0.55}));_0x2ec9ff['rotation']['x']=Math['PI']/0x2,_0x2ec9ff[_0x31cab3(0x115)]['y']=-1.31,_0x1633ec['add'](_0x2ec9ff),_0x1a2d37[_0x31cab3(0x146)](_0x2ec9ff);}function _0x52e845(_0x2c07ee){const _0x28dbbe=_0x31cab3,_0x3c18bb=document[_0x28dbbe(0xdd)]('canvas');_0x3c18bb[_0x28dbbe(0x9d)]=0x200,_0x3c18bb['height']=0x80;const _0x218e3a=_0x3c18bb['getContext']('2d');_0x218e3a['fillStyle']='rgba(5,32,54,.92)',_0x218e3a[_0x28dbbe(0x158)](0x0,0x0,0x200,0x80),_0x218e3a[_0x28dbbe(0xc2)]=_0x28dbbe(0x10a),_0x218e3a['lineWidth']=0x5,_0x218e3a[_0x28dbbe(0x103)](0x4,0x4,0x1f8,0x78),_0x218e3a[_0x28dbbe(0xda)]=_0x2922da[_0x28dbbe(0x120)],_0x218e3a[_0x28dbbe(0xac)]=_0x28dbbe(0x11d),_0x218e3a['textAlign']=_0x2922da['uVpIG'],_0x218e3a[_0x28dbbe(0xf6)]=_0x28dbbe(0x98),_0x218e3a[_0x28dbbe(0xa1)](_0x2c07ee,0x100,0x40,0x1db);const _0x37bc78=new a0_0x243166[(_0x28dbbe(0x14b))](_0x3c18bb);return _0x37bc78[_0x28dbbe(0xdc)]=a0_0x243166['SRGBColorSpace'],_0x37bc78;}const _0x2ba88d=new a0_0x243166[(_0x31cab3(0xba))]();_0x1633ec[_0x31cab3(0x10e)](_0x2ba88d);const _0x29aa57=_0x78cdb9[_0x31cab3(0xd8)]((_0x3ac008,_0x93b160)=>{const _0x20fe79=_0x31cab3,_0x2c1b9c=new a0_0x243166['Mesh'](new a0_0x243166[(_0x20fe79(0x10b))](1.16,0.3,0.025),new a0_0x243166[(_0x20fe79(0xbb))]({'map':_0x52e845(_0x3ac008[_0x20fe79(0xf5)]),'color':_0x2922da[_0x20fe79(0x11b)](_0x93b160,0x0)?0xb4f0ff:0xffffff,'transparent':!![],'opacity':0.84,'side':a0_0x243166[_0x20fe79(0x13c)],'depthWrite':![]}));return _0x2c1b9c['userData'][_0x20fe79(0x13a)]=_0x93b160,_0x2ba88d[_0x20fe79(0x10e)](_0x2c1b9c),_0x2c1b9c;}),_0x7c64dd=new a0_0x243166['Mesh'](new a0_0x243166['SphereGeometry'](0.11,0x10,0xc),new a0_0x243166['MeshBasicMaterial']({'color':0xbaf2ff,'transparent':!![],'opacity':0.75}));_0x1633ec[_0x31cab3(0x10e)](_0x7c64dd);let _0x1e6512=0x0,_0x248f71=0x0,_0x454c62=0x0,_0x4374ac=!![],_0x3bce1e=![],_0x5641e6=![],_0x5e75f4=![],_0x254c16=![],_0x1ef08e=0x0,_0x2cdc45=0x0,_0x127bd7=0x0,_0x2f4d3a=0x0,_0x4a73a1=0x0,_0x38b6f2=0x1,_0x45adb6=performance[_0x31cab3(0x132)]();const _0x40c53d=[..._0x3ec9bc['querySelectorAll']('button')];function _0x360a66(){const _0x9d1ce1=_0x31cab3,_0x3607e6=_0x45997f[_0x9d1ce1(0xf7)],_0x489060=_0x45997f[_0x9d1ce1(0x137)];if(!_0x3607e6||!_0x489060)return;_0x488d93[_0x9d1ce1(0x150)](_0x3607e6,_0x489060,![]),_0x1664eb[_0x9d1ce1(0x13d)]=_0x2922da[_0x9d1ce1(0x108)](_0x3607e6,_0x489060),_0x1664eb['position']['z']=_0x2922da[_0x9d1ce1(0xe4)](_0x3607e6,0x28a)?9.5:0xa,_0x1664eb[_0x9d1ce1(0xc1)](),_0x2922da[_0x9d1ce1(0x125)](_0x1a7776);}function _0x1a7776(){const _0x1b4426=_0x31cab3,_0x1b27a4={'rQRcw':function(_0x5b14a1,_0x201960){return _0x5b14a1+_0x201960;},'MvtSX':function(_0x306c0b,_0x93f3f1){return _0x306c0b*_0x93f3f1;},'LtChr':function(_0x19064b,_0x438d7d){return _0x19064b===_0x438d7d;},'EFyde':function(_0xff4a80,_0x48e3ce){const _0x527500=a0_0x2632;return _0x2922da[_0x527500(0x159)](_0xff4a80,_0x48e3ce);},'XWaRE':function(_0x2c7cc3,_0x2b5afd){const _0x5dd2d0=a0_0x2632;return _0x2922da[_0x5dd2d0(0x104)](_0x2c7cc3,_0x2b5afd);},'ybbNI':function(_0x44ced2,_0x568e52){const _0x201333=a0_0x2632;return _0x2922da[_0x201333(0x12e)](_0x44ced2,_0x568e52);},'dCFLO':function(_0x1691b9,_0x40246c){return _0x1691b9<_0x40246c;},'HUZky':function(_0x4d884e,_0x31592e){const _0x3ea90f=a0_0x2632;return _0x2922da[_0x3ea90f(0x104)](_0x4d884e,_0x31592e);},'SCEuv':function(_0x5f1235,_0x865b05){return _0x5f1235*_0x865b05;},'SAvEw':function(_0x3f85a9,_0x171cd2){return _0x3f85a9*_0x171cd2;},'hJQmO':function(_0x46e89b,_0x3c91bc){const _0x4e22dc=a0_0x2632;return _0x2922da[_0x4e22dc(0x159)](_0x46e89b,_0x3c91bc);},'JkWJb':function(_0x3c09e4,_0x2c5769){return _0x3c09e4*_0x2c5769;},'RKfGt':function(_0x53a6cf,_0x51b321){return _0x53a6cf(_0x51b321);},'RZUUJ':function(_0xac66c8,_0x59abb9){return _0x2922da['HijIb'](_0xac66c8,_0x59abb9);},'qSnnL':function(_0x129ed9,_0x20f7d6){return _0x129ed9*_0x20f7d6;}};if(!_0x4374ac||_0x3bce1e||document['hidden'])return;const _0x4246e=_0x2969e4&&!_0x438eb0[_0x1b4426(0x153)]&&!_0x5641e6&&!_0x5e75f4&&!_0x254c16,_0x394c14=performance[_0x1b4426(0x132)](),_0x3e0d61=Math[_0x1b4426(0xfb)]((_0x394c14-_0x45adb6)/0x3e8,0.06);_0x45adb6=_0x394c14;if(_0x4246e)_0x248f71+=_0x3e0d61*0.08;const _0x11aa3a=Math[_0x1b4426(0xb2)](0x0,0x1-(performance[_0x1b4426(0x132)]()-_0x4a73a1)/0x9c4),_0x53391c=Math[_0x1b4426(0xad)](_0x29aa57[_0x1e6512]['position']['x'])||0x1;_0x264503['visible']=_0x2922da['lKHOm'](_0x47207c,'model')&&(_0x2163e6||_0x5c6a9a),_0x381895[_0x1b4426(0xe7)]=_0x47207c===_0x1b4426(0xa2),_0x1a2d37['forEach'](_0xa93dc2=>_0xa93dc2[_0x1b4426(0xe7)]=_0x47207c===_0x1b4426(0xa2)),_0x264503[_0x1b4426(0x96)]['y']=_0x2922da[_0x1b4426(0xc8)](_0x127bd7,_0x2922da[_0x1b4426(0xcf)](Math[_0x1b4426(0x106)](_0x248f71*0.8),0.22))+_0x2922da[_0x1b4426(0xe2)](_0x11aa3a*_0x53391c,0.18),_0x264503[_0x1b4426(0x115)]['y']=_0x2922da['qOWjZ'](_0x264503[_0x1b4426(0x130)][_0x1b4426(0x123)]||0x0,_0x4246e?_0x2922da[_0x1b4426(0xe9)](Math['sin'](_0x248f71*1.7),0.025):0x0),_0x9067bd[_0x1b4426(0x96)]['z']=-0.42-_0x11aa3a*0.36;if(_0x560ada&&_0x564012)_0x560ada[_0x1b4426(0x155)][_0x1b4426(0x12c)](_0x564012);if(_0x2922da[_0x1b4426(0xfd)](_0x26fd29,_0x12debc))_0x26fd29[_0x1b4426(0x155)][_0x1b4426(0x12c)](_0x12debc);const _0xd2138b=_0x2922da[_0x1b4426(0xe4)](_0x53391c,0x0)?_0x560ada:_0x26fd29;if(_0xd2138b&&_0x11aa3a)_0xd2138b['quaternion'][_0x1b4426(0x147)](new a0_0x243166['Quaternion']()[_0x1b4426(0xc0)](new a0_0x243166[(_0x1b4426(0x11a))](_0x2922da['FUNVm'](_0x11aa3a,1.5),0x0,_0x2922da['DJaAn'](-_0x53391c,_0x11aa3a)*1.75)));const _0xddf050=!![];_0x29aa57[_0x1b4426(0x11e)]((_0x21556e,_0x777d7c)=>{const _0x2c7c1a=_0x1b4426,_0x206b90=_0x1b27a4[_0x2c7c1a(0xd3)](_0x1b27a4[_0x2c7c1a(0xd3)]((_0x777d7c-_0x1e6512)*Math['PI']*0x2/_0x1dcd63,_0x248f71),_0x1b27a4[_0x2c7c1a(0x111)](_0x127bd7,0.35)),_0x5b8fea=_0x45997f['clientWidth']<0x2bc;_0x21556e[_0x2c7c1a(0x115)][_0x2c7c1a(0x95)](Math[_0x2c7c1a(0x106)](_0x206b90)*(_0x5b8fea?1.8:0x5),-0x1+Math['cos'](_0x206b90)*0.26,Math[_0x2c7c1a(0x12f)](_0x206b90)*1.1),_0x21556e[_0x2c7c1a(0x96)]['y']=-_0x206b90*0.1,_0x21556e[_0x2c7c1a(0x10c)][_0x2c7c1a(0xca)](_0x1b27a4[_0x2c7c1a(0xa8)](_0x777d7c,_0x1e6512)?1.15:0.8),_0x21556e[_0x2c7c1a(0x118)][_0x2c7c1a(0xd8)]=null,_0x21556e[_0x2c7c1a(0x118)][_0x2c7c1a(0x14f)][_0x2c7c1a(0xde)](0x6bb9e8),_0x21556e[_0x2c7c1a(0x118)][_0x2c7c1a(0xa9)]=0.12;if(_0xddf050){const _0x54f1e2=_0x40c53d[_0x777d7c],_0x462ff6=_0x1b27a4[_0x2c7c1a(0xd6)](Math[_0x2c7c1a(0x12f)](_0x206b90),0x1)/0x2,_0x26315f=Math[_0x2c7c1a(0xfb)](_0x1b27a4[_0x2c7c1a(0xb6)](_0x777d7c-_0x1e6512,_0x1dcd63)%_0x1dcd63,_0x1b27a4[_0x2c7c1a(0xd6)](_0x1b27a4[_0x2c7c1a(0x127)](_0x1e6512,_0x777d7c),_0x1dcd63)%_0x1dcd63);_0x54f1e2['hidden']=_0x5b8fea&&_0x1b27a4[_0x2c7c1a(0xdb)](_0x462ff6,0.82);const _0x4107ff=_0x21556e['position'][_0x2c7c1a(0xd2)]()[_0x2c7c1a(0xa4)](_0x1664eb),_0x117c52=_0x1b27a4[_0x2c7c1a(0x156)](_0x1b27a4[_0x2c7c1a(0xcb)](_0x4107ff['x'],0.5),0.5)*0x64,_0x13aea4=_0x1b27a4[_0x2c7c1a(0xcb)](_0x1b27a4[_0x2c7c1a(0x122)](-_0x4107ff['y'],0.5)+0.5,0x64);_0x54f1e2[_0x2c7c1a(0x9a)]['left']=_0x117c52+'%',_0x54f1e2[_0x2c7c1a(0x9a)][_0x2c7c1a(0x11f)]=_0x13aea4+'%',_0x54f1e2[_0x2c7c1a(0x9a)][_0x2c7c1a(0xa9)]=String(_0x1b27a4[_0x2c7c1a(0xd6)](0.25,_0x462ff6*0.75)),_0x54f1e2['style'][_0x2c7c1a(0x126)]='translate(-50%,-50%)\x20scale('+_0x1b27a4[_0x2c7c1a(0x154)](0.65,_0x1b27a4[_0x2c7c1a(0xae)](_0x462ff6,0.35))+')',_0x54f1e2['style'][_0x2c7c1a(0xe5)]=_0x1b27a4[_0x2c7c1a(0x10f)](String,_0x1b27a4[_0x2c7c1a(0xb9)](_0x777d7c,_0x1e6512)?0x1e:Math['round'](_0x1b27a4['qSnnL'](_0x462ff6,0x14)));}}),_0x7c64dd[_0x1b4426(0xe7)]=_0x11aa3a>0.01&&!_0x438eb0[_0x1b4426(0x153)];if(_0x7c64dd[_0x1b4426(0xe7)]){const _0x220579=_0x29aa57[_0x1e6512][_0x1b4426(0x115)][_0x1b4426(0xd2)]();_0x220579['z']+=0.08;const _0x269fd5=_0x264503[_0x1b4426(0xff)](_0x2922da[_0x1b4426(0xe4)](_0x38b6f2,0x0)?_0x2922da[_0x1b4426(0xb0)]:_0x2922da[_0x1b4426(0xb4)]);if(_0x269fd5)_0x264503['updateMatrixWorld'](!![]),_0x269fd5[_0x1b4426(0xf8)](_0x7c64dd[_0x1b4426(0x115)]),_0x7c64dd[_0x1b4426(0x115)][_0x1b4426(0xc4)](_0x220579,Math[_0x1b4426(0xfb)](0x1,_0x2922da['gDTmh'](_0x394c14,_0x4a73a1)/0x384));else _0x7c64dd[_0x1b4426(0x115)][_0x1b4426(0x12c)](_0x220579);_0x7c64dd[_0x1b4426(0x10c)][_0x1b4426(0xca)](0.6+_0x11aa3a*1.1),_0x7c64dd[_0x1b4426(0x118)][_0x1b4426(0xa9)]=_0x11aa3a*0.75;}if(_0xddf050)_0x2f4d3a=performance[_0x1b4426(0x132)]();_0x488d93['render'](_0x1633ec,_0x1664eb);if(_0x4246e||_0x2922da[_0x1b4426(0xea)](_0x11aa3a,0x0))_0x454c62=requestAnimationFrame(_0x1a7776);}function _0x3682d4(){const _0x1eac2c=_0x31cab3;cancelAnimationFrame(_0x454c62),_0x2922da[_0x1eac2c(0xbe)](_0x1a7776);}const _0x4072a4=new IntersectionObserver(_0x1cdc7f=>{const _0x58e2dc=_0x31cab3;_0x4374ac=_0x1cdc7f[0x0][_0x58e2dc(0x134)];if(_0x4374ac)_0x2922da[_0x58e2dc(0xbe)](_0x3682d4);else _0x2922da[_0x58e2dc(0x13f)](cancelAnimationFrame,_0x454c62);});_0x4072a4['observe'](_0x45997f);const _0x23dc1d=new ResizeObserver(_0x360a66);_0x23dc1d[_0x31cab3(0xf3)](_0x45997f);const _0x456f4e=_0xb029ac=>{const _0x196f69=_0x31cab3;_0x5641e6=!![],_0x1ef08e=_0x2cdc45=_0xb029ac['clientX'],_0x39cc30['setPointerCapture'](_0xb029ac[_0x196f69(0x149)]),cancelAnimationFrame(_0x454c62);},_0x42f15a=_0x406328=>{const _0x3f5b26=_0x31cab3;if(!_0x5641e6)return;_0x127bd7+=(_0x406328['clientX']-_0x1ef08e)*0.006,_0x1ef08e=_0x406328[_0x3f5b26(0x138)],_0x1a7776();},_0xf9d926=new a0_0x243166[(_0x31cab3(0xc9))](),_0x236497=new a0_0x243166[(_0x31cab3(0xdf))](),_0x3ccb97=_0x45f79e=>{const _0x11c4fe=_0x31cab3,_0x1d60b8=_0x5641e6&&Math[_0x11c4fe(0xbf)](_0x45f79e['clientX']-_0x2cdc45)<0x7;_0x5641e6=![];if(_0x1d60b8){const _0x2f41a1=_0x39cc30[_0x11c4fe(0x14a)]();_0x236497[_0x11c4fe(0x95)](_0x2922da[_0x11c4fe(0x94)](_0x2922da['LQMrM'](_0x45f79e[_0x11c4fe(0x138)],_0x2f41a1[_0x11c4fe(0x139)])/_0x2f41a1['width']*0x2,0x1),_0x2922da[_0x11c4fe(0x9b)](-(_0x2922da[_0x11c4fe(0x11c)](_0x45f79e['clientY'],_0x2f41a1[_0x11c4fe(0x11f)])/_0x2f41a1[_0x11c4fe(0xfc)])*0x2,0x1)),_0xf9d926['setFromCamera'](_0x236497,_0x1664eb);const _0x37fd84=_0xf9d926['intersectObjects'](_0x29aa57)[0x0];if(_0x37fd84)_0x103729(_0x37fd84[_0x11c4fe(0x129)]['userData'][_0x11c4fe(0x13a)]);}_0x2922da[_0x11c4fe(0x125)](_0x3682d4);};_0x39cc30['addEventListener']('pointerdown',_0x456f4e),_0x39cc30[_0x31cab3(0xeb)](_0x31cab3(0x102),_0x42f15a),_0x39cc30['addEventListener']('pointerup',_0x3ccb97),_0x39cc30[_0x31cab3(0xeb)]('pointercancel',_0x3ccb97);const _0x1a6df9=()=>_0x3682d4();_0x438eb0[_0x31cab3(0xeb)]?.(_0x31cab3(0x14e),_0x1a6df9),document[_0x31cab3(0xeb)](_0x2922da[_0x31cab3(0x136)],_0x1a6df9);const _0x4be7d5=_0x45997f[_0x31cab3(0x119)];return _0x40c53d['forEach'](_0x4bd1ce=>{const _0x3d1c7b=_0x31cab3,_0x361f47={'bCYLm':function(_0x52b9b6){return _0x2922da['Pjnhc'](_0x52b9b6);}};_0x4bd1ce[_0x3d1c7b(0xeb)](_0x2922da[_0x3d1c7b(0xed)],()=>{const _0x19fcbd=_0x3d1c7b;_0x5e75f4=!![],_0x2922da[_0x19fcbd(0x117)](_0x3682d4);}),_0x4bd1ce[_0x3d1c7b(0xeb)](_0x2922da[_0x3d1c7b(0x12d)],()=>{const _0x5a3bac=_0x3d1c7b;_0x5e75f4=![],_0x2922da[_0x5a3bac(0x125)](_0x3682d4);}),_0x4bd1ce[_0x3d1c7b(0xeb)](_0x3d1c7b(0x14c),()=>{const _0xb2f2b4=_0x3d1c7b;_0x254c16=!![],_0x361f47[_0xb2f2b4(0x14d)](_0x3682d4);}),_0x4bd1ce[_0x3d1c7b(0xeb)](_0x3d1c7b(0x140),()=>{_0x254c16=![],_0x3682d4();});}),_0x360a66(),{'setPresentation'(_0x3404a0){_0x47207c=_0x3404a0,_0x3682d4();},'setMotion'(_0x348ee0){const _0x41a2a6=_0x31cab3;_0x2969e4=_0x348ee0,_0x2922da[_0x41a2a6(0x125)](_0x3682d4);},'focus'(_0x398b88,_0x4d5ce7=!![]){const _0x1bfd6a=_0x31cab3;_0x1e6512=_0x398b88,_0x248f71=-_0x127bd7*0.35,_0x38b6f2=Math[_0x1bfd6a(0xad)](_0x29aa57[_0x398b88][_0x1bfd6a(0x115)]['x'])||0x1;if(_0x4d5ce7&&!_0x438eb0[_0x1bfd6a(0x153)])_0x4a73a1=performance[_0x1bfd6a(0x132)]();_0x2922da['zBeci'](_0x3682d4);},'pause'(){_0x3bce1e=!![],_0x2922da['aKCHC'](cancelAnimationFrame,_0x454c62);},'resume'(){const _0x2e2a48=_0x31cab3;_0x3bce1e=![],_0x2922da[_0x2e2a48(0xbe)](_0x3682d4);},'dispose'(){const _0x42cd14=_0x31cab3;_0x3bad44=!![],_0x2922da['aKCHC'](cancelAnimationFrame,_0x454c62),_0x4072a4[_0x42cd14(0xfe)](),_0x23dc1d[_0x42cd14(0xfe)](),_0x438eb0[_0x42cd14(0x133)]?.(_0x42cd14(0x14e),_0x1a6df9),document[_0x42cd14(0x133)](_0x42cd14(0xaa),_0x1a6df9),_0x488d93['dispose'](),_0x39cc30['remove'](),_0x27a4ec[_0x42cd14(0x97)]();}};}
+import * as THREE from './vendor/three.module.min.js';
+import { createPortrait } from './architect-portrait.js?v=chin-clear-1';
+import { TAU, presentationFrame, nearestAngle } from './architect-motion.js';
+
+export function createScene(container, orbit, catalog, reduced, onSelect) {
+  const stage = container.parentElement, buttons = [...orbit.querySelectorAll('button')];
+  const live = stage.parentElement, detail = live.querySelector('.next-detail');
+  const canvas = document.createElement('canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'low-power' });
+  container.append(canvas);
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, matchMedia('(max-width:700px)').matches ? 1.25 : 1.75));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  const scene = new THREE.Scene(), camera = new THREE.PerspectiveCamera(38, 1, .1, 60);
+  scene.add(new THREE.HemisphereLight(0xc5e9ff, 0x182535, 1.05));
+  const key = new THREE.DirectionalLight(0xffede0, 3); key.position.set(-4, 5, 4); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x44baff, 2.5); rim.position.set(4, 2, -3); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0x81c9ff, .65); fill.position.set(0, 0, 5); scene.add(fill);
+  const meshes = catalog.map((item, index) => {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(2.1, .8, .025), new THREE.MeshBasicMaterial({ color: 0x3e96c9, transparent: true, opacity: .045, depthWrite: false }));
+    mesh.userData.index = index; scene.add(mesh); return mesh;
+  });
+  const arc = new THREE.Mesh(new THREE.TorusGeometry(1, .0025, 4, 128), new THREE.MeshBasicMaterial({ color: 0x8bdcff, transparent: true, opacity: .17, depthWrite: false }));
+  arc.rotation.x = Math.PI / 2; scene.add(arc);
+  const touch = new THREE.Group();
+  for (const radius of [.075, .13, .22]) touch.add(new THREE.Mesh(new THREE.RingGeometry(radius, radius + .012, 36), new THREE.MeshBasicMaterial({ color: 0xbfeeff, transparent: true, opacity: .8, side: THREE.DoubleSide, depthWrite: false })));
+  scene.add(touch);
+  const flightCube = new THREE.Group();
+  const cubeShape = new THREE.BoxGeometry(1,1,1);
+  flightCube.add(new THREE.Mesh(cubeShape,new THREE.MeshBasicMaterial({color:0x74cbff,transparent:true,opacity:.14,depthWrite:false})));
+  flightCube.add(new THREE.LineSegments(new THREE.EdgesGeometry(cubeShape),new THREE.LineBasicMaterial({color:0xc7efff,transparent:true,opacity:.9})));
+  flightCube.visible=false;scene.add(flightCube);
+  let motion = true, disposed = false, paused = false, visible = true, docked = false;
+  let dragging = false, pointerId = null, pointerTarget = null, downX = 0, downY = 0, lastX = 0, suppressClick = false;
+  let selectionVersion = 0, pendingPresented = null;
+  let holdOrbitUntil = 0;
+  let chosen = 0, angle = 0, time = 0, action = null, frame = 0, previousTime = performance.now();
+  let statusTimer;
+  let status = stage.querySelector('#next-model-status');
+  if (!status) { status = document.createElement('div'); status.id = 'next-model-status'; status.className = 'next-loading'; status.setAttribute('aria-live', 'polite'); stage.append(status); }
+  status.hidden = false; status.textContent = 'Оживляем образ…';
+  const portrait = createPortrait(scene, {
+    onReady() { container.dataset.portraitState = 'loaded'; live.dataset.portraitReady = 'true'; clearTimeout(statusTimer); status.hidden = false; status.textContent = 'Живой образ загружен'; statusTimer = setTimeout(() => { status.hidden = true; }, 1400); redraw(); },
+    onError() { container.dataset.portraitState = 'failed'; status.textContent = 'Показываем статичный образ. Карусель доступна.'; redraw(); }
+  });
+  const cleanupObject = object => object.traverse(node => {
+    node.geometry?.dispose();
+    const materials = Array.isArray(node.material) ? node.material : [node.material];
+    materials.filter(Boolean).forEach(material => {
+      for (const value of Object.values(material)) if (value?.isTexture) value.dispose();
+      material.dispose();
+    });
+  });
+  function mobile() { return container.clientWidth < 700; }
+  function resize() {
+    if (disposed) return;
+    const width = container.clientWidth, height = container.clientHeight;
+    if (!width || !height) return;
+    renderer.setSize(width, height, false); camera.aspect = width / height;
+    camera.position.set(0, mobile() ? 1.15 : 1.5, mobile() ? 11.4 : 8.9);
+    camera.lookAt(0, camera.position.y, 0); camera.updateProjectionMatrix();
+    portrait.resize(camera, width, height);
+    redraw();
+  }
+  function notifyPresented() {
+    const version = selectionVersion, index = chosen;
+    pendingPresented = {version, index};
+    // Speech listeners may redraw the scene. Dispatch after this frame finishes.
+    queueMicrotask(flushPresented);
+  }
+  function flushPresented() {
+    if (!pendingPresented || disposed) return;
+    if (pendingPresented.version !== selectionVersion) { pendingPresented = null; return; }
+    if (paused || document.hidden) return;
+    const {index} = pendingPresented;
+    pendingPresented = null;
+    stage.dispatchEvent(new CustomEvent('architect:presented', { bubbles: true, detail: { index } }));
+  }
+  function finishPresentation(notify = true) {
+    if (action) angle = action.to;
+    action = null; docked = true;
+    live.dataset.panelPresenting = docked ? 'open' : '';
+    live.style.setProperty('--panel-reveal', '1');
+    detail.inert = false;
+    if (notify) notifyPresented();
+  }
+  function canPresent() {
+    const rect = container.getBoundingClientRect();
+    const headerBottom = document.querySelector('header')?.getBoundingClientRect().bottom || 0;
+    const visibleHeight = Math.min(innerHeight, rect.bottom) - Math.max(headerBottom, rect.top);
+    return !paused && !document.hidden && rect.width > 0 && visibleHeight >= Math.min(160, rect.height * .25);
+  }
+  function render(now = performance.now()) {
+    frame = 0;
+    if (disposed || !visible || paused || document.hidden) return;
+    const dt = Math.min((now - previousTime) / 1000, .05); previousTime = now;
+    const animate = motion && !reduced.matches;
+    if (action && !canPresent()) finishPresentation();
+    if (animate) time += dt;
+    const orbitTurning = animate && !action && !dragging && !docked && !detail.dataset.sectionOpen
+      && now > holdOrbitUntil && !orbit.contains(document.activeElement)
+      && !buttons.some(button => button.matches(':hover'));
+    if (orbitTurning) angle += dt * .045;
+    container.dataset.orbitMotion = orbitTurning ? 'turning' : dragging ? 'drag' : 'held';
+    const elapsed = action ? Math.max(0, (now - action.started) / 1000) : 0;
+    const present = action ? presentationFrame(elapsed) : null;
+    const sweep = action ? { contact: present.attach, progress: Math.min(1, elapsed / .75), done: present.done } : { contact: 0, progress: 0 };
+    if (action) {
+      angle = THREE.MathUtils.lerp(action.from, action.to, sweep.progress);
+      if (sweep.done) { finishPresentation(); if (document.activeElement === buttons[chosen]) detail.querySelector('a')?.focus({preventScroll:true}); }
+    }
+    portrait.setVisible(true);
+    portrait.update({ time, animate, gesture: present });
+    const photoHand = portrait.handPosition();
+    const portraitCenter = portrait.orbitCenter?.();
+    const centerX = portraitCenter?.x ?? (mobile() ? .15 : .65);
+    let centerY = portraitCenter?.y ?? (photoHand?.y ?? .8) + .45;
+    const worldPerPixel = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2) * Math.abs(camera.position.z) / container.clientHeight;
+    const radiusX = Math.min(container.clientWidth * (mobile() ? .78 : .40), mobile() ? 310 : 560) * worldPerPixel;
+    const radiusY = (mobile() ? 105 : container.clientWidth <= 1100 ? 125 : 110) * worldPerPixel;
+    const radiusZ = mobile() ? 1.15 : 1.55;
+    const cardWidth = mobile() ? 260 : container.clientWidth <= 1100 ? 280 : 380;
+    const cardHeight = mobile() ? 232 : container.clientWidth <= 1100 ? 240 : 280;
+    // Fit the portrait orbit between the chin and the lower diagrams, including
+    // the perspective-expanded edges.
+    const lowerScreens = live.querySelector('.architect-bottom');
+    const chin = portrait.chinPosition?.();
+    let orbitBand = null;
+    if (chin && lowerScreens) {
+      const projectedChin = chin.clone().project(camera);
+      const top = (-projectedChin.y * .5 + .5) * container.clientHeight + 12;
+      const bottom = lowerScreens.getBoundingClientRect().top - container.getBoundingClientRect().top - 24;
+      const maxTurn = mobile() ? 54 : 48;
+      // CSS perspective makes a tilted near edge taller than its flat rectangle.
+      const perspectiveAllowance = 1 - cardWidth * Math.sin(THREE.MathUtils.degToRad(maxTurn)) / 2400;
+      orbitBand = {top, bottom, fit:Math.min(1, Math.max(.1, (bottom - top - 4) * perspectiveAllowance / cardHeight))};
+      container.dataset.portraitChinY = String(top - 12);
+    } else delete container.dataset.portraitChinY;
+    if (lowerScreens && !orbitBand) {
+      const lowerTop = lowerScreens.getBoundingClientRect().top - container.getBoundingClientRect().top;
+      const front = new THREE.Vector3(centerX, centerY - radiusY, radiusZ).project(camera);
+      const frontBottom = (-front.y * .5 + .5) * container.clientHeight + cardHeight / 2;
+      const lift = Math.max(0, frontBottom - (lowerTop - 24));
+      centerY += lift * worldPerPixel * (camera.position.z - radiusZ) / camera.position.z;
+    }
+    flightCube.visible=false;
+    const fullPage = live.dataset.pageLayout === 'full' && Boolean(detail.dataset.sectionOpen);
+    const canvasBox = container.getBoundingClientRect();
+    const detailBox = {x:detail.offsetLeft - (fullPage ? canvasBox.left : 0),y:detail.offsetTop - (fullPage ? canvasBox.top : 0),width:detail.offsetWidth,height:detail.offsetHeight};
+    meshes.forEach((mesh, index) => {
+      const a = index * TAU / catalog.length + angle, depth = Math.cos(a), front = (depth + 1) / 2;
+      mesh.position.set(centerX + Math.sin(a) * radiusX, centerY - depth * radiusY, depth * radiusZ);
+      mesh.rotation.y = -Math.sin(a) * .95;
+      const projected = mesh.position.clone().project(camera), button = buttons[index];
+      const x = (projected.x * .5 + .5) * container.clientWidth;
+      let y = (-projected.y * .5 + .5) * container.clientHeight;
+      const scale = (.74 + front * .26) * (orbitBand?.fit ?? 1);
+      const turn = -Math.sin(a) * (mobile() ? 54 : 48);
+      if (orbitBand) {
+        const halfHeight = cardHeight * scale / (2 * (1 - cardWidth * scale * Math.abs(Math.sin(THREE.MathUtils.degToRad(turn))) / 2400));
+        const middle = (orbitBand.top + orbitBand.bottom) / 2;
+        const travel = Math.max(0, (orbitBand.bottom - orbitBand.top) / 2 - halfHeight);
+        y = middle + depth * travel;
+        // Keep actual WebGL planes on the same shallow orbit as their readable UI.
+        projected.y = 1 - 2 * y / container.clientHeight;
+        mesh.position.copy(projected.unproject(camera));
+      }
+      const apparentWidth = cardWidth * scale * Math.max(.24, Math.abs(Math.cos(THREE.MathUtils.degToRad(turn))));
+      const apparentHeight = cardHeight * scale;
+      button.hidden = x + apparentWidth / 2 < 0 || x - apparentWidth / 2 > container.clientWidth ||
+        y + apparentHeight / 2 < 0 || y - apparentHeight / 2 > container.clientHeight;
+      button.style.left = `${x}px`;
+      button.style.top = `${y}px`;
+      // Depth comes from position, scale and portrait occlusion, not disappearing text.
+      button.style.opacity = String((.88 + .12 * front) * (present && index !== chosen ? .12 : 1));
+      button.style.setProperty('--slide-label-opacity', '1');
+      button.style.transform = `translate(-50%,-50%) perspective(1200px) rotateY(${turn}deg) scale(${scale})`;
+      button.style.zIndex = depth < 0 ? '0' : '3';
+      button.style.pointerEvents = depth < 0 ? 'none' : '';
+      if (index === chosen && present && photoHand) {
+        const hand = photoHand.clone().project(camera);
+        const handX = (hand.x * .5 + .5) * container.clientWidth;
+        const handY = (-hand.y * .5 + .5) * container.clientHeight;
+        const width = cardWidth;
+        const handAnchorX = Math.max(width / 2 + 16, Math.min(container.clientWidth - width / 2 - 16, handX - width / 2 - 24));
+        const handAnchorY = handY - 30;
+        const upperDock = container.clientWidth > 1100 || fullPage;
+        const dock = upperDock ? THREE.MathUtils.smoothstep(present.carry,.3,1) : THREE.MathUtils.smoothstep(present.carry,.72,1);
+        const dockX=detailBox.x+detailBox.width/2;
+        const landingY=upperDock ? Math.max(32,detailBox.y+16) : detailBox.y+90;
+        const unfold=present.expand;
+        const anchorX=THREE.MathUtils.lerp(handAnchorX,dockX,dock);
+        const anchorY=THREE.MathUtils.lerp(handAnchorY,landingY,dock)-Math.sin(dock*Math.PI)*45;
+        const grip=present.release>0 ? 1 : present.attach;
+        const fold=upperDock ? THREE.MathUtils.smoothstep(present.carry,0,.3)*(1-unfold) : 0;
+        button.style.left=`${THREE.MathUtils.lerp(x,anchorX,grip)}px`;
+        button.style.top=`${THREE.MathUtils.lerp(y,THREE.MathUtils.lerp(anchorY,detailBox.y+cardHeight/2,unfold),grip)}px`;
+        button.style.transform=`translate(-50%,-50%) scale(${(1-fold)*(1+unfold*.12)})`;
+        button.style.opacity=String((1-present.reveal)*(1-fold));
+        button.style.zIndex='28';
+        button.style.setProperty('--slide-label-opacity', '1');
+        if(upperDock && fold>.02){
+          const ndc=new THREE.Vector3(anchorX/container.clientWidth*2-1,1-anchorY/container.clientHeight*2,.5).unproject(camera);
+          const ray=ndc.sub(camera.position).normalize();
+          flightCube.position.copy(camera.position).addScaledVector(ray,(1-camera.position.z)/ray.z);
+          flightCube.scale.setScalar(44*worldPerPixel*fold);
+          flightCube.rotation.set(.45+present.carry*1.6,.6+present.carry*2.4,.15+present.carry*.5);
+          flightCube.visible=true;
+        }
+        live.style.setProperty('--panel-impact',String(Math.sin(unfold*Math.PI)*(1-present.reveal)));
+        live.dataset.panelPresenting = 'moving';
+        live.style.setProperty('--panel-reveal', present.reveal);
+      }
+      if (docked && index === chosen) button.hidden = true;
+      if (index !== chosen && (!present || present.reveal > 0)) {
+        const halfWidth = apparentWidth / 2;
+        const halfHeight = apparentHeight / 2;
+        if (x + halfWidth > detailBox.x && x - halfWidth < detailBox.x + detailBox.width &&
+            y + halfHeight > detailBox.y && y - halfHeight < detailBox.y + detailBox.height) button.hidden = true;
+      }
+      button.dataset.depth = front.toFixed(3);
+      mesh.visible = !button.hidden; mesh.material.opacity = .008 + front * .012;
+    });
+    if (docked) live.dataset.panelPresenting = 'open';
+    detail.inert = Boolean(present) && present.reveal < 1;
+    arc.position.set(centerX, centerY, 0); arc.scale.set(radiusX, radiusZ, 1);
+    const side = action?.side || 1, target = meshes[chosen].position.clone();
+    target.x += side * .7; target.z += .45;
+    touch.visible = animate && sweep.contact > .01;
+    if (touch.visible) {
+      touch.position.copy(photoHand || target);
+      touch.lookAt(camera.position); touch.scale.setScalar(.65 + (1 - sweep.contact) * .7);
+      touch.children.forEach(ring => { ring.material.opacity = sweep.contact * .8; });
+    }
+    container.dataset.motionState = dragging ? 'drag' : action ? 'gesture' : animate ? 'idle' : 'still';
+    renderer.render(scene, camera);
+    if (animate) frame = requestAnimationFrame(render);
+  }
+  function redraw() { cancelAnimationFrame(frame); previousTime = performance.now(); render(); }
+  const intersection = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; if (visible) redraw(); else { if (action) finishPresentation(); cancelAnimationFrame(frame); } });
+  intersection.observe(container);
+  const sizing = new ResizeObserver(resize); sizing.observe(container);
+  const down = event => {
+    if (event.button !== 0 || !event.isPrimary || pointerId !== null) return;
+    pointerId = event.pointerId; pointerTarget = event.currentTarget;
+    holdOrbitUntil = performance.now() + 5000;
+    downX = lastX = event.clientX; downY = event.clientY; suppressClick = false;
+    pointerTarget.setPointerCapture(pointerId);
+  };
+  const move = event => {
+    if (event.pointerId !== pointerId) return;
+    const distanceX = event.clientX - downX, distanceY = event.clientY - downY;
+    if (!dragging) {
+      if (Math.abs(distanceX) <= 7) return;
+      if (event.pointerType === 'touch' && Math.abs(distanceY) > Math.abs(distanceX)) return;
+      dragging = true; suppressClick = true; selectionVersion++;
+      action = null; docked = false; live.dataset.panelPresenting = ''; detail.inert = false;
+    }
+    event.preventDefault();
+    const dx = event.clientX - lastX;
+    holdOrbitUntil = performance.now() + 5000;
+    angle += dx * .006; lastX = event.clientX;
+    redraw();
+  };
+  const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
+  const up = event => {
+    if (event.pointerId !== pointerId) return;
+    const target = pointerTarget;
+    const click = event.type === 'pointerup' && !dragging && Math.hypot(event.clientX - downX, event.clientY - downY) <= 7;
+    const capturedId = pointerId;
+    dragging = false; pointerId = null; pointerTarget = null;
+    holdOrbitUntil = performance.now() + 5000;
+    if (target.hasPointerCapture(capturedId)) target.releasePointerCapture(capturedId);
+    if (click && target === canvas) {
+      const rect = canvas.getBoundingClientRect();
+      pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1);
+      raycaster.setFromCamera(pointer, camera); const hit = raycaster.intersectObjects(meshes.filter(mesh => mesh.visible))[0];
+      if (hit) onSelect(hit.object.userData.index);
+    }
+    redraw();
+  };
+  const preventDragClick = event => {
+    if (suppressClick && event.detail !== 0) { event.preventDefault(); event.stopImmediatePropagation(); suppressClick = false; }
+  };
+  const speech = event => { portrait.speech(event.detail,time); redraw(); };
+  const reduceChange = () => { if (reduced.matches && action) finishPresentation(); redraw(); };
+  const visibilityChange = () => { if (document.hidden) { if (action) finishPresentation(); cancelAnimationFrame(frame); } else { redraw(); flushPresented(); } };
+  const contextLost = event => { event.preventDefault(); cancelAnimationFrame(frame); stage.dispatchEvent(new CustomEvent('architect:context-lost', { bubbles: true })); };
+  const listeners = [];
+  function listen(target, event, callback, options = false) { target.addEventListener(event, callback, options); listeners.push([target, event, callback, options]); }
+  [canvas, ...buttons].forEach(target => {
+    target.style.touchAction = 'pan-y';
+    listen(target, 'pointerdown', down); listen(target, 'pointermove', move); listen(target, 'pointerup', up); listen(target, 'pointercancel', up); listen(target, 'lostpointercapture', up);
+    listen(target, 'click', preventDragClick, true);
+  });
+  listen(canvas, 'webglcontextlost', contextLost); listen(window, 'maestro:speech', speech);
+  listen(document, 'visibilitychange', visibilityChange); listen(reduced, 'change', reduceChange);
+  listen(live, 'architect:section-close', () => { selectionVersion++; pendingPresented = null; action = null; docked = false; detail.inert = false; live.dataset.panelPresenting = ''; holdOrbitUntil = performance.now() + 1200; redraw(); });
+  resize();
+  return {
+    // Keep the controller API; the approved scene has one portrait presentation.
+    setPresentation() { clearTimeout(statusTimer); selectionVersion++; action = null; docked = false; live.dataset.panelPresenting = ''; detail.inert = false; if (container.dataset.portraitState === 'loaded') status.hidden = true; redraw(); },
+    setMotion(value) { motion = value; if (!motion && action) finishPresentation(); redraw(); },
+    focus(index, animate = true) {
+      const direction = index === (chosen + 1) % catalog.length ? -1 : index === (chosen - 1 + catalog.length) % catalog.length ? 1 : 0;
+      selectionVersion++; chosen = index; docked = false; live.dataset.panelPresenting = ''; detail.inert = false; const target = nearestAngle(-index * TAU / catalog.length, angle);
+      if (animate && motion && !reduced.matches && canPresent()) action = { from: angle, to: target, started: performance.now(), side: direction || Math.sign(target - angle) || 1 };
+      else { angle = target; action = null; if (animate) finishPresentation(); }
+      redraw();
+    },
+    pause() { paused = true; if (action) finishPresentation(); cancelAnimationFrame(frame); },
+    resume() { paused = false; redraw(); flushPresented(); },
+    dispose() {
+      disposed = true; cancelAnimationFrame(frame); clearTimeout(statusTimer);
+      intersection.disconnect(); sizing.disconnect(); listeners.forEach(([target, event, callback, options]) => target.removeEventListener(event, callback, options));
+      portrait.dispose(); cleanupObject(scene); renderer.dispose(); canvas.remove();
+    }
+  };
+}

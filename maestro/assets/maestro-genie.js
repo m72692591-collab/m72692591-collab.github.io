@@ -1,2 +1,332 @@
-/*! (c) 2026 ИП Григоров Михаил Владимирович. MAESTRO. Все права защищены. Копирование и использование кода запрещено. */
-function a0_0x1221(){const _0x3f0fba=['tg9oz3u','phbHDgGGy2XHC3m9iM1Hzxn0CM8Tz2vUAwuTBw91DgGIigq9iK0XmdqGmte4uteXmYaXmJeGmtiZideXnYiGzMLSBd0IBM9UzsiGC3rYB2TLpsiJnZa0zJq3iIbZDhjVA2uTD2LKDgG9iJiUnsiGC3rYB2TLlwXPBMvJyxa9iNjVDw5KiI8+','0jJqMc3qVTc/0lxrGncW0ylqVTgainc80l7qTTc10yiG0l7rGTcY0lxrH9cW0ylrJcdqVDcWingc0lJqV9c+0llrI9c1incY0l7qV9ga0l7rGDgllcdrGDc+0lhqUnga0ldrGTgminc30ldrJ9cY0lRqUcdqUcdqV9c10ydqTDc00ldqSTcW0ylrJcdqVTcX0ydqSngj0lxqVDc40y8G0lZqTDc90lxqTnc20lxrGngdlIdqLnc70y8G0ydqSngb0yFrKDgc0laG0yprGTc+0yFqVDc40lWG0lRqSnc90ldqUYaO0yhqSnc50yiSifrLBgvNCMfTlcbnqvGPlcdqVTcX0yRrKDc8inc+0lhrGncW0yNqTDc90lJqUsWG0lJrGDc/0l7qU9gm0lFrG9c10lZrG9goienstsdqUcdrGTga0lxqSDc+0llqSnc90lJrJYdqUIdqV9c10ydqTDc00ldrH9c1ingh0lxqU9c+0llqTDc60ymUincF0l7qUTcW0lBqTDc8inc00l7rGDgc0ypqV9c90yVqTsdqSTcW0ydqUncW0l3rGTglinc/0l7rGDc70luG0yprGTc+0yFqVDc10l3qUngpinc30ldqTncW0yFqUc4','vKHAvg0','yxjPys1WCMvZC2vK','Dg9mB3DLCKnHC2u','lM1Hzxn0CM8Tz2vUAwuTzM9YBq','mtq4mZy2mK5vq0rZBa','0l7rGDgc0ldqSTc40ylrJcdqT9cW0y/qSTc60ym','yNv0Dg9U','0ldqSTgc0l7qVncW0ylqUnc3','0l7rHnc+0ydqVnc40ylrJcdqT9cW0y/qSTc60ym','w2rHDgeTBwC9iMjYAwvMlwDViL0','pgnPCMnSzsbJEd0ImteXiIbJEt0ImtC1iIbYpsi2iIbMAwXSpsiJzMzKndG0iIbZDhjVA2u9iInMzMzMzMyIihn0CM9Rzs13Awr0Ad0ImsiVpG','0j7rGTc60lVrJTgh0lJrGTgmincZ0l7qU9c+0ye','C21VB3rO','w2rHDgeTBwC9iMXLywqIxq','0j7qSDgb0ypqTTc00ldqU9c4ingbinc60l7qVDgb0ypqU9gm0ylqSnc90ylqVTc8oIa','zNvUy3rPB24','Aw5JBhvKzxm','0kxrGncW0l3qTDc90lJqTsdqSIdqSDga0ldrG9c30lxrGnc1inc90lxqTnc+0yhrGTgd0l/qVDc+','CMf0zq','s0j0uuO','pgzVCM0Gy2XHC3m9iM1Hzxn0CM8Tz2vUAwuTzM9YBsi+pgLUChv0ig5HBwu9iNf1zxn0Aw9UiIb0ExbLpsj0zxH0iIbTyxHSzw5NDgG9iJqWmciGyxv0B2nVBxbSzxrLpsjVzMyIigfYAweTBgfIzwW9iTcs0ldrIcdqSTc+0l/rGnc+0yeIihbSywnLAg9SzgvYpslqOncW0yhrGDc60ldqTTc40ylqTsWG0yFrGTc+inc90ypqTTc90l4G0lhqUnc30l3qTDgb0ymIihjLCxvPCMvKpJXIDxr0B24GDhLWzt0IC3vIBwL0iJ7qNTgc0l/rGncW0llqUngc0yW8l2j1DhrVBJ48l2zVCM0+','BerkyMy','wfDyyKO','zNPMDuO','Bg9JyxrPB24','Bwf4qwX0zxjUyxrPDMvZ','z2v0qxr0CMLIDxrL','0jJqMc3qVTc/0lxrGncW0ylqVTga','zgL2','0lZqSnga0lRqTDgc0lJqVDcZ','swruwg4','y2XHC3nmAxn0','zu1fB2O','ywPKvxK','q3vbCem','0y3rHnge0lxqUTgc0lJqSTc9','phaGy2XHC3m9iM1Hzxn0CM8Tz2vUAwuTBM90zsi+0j/qTDga0llrI9c5ingn0ylqSnc/oIdqVTgc0llqTDgc0ySG0l/qVIdqVDcW0l/rGncW0llqU9c10l3qUngp0lWG0yprGDc70ypqSYWG0lhqTDc3inc/0l7qTnc60lVrJTgh0lxqVDc40y8G0l3qTDc50ydqVTgb0lxrGTc4lIdqK9c+0lVqVTgbincX0ydqSngd0lFqTDga0laG0lZqVTc20lxrGIdqVTcX0ydqSncX0ldrGTgl0llqSngc0yZrGDgpinc10lpqVIdqV9ga0l7qSTcW0lNqTnc10ydqVTc8lIdqMTc+0l3rGTcW0lRrGTglinc90luG0l7rGTc/0ydqSncY0lVrJ9go0ylrGDgpincX0lxqTYdqSTcW0yJqTDcZ0l4G0ltqTDc50yhrGTcY0lJrJY48l3a+','pgj1DhrVBIb0ExbLpsjIDxr0B24IigrHDgeTBwC9iM1PyYiGyxjPys1SywjLBd0I0j/rGnc+0ltqUnc60ylqVTcY0ldrGTgmincY0l7qV9ga0l7rGsiGDgL0Bgu9iTcF0ydqVTc00lJqUTgc0l7qSTcW0ylrJcdqSTc+0l/rGnc+0yeIpVcFJPK8l2j1DhrVBJ4','Aw50zxjPBvjLC3vSDhm','BwfYA2v0Aw5N','0l3qSnc50lW','BwfLC3rYB19Nzw5Pzv9ICMLLzL92mq','Ehvozxy','tgDIq3G','AM9PBG','BxzZA1a','BMfTzq','0jiGq1jninc80l7qTTc90l4G0llrI9gb0ylrGnc+0lJrGTgmincY0l7rGnc+0l3qUTgdlcdrGDgc0ldrGTgd0yhrIYdqVTcX0ydqSngj0lxqVDc40lKSinc90ldqV9c+0lZqUnc90ldqVDc40y8Sinc+0ylqSTc10ylrGDgc0llqTDc90l3rI9gfinc4incW0l3qSnc70lJrGTc40lRrGY4G0j3qSngh0l3rKDc8ingbinc40yhrGTc+0yFqVDc40lRqVTcYinc30ldrJ9cY0l7qUIdqUcdrGTc+0lpqVIWG0lpqTnc1ingb0lxqUDgh0ldrGsdrGTc10ydrJ9go0ylrGDgpinc+0lhrGncW0yNqTDc90lJrJY4','u0H1qxa','D2L6yxjK','mZGXn0rIwMzhtW','m3W0Fdb8nxWYFde','AxmTDgfSA2LUzW','CNuTuLu','0jZqKncT0khqOTcG0j4G0lpqVTcY0l7rGnc40yi','wwP6svm','yxjPys1LEhbHBMrLza','0yhrGTc+0lG','0j7rGTcY0lxrGIdqV9c+incX0ldqT9c1ingd0yhqU9gd0lm','0lRqVTc90ylqSnc60yi','0lRqVTc80ldqVDc0','phbHDgGGzd0IttKYideZnuWXmteGmty1tdeYosaXmZvmmtiWideXoeGXmdfAiIbMAwXSpsiJyJu5yJDKiIbZDhjVA2u9iInKngmYytyIihn0CM9Rzs13Awr0Ad0ImIiVpG','0lFqSTc+0l3qUG','phnWyw4+0j/qVTc30llqSngc0yWG0jZqKncT0khqOTcG0j48l3nWyw4+pc9IDxr0B24+','ow5QtvLRyW','CNuTCNu','0j7qT9cY0yprH9c40llqSnc90lJqTsdqSTgl0lRqU9go0yFqTDc90l4','B25LBMq','DM9Py2u','y2XPy2S','0jRqSnc6ingn0ylqVTgcinc/0ydqVTgg0lxrGDgbinc+0ydqS9cW0l3qUnc30l7qSTcW0l0G0yhqTDc50yFqSngbpYdqMTcW0lRqUnc1inc+0l/qTDga0ldrHTc40lGG0llrI9c/0l7qU9c90y/rJTgcinc70y7qTnc4pW','phn2zYb2Awv3qM94psiWidaGnJqGnJqIigzPBgW9iM5VBMuIigfYAweTAgLKzgvUpsj0CNvLiJ48Cgf0AcbKpsjnmtuGndnJnc03ideYltGGmJqTogG4yZaGnY00ideZlte0ideZsdiXEIiGzMLSBd0Ii2u5yJq1zIiGC3rYB2TLpsiJzMzLmgeYiIbZDhjVA2uTD2LKDgG9iJiIlZ48Cgf0AcbKpsjnmtyGndfSltCGmwmYidGGmtiGosaXnYa0ttq2idm3yZeWltGGmtmTnca5ideTmYa0ltCGns0Xmca1iIbZDhjVA2u9iInMzMuWytiIihn0CM9Rzs13Awr0Ad0ImYiGC3rYB2TLlwXPBMvJyxa9iNjVDw5KiI8+phbHDgGGzd0Ittm2idmYyY00ltKGmteTmtiGnc0Yne0YocaZmwmTnc03idqTmtaGmY0XnIiGC3rYB2TLpsiJnZzLnwu0iIbZDhjVA2uTD2LKDgG9iJmIihn0CM9Rzs1SAw5Ly2fWpsjYB3vUzciVpJXJAxjJBguGy3G9iJq3iIbJEt0ImtCIihi9iJiIigzPBgW9iInMowrMowmIlZ48l3n2zZ4','DgL0Bgu','pgrPDIbJBgfZCZ0IBwfLC3rYBY1Nzw5Pzs1JB250CM9SCYi+pgj1DhrVBIb0ExbLpsjIDxr0B24IigrHDgeTBwC9iNzVAwnLiIbHCMLHlwXHyMvSpslqKTc60lVrJTgh0lJrGTgminc+0lFqSTgd0yFqUncY0ldqVDc40luG0l7rGTcY0lxrGTc+0liIigfYAweTChjLC3nLzd0IzMfSC2uIihrPDgXLpslqKTc60lVrJTgh0lJrGTgmincZ0l7qU9c+0yeIpUkzQZWVyNv0Dg9UpG','sNLbAxa','q3Pzs0W','t3LHD0K','t3PNCLC','0jtqUnc60ylqVTcY0lRqScdqVDc1inc/0l7qTnc00lxrGnc20lJqSTcW0lxrGTgb0y8UincD0ldqV9c40yJqUngc0luG0llqVTc/0ydqVTgbingc0lxqUTgb0ylqVTc8lG','pgrPDIbJBgfZCZ0IBwfLC3rYBY1Nzw5Pzs1JAgf0iIbYB2XLpsjSB2CIigfYAweTBgfIzwW9iTcy0yhrGTc+0ydqUngpinc00lJqSnc70l7qS9cWiIbHCMLHlwXPDMu9iNbVBgL0zsiGyxjPys1YzwXLDMfUDd0IywrKAxrPB25ZiJ48l2rPDJ4','EwL2twi','mti3mZGYndHyqMznz3a','zfzXA04','CxvLCNLtzwXLy3rVCG','mtK5mdm3mMPMDurWDa','yKPUCKC','yvbuz1i','khbYzwzLCNmTCMvKDwnLzc1TB3rPB246ihjLzhvJzsK','wxziyxO','0ylqTDc70lxqS9ga0ldqVa','DhjPBq','CMLIEuW','ywrK','yw5ZD2vYCW','w2rHDgeTBwC9iNzVAwnLiL0','0kdqSnc30ydqSncX0ldrGTgl0llqSnc10lWG0yhqSnc50ylrIYdrG9gb0lVrG9cZlcdqU9c10l3qTnc40l3qS9c4lcdqUTcW0ylqSnc70l7qS9c4inc4ingg0lJrHnga0l7qSTgl0luG0llqUngc0ydqUnc90ySUincs0ldqTTc90ySG0yBqTDc70yWG0yhqSnc50ylqScWG0l/rGnc40lZqTDga0ySG0lRqVTc90lRrG9ga0lxqVDgc0l7qSIWG0l7rGDc90l7qSTc90yVqTsdrGncW0lFqTnc10lVrIYWG0ytqVTga0lZrIYdqT9cW0y/qSTc+0lOG0lGG0lJqVDgc0lxqS9ga0ldrHTc40lGUincx0ldqV9c40yJqTDc8ingc0ydqTDcX0l7qSTcW0l3qUngpinc4inc/0l7qTncZ0l7rGTc+0llqUnc8inc/0ydqTDc00lVqVTc20lxqVDc40luU','zMfSC2u','C3vIBwL0','y2HPBgrYzw4','0l3qSnc/0lJrGDcW0ylrJcdqVDcW0lW','0l7qV9c10ydqSngc0l7rGa','0khqU9gd0yJqSngoiokaLcdqT9cW0ltqSnc50ylqTsdqSTc+0l/rGnc+0ye','0khqVTc30ltqSnc00lJqVcdqV9ga0lxqTncY0ldrGnc40ylqTDc70yZqVDc+0luG0klqLYdqT9cWinc/0y/rGTgminc60l7rGnc+0ylqUTc40yuG0llqVTc/0ydqVTgb0l7qSI4G0jxrGDc70lGG0lFqSngf0l7rGTc40ylqTsdqVTgb0ylqSnc90l7qSTc40ylrJngb0y8Sinc90ldqV9c40yJqUngc0luGWQVqVTgc0lZqTDc90ldcUY4G','C3rHCNq','DK10uuy','0jRqSnc60yprJIdrG9gb0lVrG9cZ0ymG0lJqU9c4ingb0lJrGDgc0lxqVngdingf0l7rGTc40ylqTsdqV9c+0lVrG9gh0lJrGTgmpYdqNDcW0l/rGnc40lZqTDgaoIdqSDc+0yiG0ltqU9gpingb0ldqUDgc0laSienstsdqUnc70lGG0ldqSTgc0l7qVncW0ylqUnc30ldrHTc40y8G0l7qSDga0ldqSDc+0ylqUTc4inc30ldrJ9cY0l7qUI4','C2XPy2u','pgj1DhrVBIb0ExbLpsjIDxr0B24IigrHDgeTBwCTCxvLC3rPB249iTcA0ldqUIdqT9cW0lRqSnc30ldrGTgminc/0ydqVTc10lRrGJ8IpTcE0yhrGTcW0llqUngc0yWG0lFqSngp0llqUTgdpc9IDxr0B24+','B3bLBG','A2v5','C2nYB2XSsgvPz2H0','Dgv4DenVBNrLBNq','Ehz4qKm','0l/rGnc+0yBqTDgb0ye','z2vUzxjHBa','0yhqVTgc0ydrG9c00l3qUnc6','mta2nZu3ofDMzwLbEG','inc40lCGnq','ywKT','0jRqSnc60yprJIdqV9ga0l7qSDc70lxqVngdinc90lxqVTcX0yxqVTc00lJqVnc+inga0lxrInc40ylrJcdqUcdqUTcW0lRqUnc8inc00l7qU9c20lxqVsdqSDgl0ylrJcdrGnc10lFrG9c70yZrGTcW0yi/','C3rYAw5NAwz5','zfnUEKe','yxbWzw5K','C2v0qxr0CMLIDxrL','D0fwsLG','DMfSDwu','ndKZndqZtMzuCNPN','0lhqVTgc','lM1Hzxn0CM8Tz2vUAwuTBgf1BMnOzxi','0kFqTDc8inc30ldqVDc40lZqSnc10ylrGDgpinc60l7qVnc/0ldqVDc40y8/incJ0lRqSnc20lGG0yhrHnc10ydrGYdqSDc40lFqVDc10yhqScWG0lhqTDc3inc/0lxrGngb0l7qVDcW0lVrJnc90yVrHsdqTncW0l3qVDgl0yuU','z2v0rwXLBwvUDej5swq','C0fMzfa','yxvKAxq','zM9JDxm','y2fUy2vS','BgfUzW','ChvZAa','BNbVB0S','phbHDgGGzd0IttKYideZneWXmtiGmty2tdeZmsaXmZvmmtq1ide0neWXmZeGmtK0sdK0tdC3ide0nvOIigzPBgW9iImXmdmWndqIig9WywnPDhK9iI45iI8+','0ldrG9c00lJrGG','0lFqSnc60ldqT9cW0ylrJa','yuP5yuq','0l/rGnc+0llqTDga','sKnNrMO','0ydrG9cX0lS','0lRqSngc0ldqU9c+0lm','ChjLDMvUDerLzMf1Bhq','rxnJyxbL','w2rHDgeTBwCTCxvLC3rPB25D','yM9KEq','0jiG0y3rGTc+0lWG0lhrGncW0ypqT9c10ydqTsdqVDc10yiG0yhqUnc90ylqTDc30laG0ydqTDgh0lG','0jlqUTc70y7rH9c40ylrJcdqS9c+0lVqVTgb','0lRqVTc90ylqTDc90yi','ELLeDuO','pgnPCMnSzsbJEd0ImtaXiIbJEt0IotmIihi9iJiUnsiGzMLSBd0IiZy5ztbLysiVpJXJAxjJBguGy3G9iJeYnciGy3K9iJKZiIbYpsiYlJuIigzPBgW9iIm2owuWzweIlZ4','CMvWBgfJzq','0ydqTDc60lVqSnc8','s3HTAum','BwfLC3rYBY1Nzw5Pzs1YB290','pgj1DhrVBIb0ExbLpsjIDxr0B24IignSyxnZpsjTywvZDhjVlwDLBMLLlwDViIbKyxrHlw1NpsjICMLLzI1NBYiGAgLKzgvUpTcE0ylqUTga0yVrGTgmincZ0l7rGTc+0llrI9c5ingh0lxrGnc90l7qSTc40lOG0klqLYdIHPi8l2j1DhrVBJ4','C3bLzwnOu3LUDgHLC2LZ','0j3qTsdrG9c00ldqU9c+0yhrJcdqSTc60lVrJTgh0lJrGTgminc80lJqUTga0l7rHnc+0l0','BwfLC3rYBY1Nzw5Pzs1TC2CG','0jtrGngd0lpqVTc1','BgPdAMm','rKvQzvm','Aw50zxjLC3q','pc9HC2LKzt4','CLPlwhi','Aw5WDxrBBMfTzt0ICxvLC3rPB24Ixq','yxnZAxn0yw50','4PYMincF0l7qT9cY0ldrGTgmincC0jdqRDcH0klqOncE','q1jn','y3jLyxrLrwXLBwvUDa','z2v0vM9Py2vZ','0kFqTDga0l3qVTcY0lJqUIdqOTcxincZ0l7rGTc+0li','rLjPsLa','B3b0Aw9UCW','yNjPzwyTyNvPBgrLCI5ODg1S','0jdrG9c00lJrGG','r2fgrKK','0kFqTDga0l3qVTcY0lJqUIdqS9c+0ylqVTcYisdqNDcW0lBqVnc40ylqTsdcQ9cE0ylqUTga0yVrGTgmincZ0l7rGTc+0llrI9c5ingh0lxrGnc90l7qSTc40lOG0klqL8k7lcdqV9ga0l7qSTc10ydrJngc0luG0ylrGnc10lhqVTcY0ldqVDc40y8G0lGG0l/rGnc4inc20lxqU9cW0l3qUnc4ingb0l7rHDga0ldqVDc40ylqTsdqTnc+0lRrG9c80lxqVDgcinc40lVqUcdqV9c+0ltqS9c+0ylqVTcY0yZrGTc1inc30ldrJ9cY0lRrGY4','ELD3rg0','y2nUt1e','zvbuuuO','sejTs3y','CK9erLi','0jFqTnga0ldqSTgb0ylqSTgd0lNrGTc1isdqRYdqNncq0k3qODcI0kdqNI4G0j/qVTc80l7qS9cW0y4G0llrI9cX0ydqSngc0yWG0l/qVTc00yxqVTc00y/rIDc10luG0l3qSnc/0ydqSncY0lVqTDc90lJqTtOG0yhqSnc50ylrIYWG0lhqVTgc0ySSincy0jGT0l7qV9c10ydqSngc0l7rGngllcbduK0Sinc80ldrGnc60lxrGTc40l3qSYWG0lRqVTc80ldqVDc00laG0lGG0ldqVDcW0lVqUngc0lJqUTcWlIdqOncW0yhrGDc60ldqTTc40ylqTsWG0yFrGTc+incY0ySG0yxqVTgc0lJrGTc1ingd0lVrG9gh0yJqUngc0yWUincVinc80l7qS9gdinc/0l7qVnc+0yFrJcdrGDge0l7rGnc80ypqU9c40ydqVTcY0ldrGTgminc30ldrJ9cY0lRrGY4','C3rLCa','ywrKrxzLBNrmAxn0zw5LCG','pgj1DhrVBIb0ExbLpsjIDxr0B24IigrHDgeTBwC9iMnSB3nLiIbHCMLHlwXHyMvSpslqL9cW0lRrGngl0ylrJcdqUTc+0l3rGDgd0lVrJngc0ldqVDgc0laIpSoxpc9IDxr0B24+pc9KAxy+pc9KAxy+','C3bLywTPBMC','lM1Hzxn0CM8Tz2vUAwuTC3rHDhvZ','AgLKzgvU','w2rHDgeTBwC9iM1PyYjD','uuzPEeq','yxv0BW','A2viChO','B25LCNjVCG','CMvJB2DUAxrPB24','tuffu1rst19hru5jrv9wt0Ldrq','B25ZDgfYDa','BgvHza','C3rUsxm','0jOG0lRqSnc60lJqVcdrGDc10ydqSTc40yhqSnc8inc90ypqTTc90l4G0l/qVTc00lRqU9go0yFqUngc0yZrGDgpoIdrGDcW0lNrGIWGtufylcbuzwXLz3jHBsWGq1jnlcdqV9c+0yFrGTcWinc40lVqUcdqTnga0ypqS9c+0lu/','BgvHzeLUDgvYzxn0','vu1StLi','pgrPDIbJBgfZCZ0IBwfLC3rYBY1Nzw5Pzs1ZDgf0DxmIihjVBgu9iNn0yxr1CYiGyxjPys1SAxzLpsjWB2XPDguIpTct0l7rGTc+0liG0l7qSDgb0ypqTnc40ylrJcdqSTcW0yJrGYdqT9cW0ltqSngh0ym8l2rPDJ48l2rPDJ4','tNvizhG','phbHDgGGzd0IttGYidC3utCXidm0idKZidi1utK1ideWideXosaXn1eXndGGocaXnteGmZLrmtu3idu4ide0msa3nKWXmZGGntfrmti2idqYideXnIaZnve5nYa1mYa4nIa1m1OIigzPBgW9iInJnwnJzdiIihn0CM9Rzt0Ii2eZy2jKmYiGC3rYB2TLlxDPzhrOpsiYiI8+','Bwf0y2HLCW','ufD3qxi','wgv2yMi','0jpqVTgc0l7qSIdqUIdqSTcW0yJqTDc80ymG0llqVTc/0ydqVTgb0ym','BwfLC3rYBY1Nzw5Pzs1Uyxy','C2nYB2XSsw50B1zPzxC','tMrmBxa','0j/qTDga0lxqTncW0ylrJcdqT9cW0l/qVTc70l3qTDc90l3rI9c1inc/0l7qU9gpinc90luG0ypqTncW0lVqVTgb0yWG0lJqTY3qT9cWinc90ldrGDgc0ydqVTc10lOG0lhrGncW0ypqT9c10ydqSc4G0jZqVTc20l3qVIdqT9cW0l/qVTc70l3qUngc0yWG0lRqVTc90yhrGTga0ypqUTgc0l7rGcdqSTga0yprH9c90yprJI4','0yhqSnc50yi','phbHDgGGzd0IttKWidKZuteWmca4mYaXmdyGotjnmte2idKYuteYnYa4mYaXmZqGotiIigzPBgW9iM5VBMuIihn0CM9Rzt0IiZi0m2y0yYiGC3rYB2TLlxDPzhrOpsiZiIbZDhjVA2uTBgLUzwnHCd0ICM91BMqIlZ4','BwvUDq','otG3otiXnMHNwvnuta','Dg9WAwm','pgj1DhrVBIb0ExbLpsjIDxr0B24IignSyxnZpsjTywvZDhjVlwDLBMLLlwDViIbKyxrHlw1NpsjSzwfKiJ7qN9c10ydqTDc50ylqUcdqUIdqT9cW0y/qSTc60luG4OAspc9IDxr0B24+','0l/rGnc+0ltqSnc2','q0rQv0e','EejJt1G','0yBqTDc9','C3bSAxq','twvzALm','0l3qTDc50ydqVTgb0lxrGG','0jZqVTc20l3qVIdqSncY0ylqVTc80ldrGTc40lFqUnga0l7qSTcW0ylrJcdqV9ga0lJrKDc8inc+0ylqUTc70lJqUTc+0liSinc/0lxrGncY0lJrH9c90yprJIdqSnc90lRqTDgc0ymSingb0l7qS9c70ldrGDc+0llqSnc90lJqTsdqUTcW0l3qTnc40ltqSngc0l7qSIdqUcdqUTc+0l3rGTga0l7qU9gminc30ldqTncW0yCG0lRqVTc80ldqVDc00ySUincN0ypqSTgb0ylqSTc40ylqTDc70yZqVDgl0luG0ydqTDgi0lxqVDc40y8G0l4G0l3qSnc50lZqTsdqVTgb0ylqSngo0ylrGDgpinc30laG0yFqTDc70l7qSTc10lRqVTc8lG','CMvZDwX0CW','DgvSzwDYyw0','ugvlAfi','0lJqVDgc0lxrGnc90lxrGI3qVncW0lpqSnc3','0l/qTDga0yhqVTc90ldqUW','Dhj1zq','C29Tzq','r1DgB00','C3rVCa','0lRqSnc00ya','BeLfBvO','u3bLzwnOuMvJB2DUAxrPB24','0ylqSnga0lJrHa','DMvtA3e','r2LhwKu','BgvUz3rO','pgXPBMvHCKDYywrPzw50igLKpsjTzY1ZA2LUiIb4mt0ImciGEte9iJaIihGYpsiXiIb5mJ0Imsi+phn0B3aGC3rVCc1JB2XVCJ0Ii2u1zdnHzIiVpJXZDg9Wig9MzNnLDd0ImsiGC3rVCc1JB2XVCJ0Ii2e3ogu3ociVpJWVBgLUzwfYr3jHzgLLBNq+','pgrPDIbJBgfZCZ0IBwfLC3rYBY1Nzw5Pzs1XDwLJAYi+pgj1DhrVBIb0ExbLpsjIDxr0B24IigrHDgeTBwCTCxvLC3rPB249iTcD0ypqTTc10l0G0jJqMc3qVTc/0lxrGncW0ylqVTgainc00lVrJYdqT9cW0y/qSTc+0lOIpTcy0jGT0l7qV9c10ydqSngc0l7rGdWVyNv0Dg9UpG','y3jT','D1LLAxK','0lVqTDc90ltqUnc90lm','rxnMA0K','zgf0ys1TzY1XDwvZDgLVBG','zMLUza','sevuzvy','tuffu1rst19hru5jrq','w2rHDgeTBwC9iMjYAwvMlxn0yxj0iL0','0khqSnc50yi','phbHDgGGzd0Itty3ide2ove5mcaXoduGmteXide5nfeXmZCGmtG0ide1mIaXnJuIigzPBgW9iM5VBMuIihn0CM9Rzt0Ii2y1yZu2zciGC3rYB2TLlxDPzhrOpsiYiI8+','sLrWwwK','Aw5Uzxjive1m','C3bLywS','zxLfDeS','0lJqUc0','C3v0uMW','pgj1DhrVBIb0ExbLpsjIDxr0B24IignSyxnZpsjTywvZDhjVlwDLBMLLlwXHDw5JAgvYiIbHCMLHlwnVBNrYB2XZpsjTywvZDhjVlwDLBMLLlxbHBMvSiIbHCMLHlwv4CgfUzgvKpsjMywXZzsiGyxjPys1SywjLBd0I0jlrI9c30llqSngc0yWG0lRqVTc90yhrG9c70yZrGTcW0l3rGTcWincC0jdqRDcH0klqOncEiJ4','D2vIA2L0u3bLzwnOuMvJB2DUAxrPB24','0yhqUTc+0lVrJnc60l4','0lhrJTc00lBqTDgc','mtqWodmWDefNCwDd','y2XHC3noyw1L','pgfZAwrLigLKpsjTywvZDhjVlwDLBMLLlxbHBMvSiIbJBgfZCZ0IBwfLC3rYBY1Nzw5Pzs1Wyw5LBciGyxjPys1SywjLBd0I0jRqVTc90yhrG9c70yZrGTcW0l3rGIdqNncq0k3qODcI0kdqNIiGAgLKzgvUpG','ChjPy2u','BgfZDff1zxn0Aw9U','phbHDgGGzd0Itti3ide5nLeZmIaXndGGodmGmtm3tdKZideYoeWXmJKGmti3tde0msaXmZLrmtG0ide0ocaXotmGmtK2wIiGzMLSBd0IDxjSkcnTzY1ZDwL0ksiGC3rYB2TLpsiJodnKzwvIiIbZDhjVA2uTD2LKDgG9iJiIlZ4','yLfKyNK','phbHDgGGzd0IttG3idy4utG1idqWideXmsaZnfeXndeGmZuGmtqWidy3tdeZosa5ofeXmZuGmti2ideXmIaXmZvroteGmti4idG1ideWmvOIigzPBgW9iNvYBcGJBwCTC2TPBIKIihn0CM9Rzt0Ii2vKzdHInciGC3rYB2TLlxDPzhrOpsiYiI8+','quvQqLe','0kFrGTc+0lhrIYdqV9c+0lVrG9gh0lJrGTgminc/0ydqTDc00lVqVTc20lxqVDc40luSinc90ldqTTc80lJrGTc1imkR0j/qTDga0lxqUDgc0lGG0lOG0lFqSngp0llqUTc1WRSUincVinc/0lxrGnc10l3qTDgb0ymG0ylqTDc80ymG0l7qSDgb0ypqTTc00lxqVDc40y8G0liG0ytqVTga0lZrGY4G0jlqV9c40yJqUngc0luG0lJqVngpinc4inc60l7qVDgc0ldqUTgclcdqVTc30l3qSnc60l7qVngm0ylqTDgb0yWG0yeG0yhqVTcZ0lVqSngb0lJqTDc8inc90laG0l7qSDga0ldqSDc+0ylqUTgdinc00ldqVDc90yVrHsdqUcdqVTgc0l/rGncW0llrJngc0luG0lFqSngp0llqUTgdinc/0l4G0lJqVDgb0ylrGngd0lRrHTc40lGG0yhqSnc50ylqSc4','n1z4txvKAW','CMvTB3zL','phbHDgGGzd0IttC2ide0n1e2mIaXntuGntyGmtC2utuYide5msa4mYaXotjrmti4idiXmsaXmdKGmJi4ute2ocaYmtGGmti2ide4nfeXnJyGmtC4ide2mIaXntLmmtqZide0mLOIigzPBgW9iNvYBcGJBwCTBwLZDcKIig9WywnPDhK9iI44iI8+','nwjPELflCG','0j/qVTc80l7qTTc10lWG0yeG0l/qVTc30lJrHTc40l7qVDc40ydqVTcY0ldqVDc40lxqVcWG0ydqTDc60lVqSnc80l3rI9c80lGG0lZqSngc0lxrGnc40ldqU9cW0lZqUcdqUcdqSnc90ldqU9c40ylqUnc60l7qUsdqVTcX0ydqSngj0lxqVDc40lKUincN0ylqVTcX0ySG0llrI9cX0ydqSngc0yWG0ytqVTga0lZqSngclcdqVTc/0ydqTDc00lxqU9c40lWG0l/rGnc+0ltrG9c60yiSincW0ypqTnc40ylqVTga0lJrJIWG0lpqTDc+0lprGncW0ytqUngoinc4inc00l7rGDgc0ypqV9c90yVqUsdqSDgo0ltqTTc10yiU','0ltqUnc30ldqUDc9','C2v0sxrLBq','0j3qSngh0l3rKDc8ingbinc00lJqSncZ0l3qVTgb0ylqUnc60lGG0l/rGnc+0yBqTDgb0yhqVTcYoIdrGTc+0yFqUTc4inc/0l7rGTc10ydrJcWG0l/qVTcY0ylqVTga0y/rJTgj0lJqTDgb0y8G0l7qV9c10ydqSngg0lJqUcdqUcdqSTc+0lFqVnc+0lBqVDgl0luG0lhrI9gb0ylrGngl0luG0ypqU9gd0yFrInc10l3qUngplIdqLnc70y8G0lRqVTc90lRrGnc10ylqVDc+0lpqVIdqV9c70ldqVDcWinc90ypqTTc90ySG0yhqSTc10ltqTDc90lJrJYdqVIdrGTc10lRrG9gj0lxqVcdqV9ga0l7rHTc10yhrGDc1lG','0j/qTDga0yhqVTc90ldqU9gm0l3rI9c5incZ0l7qU9c+0yeG0l3qTDc00l7rGDgc0ypqV9c10l0G4OcuincY0lRqU9go0yFrKDc9inga0lxqT9c10ydqSTc90yVqUq','zM9YrwfJAa','sKnUwgO','lM1Hzxn0CM8Tz2vUAwuTy2HHDa','vwj3teG','0ldqVDcW0lVqUngc0lJqUG','Bg9IA00','B25Yzxn1Bhq'];a0_0x1221=function(){return _0x3f0fba;};return a0_0x1221();}function a0_0x1f22(_0x345fe5,_0x1f9f95){_0x345fe5=_0x345fe5-0x112;const _0x12216c=a0_0x1221();let _0x1f22ec=_0x12216c[_0x345fe5];if(a0_0x1f22['wDEOXg']===undefined){var _0x5b8494=function(_0x1005c9){const _0x4fe4fe='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x322e47='',_0x55182f='';for(let _0x14bd3c=0x0,_0x4cdc3e,_0x4108f9,_0x4b272d=0x0;_0x4108f9=_0x1005c9['charAt'](_0x4b272d++);~_0x4108f9&&(_0x4cdc3e=_0x14bd3c%0x4?_0x4cdc3e*0x40+_0x4108f9:_0x4108f9,_0x14bd3c++%0x4)?_0x322e47+=String['fromCharCode'](0xff&_0x4cdc3e>>(-0x2*_0x14bd3c&0x6)):0x0){_0x4108f9=_0x4fe4fe['indexOf'](_0x4108f9);}for(let _0x3a1ba8=0x0,_0x587b10=_0x322e47['length'];_0x3a1ba8<_0x587b10;_0x3a1ba8++){_0x55182f+='%'+('00'+_0x322e47['charCodeAt'](_0x3a1ba8)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x55182f);};a0_0x1f22['YSccVL']=_0x5b8494,a0_0x1f22['FuifUg']={},a0_0x1f22['wDEOXg']=!![];}const _0x4081f8=_0x12216c[0x0],_0x51abd6=_0x345fe5+_0x4081f8,_0x47fa36=a0_0x1f22['FuifUg'][_0x51abd6];return!_0x47fa36?(_0x1f22ec=a0_0x1f22['YSccVL'](_0x1f22ec),a0_0x1f22['FuifUg'][_0x51abd6]=_0x1f22ec):_0x1f22ec=_0x47fa36,_0x1f22ec;}(function(_0x2b7f24,_0x4f194e){const _0x426e95=a0_0x1f22,_0x3325fc=_0x2b7f24();while(!![]){try{const _0x955d1c=parseInt(_0x426e95(0x1dc))/0x1+-parseInt(_0x426e95(0x120))/0x2+parseInt(_0x426e95(0x218))/0x3*(parseInt(_0x426e95(0x22c))/0x4)+-parseInt(_0x426e95(0x1c8))/0x5*(-parseInt(_0x426e95(0x189))/0x6)+parseInt(_0x426e95(0x1c5))/0x7*(parseInt(_0x426e95(0x229))/0x8)+parseInt(_0x426e95(0x12a))/0x9+-parseInt(_0x426e95(0x1bb))/0xa*(parseInt(_0x426e95(0x20a))/0xb);if(_0x955d1c===_0x4f194e)break;else _0x3325fc['push'](_0x3325fc['shift']());}catch(_0x3c4e88){_0x3325fc['push'](_0x3325fc['shift']());}}}(a0_0x1221,0xcf657),(function(){'use strict';const _0x384ff9=a0_0x1f22,_0x883efb={'wAVJX':function(_0x482dcc,_0x152b55){return _0x482dcc+_0x152b55;},'aMpmu':_0x384ff9(0x11e),'LgbCx':_0x384ff9(0x20c),'GaFFI':_0x384ff9(0x20e),'JCnXj':'3|5|4|0|1|2','dVqkN':function(_0x32d8e0,_0x4255cb){return _0x32d8e0(_0x4255cb);},'imQIu':_0x384ff9(0x142),'sutRl':_0x384ff9(0x112),'JyAip':'Сбор\x20ТЗ\x20отменён.\x20Можем\x20продолжить\x20обсуждение\x20любой\x20услуги.','bJnrG':function(_0x34bc82,_0x4926df){return _0x34bc82(_0x4926df);},'mvskP':function(_0x5c44e3,_0x11fa2e){return _0x5c44e3(_0x11fa2e);},'OzgrW':_0x384ff9(0x121),'IdTXn':_0x384ff9(0x156),'CuApC':_0x384ff9(0x15b),'xBcOX':function(_0x4dadc4,_0x3605c7,_0xeaf6f7){return _0x4dadc4(_0x3605c7,_0xeaf6f7);},'MeYjS':function(_0x52fe37){return _0x52fe37();},'GWFoM':function(_0x2c3c28,_0x47dfe3,_0x4e68da){return _0x2c3c28(_0x47dfe3,_0x4e68da);},'veSkq':function(_0x431103,_0x1efee7){return _0x431103(_0x1efee7);},'XWXbJ':_0x384ff9(0x212),'siNwW':function(_0x4b6483){return _0x4b6483();},'ribyL':_0x384ff9(0x210),'JCgFj':'false','mKagj':_0x384ff9(0x1af),'YjzIS':_0x384ff9(0x15f),'vMtQF':function(_0x454be6,_0xc333){return _0x454be6+_0xc333;},'lDJbf':function(_0x1877c8){return _0x1877c8();},'tDQEt':_0x384ff9(0x170),'Xevbb':function(_0x34d30b,_0x13dbb2){return _0x34d30b(_0x13dbb2);},'NuHdx':function(_0x51a9cc,_0x141afc){return _0x51a9cc(_0x141afc);},'xuNev':_0x384ff9(0x20d),'zWwDm':function(_0x4db0d5,_0x366efd){return _0x4db0d5(_0x366efd);},'CDjWA':_0x384ff9(0x14d),'FgjcP':'3|2|0|5|1|4','CzYKL':_0x384ff9(0x1e3),'keHpz':_0x384ff9(0x143),'cJSPH':function(_0x5e163e,_0x1a1615){return _0x5e163e(_0x1a1615);},'aJyaD':'Озвучивание\x20включено','RXHlB':_0x384ff9(0x188),'EsfkI':_0x384ff9(0x1c7),'iJaCV':_0x384ff9(0x215),'JoWJZ':_0x384ff9(0x136),'PWwAr':_0x384ff9(0x17d),'fzfuJ':'<path\x20d=\x22M112\x2099L108\x20111L115\x20114\x22\x20fill=\x22none\x22\x20stroke=\x22#785f51\x22\x20stroke-width=\x221.8\x22/>','sAfdP':'<path\x20d=\x22M84\x20103Q91\x20130\x20111\x20140Q131\x20135\x20141\x20104Q138\x20127\x20121\x20144L110\x20150L95\x20139Z\x22\x20fill=\x22#a0afb1\x22\x20opacity=\x22.8\x22/>','UMlNR':_0x384ff9(0x1b0),'OeNHZ':_0x384ff9(0x1e2),'bQdby':_0x384ff9(0x1f4),'lobkM':function(_0x355edf,_0x26dd23){return _0x355edf+_0x26dd23;},'LoNgu':function(_0x1d44f6,_0x57a780){return _0x1d44f6+_0x57a780;},'zYDuJ':function(_0x33a5c4,_0xdc4ca8){return _0x33a5c4+_0xdc4ca8;},'lIEmZ':function(_0x3d7ac1,_0x31443a){return _0x3d7ac1+_0x31443a;},'TVhwd':_0x384ff9(0x1b7),'ajdUy':'<div\x20class=\x22maestro-genie-stage\x22>','YvHaz':_0x384ff9(0x17b),'KxmiC':_0x384ff9(0x227),'HETeV':_0x384ff9(0x1a5),'JTpYi':_0x384ff9(0x117),'ljCjc':_0x384ff9(0x14b),'dZYtp':_0x384ff9(0x1fc),'rODFR':_0x384ff9(0x153),'FXGUX':_0x384ff9(0x16c),'FRiJP':_0x384ff9(0x155),'ePTQJ':_0x384ff9(0x236),'yivMb':_0x384ff9(0x16e),'HBmKv':_0x384ff9(0x1c9),'NdLmp':_0x384ff9(0x193),'FfUWp':_0x384ff9(0x1c4),'GiGZE':_0x384ff9(0x176),'PeKhR':_0x384ff9(0x1e0),'UxPgs':_0x384ff9(0x213),'MdMNF':'обсудить\x20проект','UbwLH':_0x384ff9(0x23b),'stnIs':_0x384ff9(0x1be),'tFSXN':_0x384ff9(0x1a0),'AtvrR':_0x384ff9(0x1b5),'AEjBQ':_0x384ff9(0x122),'wxdqZ':'црм','eMEoj':_0x384ff9(0x18c),'VHZTm':'клиент','SHuAp':_0x384ff9(0x186),'EJbRM':_0x384ff9(0x1a8),'szazQ':'web','dSnzA':_0x384ff9(0x1f5),'KBtQJ':_0x384ff9(0x1ca),'UlMwC':_0x384ff9(0x19d),'rZKXr':_0x384ff9(0x198),'aPTgR':_0x384ff9(0x13a),'HpjrB':_0x384ff9(0x11d),'ccnOQ':_0x384ff9(0x115),'npooK':_0x384ff9(0x12d),'wYeiy':'[data-mg=\x22close\x22]','QFixD':_0x384ff9(0x21d),'OyawI':_0x384ff9(0x1e1),'eyEtK':_0x384ff9(0x140),'FEjeS':_0x384ff9(0x239),'xvxBC':'keydown','LjNbk':_0x384ff9(0x182)};if(window[_0x384ff9(0x1ad)]||!document[_0x384ff9(0x141)])return;const _0x23407f=_0x384ff9(0x21f),_0x514b2d=['<svg\x20class=\x22maestro-genie-avatar\x22\x20viewBox=\x220\x200\x20220\x20230\x22\x20aria-label=\x22Цифровой\x20советник\x20МАЭСТРО\x22\x20role=\x22img\x22>','<defs><linearGradient\x20id=\x22mg-suit\x22\x20x1=\x220\x22\x20y1=\x220\x22\x20x2=\x221\x22\x20y2=\x221\x22><stop\x20stop-color=\x22#10364a\x22/><stop\x20offset=\x22.55\x22\x20stop-color=\x22#25869a\x22/><stop\x20offset=\x221\x22\x20stop-color=\x22#132339\x22/></linearGradient>',_0x384ff9(0x1a4),'<linearGradient\x20id=\x22mg-mist\x22\x20x1=\x220\x22\x20y1=\x220\x22\x20x2=\x221\x22\x20y2=\x221\x22><stop\x20stop-color=\x22#87eaf1\x22\x20stop-opacity=\x22.9\x22/><stop\x20offset=\x221\x22\x20stop-color=\x22#1b88a3\x22\x20stop-opacity=\x220\x22/></linearGradient></defs>',_0x883efb[_0x384ff9(0x1a9)],_0x384ff9(0x1c0),_0x883efb['iJaCV'],_0x883efb['JoWJZ'],_0x384ff9(0x1c2),_0x883efb[_0x384ff9(0x17f)],_0x384ff9(0x187),_0x384ff9(0x146),_0x883efb[_0x384ff9(0x1ef)],_0x384ff9(0x1d6),_0x883efb[_0x384ff9(0x12f)],_0x883efb[_0x384ff9(0x17a)],_0x883efb['OeNHZ'],'</svg>'][_0x384ff9(0x204)](''),_0x493361=document[_0x384ff9(0x159)](_0x883efb[_0x384ff9(0x1c1)]);_0x493361['id']=_0x384ff9(0x14a),_0x493361[_0x384ff9(0x1b2)]=_0x883efb[_0x384ff9(0x114)](_0x883efb[_0x384ff9(0x1d3)](_0x883efb[_0x384ff9(0x1d5)](_0x883efb[_0x384ff9(0x128)](_0x883efb['LoNgu'](_0x883efb[_0x384ff9(0x145)](_0x883efb[_0x384ff9(0x19e)](_0x883efb['TVhwd']+_0x23407f,_0x384ff9(0x217))+_0x384ff9(0x1bd),'<div\x20class=\x22maestro-genie-head\x22><div\x20class=\x22maestro-genie-title\x22><strong>МАЭСТРО\x20·\x20ЦИФРОВОЙ\x20СОВЕТНИК</strong><small>Бесплатная\x20консультация\x20·\x20сценарный\x20режим</small></div>')+_0x384ff9(0x221)+_0x384ff9(0x1fd)+_0x384ff9(0x16a)+_0x883efb[_0x384ff9(0x1f9)]+_0x514b2d,'<span\x20class=\x22maestro-genie-star\x22></span><span\x20class=\x22maestro-genie-star\x22></span><span\x20class=\x22maestro-genie-star\x22></span><span\x20class=\x22maestro-genie-star\x22></span>'),_0x883efb[_0x384ff9(0x230)])+_0x883efb[_0x384ff9(0x149)]+_0x883efb[_0x384ff9(0x1ac)]+'<button\x20type=\x22button\x22\x20data-mg-question=\x22Нужен\x20сайт\x22>Сайт</button><button\x20type=\x22button\x22\x20data-mg-question=\x22Нужны\x20CRM\x20и\x20продажи\x22>CRM\x20и\x20продажи</button>',_0x883efb[_0x384ff9(0x1b1)])+'<button\x20type=\x22button\x22\x20data-mg=\x22brief-start\x22>Собрать\x20ТЗ</button></div>',_0x384ff9(0x1ec))+_0x384ff9(0x18b)+_0x883efb[_0x384ff9(0x150)]+_0x883efb['dZYtp'],_0x883efb[_0x384ff9(0x166)]),document[_0x384ff9(0x141)]['append'](_0x493361);const _0x566e0f=_0x493361[_0x384ff9(0x22b)]('.maestro-genie-panel'),_0x572e60=_0x493361[_0x384ff9(0x22b)](_0x384ff9(0x12c)),_0x190833=_0x493361['querySelector'](_0x384ff9(0x1d0)),_0x22ed87=_0x493361[_0x384ff9(0x22b)](_0x883efb['FXGUX']),_0x434d3b=_0x493361[_0x384ff9(0x22b)](_0x883efb[_0x384ff9(0x15c)]),_0x3def3d=_0x493361['querySelector'](_0x883efb[_0x384ff9(0x164)]),_0x477379=_0x493361[_0x384ff9(0x22b)](_0x883efb[_0x384ff9(0x228)]),_0x1aa8d7={'voice':![],'topic':_0x384ff9(0x11e),'lastQuestion':'','leadInterest':null,'recognition':null,'speaking':![],'wizard':null},_0x33f5da={'general':_0x384ff9(0x167),'ai':_0x384ff9(0x1d7),'web':_0x384ff9(0x237),'crm':_0x384ff9(0x207),'marketing':_0x883efb[_0x384ff9(0x165)],'hr':_0x883efb[_0x384ff9(0x184)],'audit':_0x384ff9(0x1cc),'price':'На\x20сайте\x20приведены\x20ориентировочные\x20пакеты:\x20«Старт»\x20—\x209\x20900\x20₽,\x20«Рост»\x20—\x2024\x20900\x20₽,\x20«Система»\x20—\x2049\x20900\x20₽,\x20Enterprise\x20—\x20от\x2099\x20000\x20₽.\x20Итог\x20зависит\x20от\x20состава\x20работ.\x20Могу\x20помочь\x20оформить\x20запрос\x20на\x20индивидуальную\x20оценку.','lead':_0x883efb['FfUWp']},_0x2137b6=[[_0x883efb[_0x384ff9(0x1a2)],[_0x384ff9(0x138),_0x883efb[_0x384ff9(0x196)],_0x384ff9(0x1dd),'связаться',_0x883efb['UxPgs'],_0x883efb['MdMNF'],_0x883efb[_0x384ff9(0x1d1)]]],[_0x883efb[_0x384ff9(0x177)],[_0x384ff9(0x18f),_0x384ff9(0x211),_0x384ff9(0x1b9),_0x384ff9(0x13c),_0x883efb['tFSXN'],_0x384ff9(0x1ba)]],['ai',[_0x883efb['AtvrR'],_0x883efb[_0x384ff9(0x1c3)],_0x384ff9(0x192),_0x384ff9(0x23c),_0x384ff9(0x12b),_0x384ff9(0x1df),_0x384ff9(0x231),_0x384ff9(0x195),'max']],[_0x384ff9(0x1a6),[_0x384ff9(0x1a6),_0x883efb['wxdqZ'],'воронк',_0x883efb[_0x384ff9(0x1f8)],'лид',_0x883efb[_0x384ff9(0x1d8)],_0x384ff9(0x216)]],['web',[_0x883efb[_0x384ff9(0x208)],_0x883efb['EJbRM'],'витрин',_0x384ff9(0x13d),_0x384ff9(0x197),_0x883efb['szazQ']]],[_0x384ff9(0x1ff),[_0x883efb[_0x384ff9(0x125)],_0x384ff9(0x148),_0x883efb[_0x384ff9(0x1eb)],_0x384ff9(0x144),'бренд']],['hr',[_0x384ff9(0x11f),_0x883efb['UlMwC'],'hr',_0x384ff9(0x200),_0x384ff9(0x214),_0x883efb[_0x384ff9(0x154)]]],[_0x384ff9(0x130),[_0x384ff9(0x137),_0x384ff9(0x1d2),_0x883efb[_0x384ff9(0x22e)],_0x883efb['HpjrB'],_0x384ff9(0x1fb)]]];function _0x508046(_0x6267f5,_0x25e9eb){const _0x342dde=_0x384ff9,_0xfe7ad4=document[_0x342dde(0x159)](_0x342dde(0x1f4));_0xfe7ad4['className']=_0x883efb['wAVJX'](_0x342dde(0x14e),_0x6267f5),_0xfe7ad4['textContent']=_0x25e9eb,_0x190833[_0x342dde(0x126)](_0xfe7ad4),_0x190833['scrollTop']=_0x190833[_0x342dde(0x11a)];}function _0x3c5be0(_0x559280){const _0x34a084=_0x384ff9;_0x22ed87[_0x34a084(0x11b)]=_0x559280;}function _0x1f6b24(_0x518c7b){const _0x568081=_0x384ff9,_0x5e7373=_0x518c7b[_0x568081(0x1da)]()[_0x568081(0x147)](/ё/g,'е');for(const _0x5e19a6 of _0x2137b6)if(_0x5e19a6[0x1][_0x568081(0x19a)](_0x699a3f=>_0x5e7373[_0x568081(0x1e8)](_0x699a3f)))return _0x5e19a6[0x0];return _0x883efb['aMpmu'];}function _0x49ec21(){const _0x228480=_0x384ff9;try{window[_0x228480(0x14c)]?.[_0x228480(0x132)]();}catch(_0x789a42){}try{window[_0x228480(0x174)]?.[_0x228480(0x19c)]?.();}catch(_0x305aba){}_0x566e0f[_0x228480(0x1f7)][_0x228480(0x1c6)](_0x883efb[_0x228480(0x203)]),_0x1aa8d7[_0x228480(0x16b)]=![];}async function _0x5e271c(_0x1e0582){const _0x132296=_0x384ff9,_0x3ea654={'Duayg':_0x883efb[_0x132296(0x203)],'THRtF':_0x883efb[_0x132296(0x160)]};if(!_0x1aa8d7[_0x132296(0x21c)])return;_0x49ec21();const _0x2026fe=window[_0x132296(0x174)];if(_0x2026fe&&typeof _0x2026fe[_0x132296(0x1b3)]===_0x132296(0x1e7))try{const _0x114c5e=_0x883efb[_0x132296(0x1cf)]['split']('|');let _0x1d5291=0x0;while(!![]){switch(_0x114c5e[_0x1d5291++]){case'0':_0x566e0f[_0x132296(0x1f7)][_0x132296(0x1c6)](_0x883efb[_0x132296(0x203)]);continue;case'1':_0x1aa8d7['speaking']=![];continue;case'2':return;case'3':_0x566e0f['classList'][_0x132296(0x234)](_0x132296(0x20c));continue;case'4':await _0x2026fe['speak'](_0x1e0582);continue;case'5':_0x1aa8d7[_0x132296(0x16b)]=!![];continue;}break;}}catch(_0x1d6850){_0x3c5be0(_0x132296(0x1cd));}if(!(_0x132296(0x14c)in window)){_0x883efb[_0x132296(0x22a)](_0x3c5be0,_0x883efb['imQIu']);return;}const _0xd4d25e=new SpeechSynthesisUtterance(_0x1e0582);_0xd4d25e[_0x132296(0x133)]=_0x132296(0x20d),_0xd4d25e[_0x132296(0x1ea)]=0.98,_0xd4d25e['pitch']=0.96;const _0x568472=window[_0x132296(0x14c)][_0x132296(0x15a)](),_0x5bf53d=_0x568472['find'](_0x26c48c=>_0x26c48c[_0x132296(0x133)]?.['toLowerCase']()===_0x132296(0x219))||_0x568472[_0x132296(0x1ab)](_0x2bd38c=>_0x2bd38c[_0x132296(0x133)]?.[_0x132296(0x1da)]()['startsWith']('ru'));if(_0x5bf53d)_0xd4d25e[_0x132296(0x21c)]=_0x5bf53d;_0xd4d25e[_0x132296(0x175)]=()=>{const _0x17d020=_0x132296;_0x1aa8d7[_0x17d020(0x16b)]=!![],_0x566e0f[_0x17d020(0x1f7)]['add'](_0x3ea654['Duayg']),_0x3c5be0(_0x3ea654['THRtF']);},_0xd4d25e[_0x132296(0x21b)]=_0xd4d25e[_0x132296(0x172)]=()=>{const _0x3c078a=_0x132296;_0x1aa8d7[_0x3c078a(0x16b)]=![],_0x566e0f[_0x3c078a(0x1f7)][_0x3c078a(0x1c6)](_0x3c078a(0x20c)),_0x3c5be0(_0x3c078a(0x181));},window[_0x132296(0x14c)]['speak'](_0xd4d25e);}const _0xf2d112=[_0x883efb[_0x384ff9(0x163)],_0x883efb[_0x384ff9(0x135)],_0x384ff9(0x123),_0x384ff9(0x21e),_0x384ff9(0x178)];function _0x37400b(){const _0x1fd816=_0x384ff9;_0x49ec21(),_0x1aa8d7['wizard']={'step':0x0,'answers':[]},_0x493361[_0x1fd816(0x22b)](_0x1fd816(0x1e1))[_0x1fd816(0x16d)]=!![];const _0x537851=_0x883efb[_0x1fd816(0x128)](_0x883efb[_0x1fd816(0x1b6)],_0xf2d112[0x0]);_0x508046(_0x1fd816(0x156),_0x537851),_0x3c5be0('Конструктор\x20ТЗ:\x20вопрос\x201\x20из\x205'),void _0x5e271c(_0x537851),_0x434d3b[_0x1fd816(0x131)]();}function _0x4189c1(_0x224c08){const _0x2011b5=_0x384ff9;if(/^отмена$/i['test'](_0x224c08[_0x2011b5(0x232)]())){_0x1aa8d7['wizard']=null;const _0x320f2b=_0x883efb[_0x2011b5(0x222)];_0x508046('assistant',_0x320f2b),_0x883efb[_0x2011b5(0x22d)](_0x3c5be0,'Режим\x20консультанта'),void _0x883efb[_0x2011b5(0x205)](_0x5e271c,_0x320f2b);return;}_0x1aa8d7['wizard'][_0x2011b5(0x235)][_0x2011b5(0x134)](_0x224c08),_0x1aa8d7[_0x2011b5(0x209)][_0x2011b5(0x168)]++;if(_0x1aa8d7['wizard'][_0x2011b5(0x168)]<_0xf2d112[_0x2011b5(0x1a3)]){const _0x257bcd=_0x1aa8d7[_0x2011b5(0x209)][_0x2011b5(0x168)]+0x1,_0x497b9e='Вопрос\x20'+_0x257bcd+'\x20из\x205.\x20'+_0xf2d112[_0x1aa8d7[_0x2011b5(0x209)]['step']];_0x508046(_0x2011b5(0x156),_0x497b9e),_0x883efb['bJnrG'](_0x3c5be0,'Конструктор\x20ТЗ:\x20вопрос\x20'+_0x257bcd+_0x883efb[_0x2011b5(0x225)]),void _0x5e271c(_0x497b9e);}else{const _0x4f41e2=_0x2011b5(0x161);_0x508046(_0x883efb[_0x2011b5(0x1f6)],_0x4f41e2);try{sessionStorage[_0x2011b5(0x1cb)](_0x2011b5(0x201),JSON[_0x2011b5(0x124)]({'answers':_0x1aa8d7[_0x2011b5(0x209)][_0x2011b5(0x235)],'created':Date['now']()})),_0x493361[_0x2011b5(0x22b)]('[data-mg=\x22brief-go\x22]')[_0x2011b5(0x16d)]=![],_0x3c5be0(_0x883efb[_0x2011b5(0x1fa)]);}catch(_0x1d62bd){_0x883efb[_0x2011b5(0x18e)](_0x508046,_0x883efb['IdTXn'],_0x2011b5(0x185)),_0x3c5be0(_0x2011b5(0x1e9));}_0x1aa8d7[_0x2011b5(0x209)]=null,void _0x883efb['mvskP'](_0x5e271c,_0x4f41e2);}}function _0x17dcea(_0x1f3cbc){const _0x393158=_0x384ff9,_0x293cc2=_0x883efb[_0x393158(0x22a)](String,_0x1f3cbc||'')[_0x393158(0x232)]()[_0x393158(0x116)](0x0,0x190);if(!_0x293cc2)return;_0x883efb[_0x393158(0x191)](_0x49ec21),_0x1aa8d7['lastQuestion']=_0x293cc2,_0x508046('user',_0x293cc2);if(_0x1aa8d7[_0x393158(0x209)]){_0x4189c1(_0x293cc2);return;}const _0x5fce6c=_0x1f6b24(_0x293cc2);if(_0x5fce6c!==_0x393158(0x11e))_0x1aa8d7[_0x393158(0x18a)]=_0x5fce6c;const _0x2c27bc=_0x33f5da[_0x5fce6c]||_0x33f5da['general'];_0x883efb[_0x393158(0x19b)](_0x508046,'assistant',_0x2c27bc),_0x883efb[_0x393158(0x1a1)](_0x3c5be0,_0x883efb[_0x393158(0x1ee)]),void _0x883efb[_0x393158(0x22d)](_0x5e271c,_0x2c27bc);}function _0x2727f7(){const _0xc647b=_0x384ff9,_0x3d36d6=_0xc647b(0x20b)[_0xc647b(0x190)]('|');let _0x32e17b=0x0;while(!![]){switch(_0x3d36d6[_0x32e17b++]){case'0':_0x572e60[_0xc647b(0x127)](_0xc647b(0x210),_0xc647b(0x199));continue;case'1':_0x434d3b['focus']();continue;case'2':if(!_0x190833[_0xc647b(0x23a)][_0xc647b(0x1a3)])_0x508046(_0x883efb[_0xc647b(0x1f6)],_0x33f5da[_0xc647b(0x11e)]);continue;case'3':if(!_0x566e0f[_0xc647b(0x16d)])return;continue;case'4':_0x566e0f[_0xc647b(0x16d)]=![];continue;case'5':_0x572e60[_0xc647b(0x16d)]=!![];continue;}break;}}function _0x553db3(){const _0x219f8b=_0x384ff9;_0x883efb['siNwW'](_0x49ec21);if(_0x1aa8d7[_0x219f8b(0x173)])try{_0x1aa8d7[_0x219f8b(0x173)][_0x219f8b(0x19c)]();}catch(_0x53f662){}_0x566e0f[_0x219f8b(0x16d)]=!![],_0x572e60[_0x219f8b(0x16d)]=![],_0x572e60['setAttribute'](_0x883efb[_0x219f8b(0x233)],_0x883efb[_0x219f8b(0x13b)]),_0x1aa8d7[_0x219f8b(0x179)]=null,_0x572e60[_0x219f8b(0x131)]();}function _0x4ad6cd(_0x2fdb99){const _0x3dbac7=_0x384ff9,_0x268bb8=document[_0x3dbac7(0x12e)]('interest');_0x1aa8d7[_0x3dbac7(0x179)]=_0x268bb8&&[..._0x268bb8[_0x3dbac7(0x15d)]][_0x3dbac7(0x19a)](_0x47b784=>_0x47b784[_0x3dbac7(0x129)]===_0x2fdb99)?_0x2fdb99:null;}function _0x5e96ff(){const _0x198f3b=_0x384ff9,_0x4c840e=document[_0x198f3b(0x12e)](_0x198f3b(0x152)),_0xdd4d7d=document['getElementById']('business'),_0x3d4498=document[_0x198f3b(0x12e)](_0x198f3b(0x176)),_0x1b8ef8={'ai':_0x198f3b(0x1f3),'web':_0x883efb['mKagj'],'crm':_0x198f3b(0x158),'marketing':_0x198f3b(0x14f),'hr':'HR','audit':_0x883efb[_0x198f3b(0x20f)],'price':_0x198f3b(0x14f),'general':_0x198f3b(0x14f),'lead':'Другое'};if(_0x4c840e)_0x4c840e['value']=_0x1aa8d7[_0x198f3b(0x179)]||_0x1b8ef8[_0x1aa8d7[_0x198f3b(0x18a)]]||_0x198f3b(0x14f);if(_0xdd4d7d&&!_0xdd4d7d[_0x198f3b(0x129)][_0x198f3b(0x232)]()&&_0x1aa8d7[_0x198f3b(0x1bf)])_0xdd4d7d[_0x198f3b(0x129)]=_0x883efb[_0x198f3b(0x114)](_0x198f3b(0x1e6),_0x1aa8d7[_0x198f3b(0x1bf)]);_0x883efb[_0x198f3b(0x1ed)](_0x553db3);if(_0x3d4498)_0x3d4498[_0x198f3b(0x183)]({'behavior':matchMedia(_0x198f3b(0x22f))[_0x198f3b(0x17e)]?_0x883efb['tDQEt']:_0x198f3b(0x1e4),'block':_0x198f3b(0x113)});setTimeout(()=>document['getElementById'](_0x198f3b(0x206))?.[_0x198f3b(0x131)]({'preventScroll':!![]}),0x190);}function _0x3d2ef4(){const _0x3d60e6=_0x384ff9,_0x17082f=window[_0x3d60e6(0x19f)]||window[_0x3d60e6(0x1b8)];if(!_0x17082f){_0x883efb[_0x3d60e6(0x17c)](_0x3c5be0,_0x3d60e6(0x226)),_0x434d3b[_0x3d60e6(0x131)]();return;}if(_0x1aa8d7[_0x3d60e6(0x173)]){try{_0x1aa8d7['recognition'][_0x3d60e6(0x19c)]();}catch(_0x598f67){}_0x1aa8d7[_0x3d60e6(0x173)]=null;return;}const _0x27e502=new _0x17082f();_0x1aa8d7[_0x3d60e6(0x173)]=_0x27e502,_0x27e502[_0x3d60e6(0x133)]=_0x883efb[_0x3d60e6(0x202)],_0x27e502[_0x3d60e6(0x1fe)]=![],_0x27e502[_0x3d60e6(0x1f1)]=0x1,_0x27e502[_0x3d60e6(0x175)]=()=>_0x3c5be0(_0x3d60e6(0x23d)),_0x27e502[_0x3d60e6(0x1d4)]=_0x30320b=>{const _0x5aab3a=_0x3d60e6,_0x2ecc62=_0x30320b[_0x5aab3a(0x194)][0x0]?.[0x0]?.['transcript'];if(_0x2ecc62)_0x17dcea(_0x2ecc62);},_0x27e502['onerror']=()=>_0x3c5be0('Микрофон\x20недоступен.\x20Напишите\x20вопрос.'),_0x27e502['onend']=()=>{const _0x5c6e98=_0x3d60e6;_0x1aa8d7[_0x5c6e98(0x173)]=null;if(!_0x1aa8d7[_0x5c6e98(0x16b)])_0x883efb[_0x5c6e98(0x180)](_0x3c5be0,'Готов\x20к\x20вашему\x20вопросу');};try{_0x27e502[_0x3d60e6(0x113)]();}catch(_0x43321f){_0x1aa8d7[_0x3d60e6(0x173)]=null,_0x883efb[_0x3d60e6(0x162)](_0x3c5be0,_0x883efb[_0x3d60e6(0x18d)]);}}_0x572e60['addEventListener'](_0x384ff9(0x21d),_0x2727f7),_0x493361[_0x384ff9(0x22b)](_0x883efb[_0x384ff9(0x1a7)])[_0x384ff9(0x169)](_0x883efb[_0x384ff9(0x16f)],_0x553db3),_0x493361[_0x384ff9(0x22b)](_0x384ff9(0x1e5))[_0x384ff9(0x169)](_0x883efb[_0x384ff9(0x16f)],_0x5e96ff),_0x493361[_0x384ff9(0x22b)](_0x384ff9(0x1ae))['addEventListener']('click',_0x37400b),_0x493361[_0x384ff9(0x22b)](_0x883efb[_0x384ff9(0x224)])[_0x384ff9(0x169)](_0x883efb[_0x384ff9(0x16f)],()=>{const _0x4f6e9d=_0x384ff9;window[_0x4f6e9d(0x1f0)]['href']=_0x4f6e9d(0x15e);}),_0x3def3d[_0x384ff9(0x169)]('click',()=>{const _0x58883e=_0x384ff9,_0x3a4be0=_0x883efb['FgjcP'][_0x58883e(0x190)]('|');let _0x6f10bc=0x0;while(!![]){switch(_0x3a4be0[_0x6f10bc++]){case'0':_0x3def3d['title']=_0x1aa8d7[_0x58883e(0x21c)]?_0x883efb[_0x58883e(0x223)]:_0x883efb[_0x58883e(0x171)];continue;case'1':if(!_0x1aa8d7[_0x58883e(0x21c)])_0x49ec21();continue;case'2':_0x3def3d['setAttribute'](_0x58883e(0x1d9),String(_0x1aa8d7[_0x58883e(0x21c)]));continue;case'3':_0x1aa8d7['voice']=!_0x1aa8d7['voice'];continue;case'4':_0x883efb['cJSPH'](_0x3c5be0,_0x1aa8d7['voice']?_0x883efb[_0x58883e(0x139)]:_0x58883e(0x21a));continue;case'5':_0x3def3d[_0x58883e(0x127)]('aria-label',_0x3def3d[_0x58883e(0x220)]);continue;}break;}}),_0x477379[_0x384ff9(0x169)](_0x883efb[_0x384ff9(0x16f)],_0x3d2ef4),_0x493361['querySelectorAll'](_0x883efb[_0x384ff9(0x1b4)])[_0x384ff9(0x1ce)](_0x3271bd=>_0x3271bd['addEventListener'](_0x384ff9(0x21d),()=>_0x17dcea(_0x3271bd[_0x384ff9(0x1f2)](_0x384ff9(0x1aa))))),_0x493361[_0x384ff9(0x22b)](_0x384ff9(0x1db))[_0x384ff9(0x169)](_0x883efb[_0x384ff9(0x151)],_0x383360=>{const _0x544081=_0x384ff9;_0x383360[_0x544081(0x13e)](),_0x17dcea(_0x434d3b[_0x544081(0x129)]),_0x434d3b[_0x544081(0x129)]='',_0x434d3b[_0x544081(0x131)]();}),document[_0x384ff9(0x169)](_0x883efb[_0x384ff9(0x11c)],_0x1f4cda=>{const _0x4e2488=_0x384ff9;if(_0x1f4cda[_0x4e2488(0x119)]===_0x4e2488(0x13f)&&!_0x566e0f['hidden'])_0x553db3();});const _0x5f1d47=document['getElementById']('links');if(_0x5f1d47){const _0x150dd3=document[_0x384ff9(0x159)](_0x384ff9(0x1de));_0x150dd3['type']=_0x384ff9(0x1de),_0x150dd3[_0x384ff9(0x1bc)]=_0x883efb['LjNbk'],_0x150dd3['textContent']=_0x384ff9(0x157),_0x150dd3[_0x384ff9(0x169)](_0x384ff9(0x21d),()=>{const _0xc39b2c=_0x384ff9;_0x2727f7(),_0x5f1d47[_0xc39b2c(0x1f7)][_0xc39b2c(0x1c6)](_0xc39b2c(0x118)),document[_0xc39b2c(0x12e)](_0x883efb['RXHlB'])?.[_0xc39b2c(0x127)]('aria-expanded',_0xc39b2c(0x238));}),_0x5f1d47['append'](_0x150dd3);}window['MAESTRO_GENIE']=Object['freeze']({'open':_0x2727f7,'close':_0x553db3,'ask':_0x17dcea,'setLeadInterest':_0x4ad6cd,'stopVoice':_0x49ec21});}()));
+/* MAESTRO GENIE ENGINE v0.1 — progressive enhancement on a static site.
+ * No tokens, cookies, trackers, paid services or server-side AI claims.
+ * Prepared narration adapter: window.MAESTRO_GENIE_VOICE = { speak(text, hooks): Promise<void>, stop(): void }.
+ * hooks.onStart/onBoundary/onEnd may report actual playback timing. An adapter without hooks still plays,
+ * but does not claim timed speech events for the 3D scene.
+ * Public narration files are generated offline. Never put API keys or consent recordings in the public repo.
+ */
+(function () {
+  "use strict";
+  if (window.MAESTRO_GENIE || !document.body) return;
+
+  const lamp = '<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M15 43c4-7 12-8 24-8h8c0 7-4 13-14 13H21z" fill="#e9b45f" stroke="#ffe0a2" stroke-width="2"/><path d="M16 41l-7 1c2 8 12 9 17 4M46 37c10-8 13-4 9 1-3 4-7 5-10 5" stroke="#ffe0a2" stroke-width="3" stroke-linecap="round"/><path d="M36 32c-4-9 11-12 4-24M28 31c-4-7 4-10 3-16" stroke="#76e5e4" stroke-width="3" stroke-linecap="round"/><circle cx="47" cy="17" r="2" fill="#f9df9c"/></svg>';
+  const avatar = [
+    '<svg class="maestro-genie-avatar" viewBox="0 0 220 230" aria-label="Цифровой советник МАЭСТРО" role="img">',
+    '<defs><linearGradient id="mg-suit" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#10364a"/><stop offset=".55" stop-color="#25869a"/><stop offset="1" stop-color="#132339"/></linearGradient>',
+    '<linearGradient id="mg-skin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e5d3af"/><stop offset="1" stop-color="#a78e78"/></linearGradient>',
+    '<linearGradient id="mg-mist" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#87eaf1" stop-opacity=".9"/><stop offset="1" stop-color="#1b88a3" stop-opacity="0"/></linearGradient></defs>',
+    '<path d="M76 147Q62 155 56 176Q52 191 83 192Q128 211 109 228Q168 218 126 184Q166 178 162 159L143 142Z" fill="url(#mg-mist)" opacity=".8"/>',
+    '<path d="M27 196Q32 148 83 137L93 128L129 127L141 139Q184 148 193 196Z" fill="url(#mg-suit)" stroke="#83deeb" stroke-width="2"/>',
+    '<path d="M92 135L111 165L129 135L120 118H101Z" fill="#b59b7d" stroke="#d4c2a6" stroke-width="2"/>',
+    '<path d="M92 134L112 166L131 135L145 144L131 194H94L77 145Z" fill="#103044" opacity=".9"/>',
+    '<path d="M87 68Q85 40 111 34Q141 35 140 67L139 98Q135 126 112 135Q91 128 85 101Z" fill="url(#mg-skin)" stroke="#edd8b4" stroke-width="2"/>',
+    '<path d="M82 77Q71 34 93 25Q95 10 119 17Q148 8 151 39Q157 58 141 76L138 51Q126 42 116 35Q97 53 86 53Z" fill="#c5ccd2" stroke="#a3cbd3" stroke-width="2"/>',
+    '<path d="M90 93Q100 83 106 92M116 92Q127 83 134 92" fill="none" stroke="#243f4c" stroke-width="3" stroke-linecap="round"/>',
+    '<circle cx="101" cy="93" r="2.5" fill="#69e0ea"/><circle cx="124" cy="93" r="2.5" fill="#69e0ea"/>',
+    '<path d="M112 99L108 111L115 114" fill="none" stroke="#785f51" stroke-width="1.8"/>',
+    '<path class="maestro-genie-mouth" d="M104 118Q113 121 123 117" fill="none" stroke="#704f47" stroke-width="2.5" stroke-linecap="round"/>',
+    '<path d="M84 103Q91 130 111 140Q131 135 141 104Q138 127 121 144L110 150L95 139Z" fill="#a0afb1" opacity=".8"/>',
+    '<path d="M67 169Q90 185 111 194Q137 184 152 165" fill="none" stroke="#f5c56d" stroke-width="2"/>',
+    '<circle cx="111" cy="175" r="6" fill="#ffd484" stroke="#ffffff" stroke-width="1"/>',
+    '</svg>'
+  ].join('');
+
+  const root = document.createElement('div');
+  root.id = 'maestro-genie-root';
+  root.innerHTML =
+    '<button type="button" class="maestro-genie-launcher" aria-controls="maestro-genie-panel" aria-expanded="false" aria-label="Вызвать консультанта МАЭСТРО">' + lamp + '<span>Позвать МАЭСТРО</span></button>' +
+    '<aside id="maestro-genie-panel" class="maestro-genie-panel" aria-label="Консультант МАЭСТРО" hidden>' +
+      '<div class="maestro-genie-head"><div class="maestro-genie-title"><strong>МАЭСТРО · ЦИФРОВОЙ СОВЕТНИК</strong><small>Бесплатная консультация · сценарный режим</small></div>' +
+      '<div class="maestro-genie-controls"><button type="button" data-mg="voice" aria-label="Включить озвучивание направлений" aria-pressed="false" title="Включить голос">♫</button>' +
+      '<button type="button" data-mg="close" aria-label="Закрыть консультанта">×</button></div></div>' +
+      '<div class="maestro-genie-stage">' + avatar +
+      '<span class="maestro-genie-star"></span><span class="maestro-genie-star"></span><span class="maestro-genie-star"></span><span class="maestro-genie-star"></span>' +
+      '<div class="maestro-genie-status" role="status" aria-live="polite">Готов обсудить вашу задачу</div></div>' +
+      '<div class="maestro-genie-chat" role="log" aria-label="История диалога" aria-live="polite" aria-relevant="additions"></div>' +
+      '<div class="maestro-genie-quick"><button type="button" data-mg-question="Нужен ИИ-оператор для заявок">ИИ-оператор</button>' +
+      '<button type="button" data-mg-question="Нужен сайт">Сайт</button><button type="button" data-mg-question="Нужны CRM и продажи">CRM и продажи</button>' +
+      '<button type="button" data-mg-question="Как заказать проект?">Оставить заявку</button>' +
+      '<button type="button" data-mg="brief-start">Собрать ТЗ</button></div>' +
+      '<form class="maestro-genie-form"><input name="question" type="text" maxlength="400" autocomplete="off" aria-label="Ваш вопрос" placeholder="Расскажите, что нужно бизнесу" required><button type="submit">Отправить</button></form>' +
+      '<button type="button" class="maestro-genie-go" data-mg="lead">Перейти к заявке →</button>' +
+      '<button type="button" class="maestro-genie-go" data-mg="brief-go" hidden>Открыть готовый черновик ТЗ →</button>' +
+      '<p class="maestro-genie-note">Первый этап: ответы по направлениям услуг, без подключения нейросети. Направления озвучены заранее; ответы в диалоге доступны текстом. Контакты не отправляются без вашего действия.</p>' +
+    '</aside>';
+  document.body.append(root);
+
+  const panel = root.querySelector('.maestro-genie-panel');
+  const launcher = root.querySelector('.maestro-genie-launcher');
+  const chat = root.querySelector('.maestro-genie-chat');
+  const status = root.querySelector('.maestro-genie-status');
+  const input = root.querySelector('input[name="question"]');
+  const voiceButton = root.querySelector('[data-mg="voice"]');
+  const state = { voice: false, topic: 'general', lastQuestion: '', leadInterest: null, speaking: false, wizard: null };
+  let activeSpeech = null;
+
+  const knowledge = {
+    general: 'Здравствуйте! Я МАЭСТРО. Помогаю выбрать подходящее направление: сайты, боты, ИИ-операторы, CRM, маркетинг, команда и аналитика. Расскажите, что вы хотите улучшить. Я могу помочь сформулировать заявку.',
+    ai: 'ИИ-оператор может отвечать на типовые вопросы, собирать заявки и передавать обращения менеджеру. Для расчёта уточним канал (сайт, Telegram, MAX), объём обращений, используемую CRM и требования к передаче человеку. Покажем доступные варианты после уточнения задачи.',
+    web: 'Разрабатываем сайты услуг, лендинги, каталоги и цифровые витрины. Важны цель сайта, примеры конкурентов, основные разделы, формы заявок и интеграции. Запишем требования и подготовим предложение.',
+    crm: 'В CRM можно выстроить воронку, статусы обращений, напоминания, ответственных и аналитику. Начнём с источников заявок и того, где сейчас теряются обращения.',
+    marketing: 'Поможем с позиционированием, рекламными материалами и аналитикой обращений. Чтобы выбрать формат, определим продукт, аудиторию, географию и доступный бюджет.',
+    hr: 'Можно автоматизировать приём откликов, первичную анкету, согласование кандидатов и контроль задач команды. Чувствительные решения о найме остаются за человеком.',
+    audit: 'Начнём с диагностики процессов: точки потерь, повторяющиеся операции и возможные быстрые улучшения. Для конкретного плана нужны сведения о текущем процессе.',
+    get price() {
+      const packages = [...document.querySelectorAll('#pricing .price')].map(card => {
+        const name = card.querySelector('h3')?.textContent.trim();
+        const amount = card.querySelector('.money')?.textContent.trim();
+        return name && amount ? `${name} — ${amount}` : '';
+      }).filter(Boolean);
+      return (packages.length ? 'Пакеты на этой странице: ' + packages.join('; ') + '. ' : 'Пакеты и цены указаны на главной странице в разделе «Тарифы». ') + 'Состав, срок и стоимость вашей задачи согласуем до начала работы. Услуги на биржах могут отличаться по объёму — условия указаны в каждом объявлении.';
+    },
+    lead: 'Чтобы получить предложение, нажмите «Перейти к заявке». Я перенесу тему обсуждения в форму. Впишите имя и контакт, ознакомьтесь с согласием на обработку данных и отправьте заявку по инструкции сайта.'
+  };
+  const intentChecks = [
+    ['lead', ['заказать', 'оформить заявку', 'оставить заявку', 'связаться', 'контакт', 'обсудить проект', 'написать нам']],
+    ['price', ['цен', 'стои', 'сколько', 'рубл', 'тариф', 'бюджет']],
+    ['ai', ['ии-', 'ai-', 'нейросет', 'оператор', 'бот', 'автоматиз', 'телеграм', 'telegram', 'max']],
+    ['crm', ['crm', 'црм', 'воронк', 'продаж', 'лид', 'клиент', 'звонк']],
+    ['web', ['сайт', 'лендинг', 'витрин', 'каталог', 'интернет-магаз', 'web']],
+    ['marketing', ['маркетинг', 'реклам', 'дизайн', 'контент', 'бренд']],
+    ['hr', ['сотрудник', 'кадр', 'hr', 'найм', 'команд', 'персонал']],
+    ['audit', ['аудит', 'аналитик', 'провер', 'процесс', 'эффективн']]
+  ];
+
+  function addMessage(from, text) {
+    const item = document.createElement('div');
+    item.className = 'maestro-genie-msg ' + from;
+    item.textContent = text;
+    chat.append(item);
+    chat.scrollTop = chat.scrollHeight;
+  }
+  function setStatus(message) { status.textContent = message; }
+  function chooseTopic(text) {
+    const q = text.toLowerCase().replace(/ё/g, 'е');
+    for (const entry of intentChecks) if (entry[1].some(word => q.includes(word))) return entry[0];
+    return 'general';
+  }
+  function speechEvent(run, phase, charIndex = 0, charLength = 0) {
+    try { window.dispatchEvent(new CustomEvent('maestro:speech', {
+      detail: { phase, text: run.text, charIndex, charLength }
+    })); } catch (_) { /* A scene listener must never break the consultant. */ }
+  }
+  function beginSpeech(run) {
+    if (activeSpeech !== run || run.ended || run.started) return;
+    run.started = true;
+    state.speaking = true;
+    panel.classList.add('is-talking');
+    setStatus('МАЭСТРО рассказывает о направлении');
+    speechEvent(run, 'start');
+  }
+  function boundarySpeech(run, charIndex, charLength) {
+    if (activeSpeech !== run || run.ended) return;
+    beginSpeech(run);
+    const index = Number.isFinite(charIndex) ? Math.max(0, Math.min(run.text.length, charIndex)) : 0;
+    const length = Number.isFinite(charLength) ? Math.max(0, Math.min(run.text.length - index, charLength)) : 0;
+    run.lastIndex = index;
+    speechEvent(run, 'boundary', index, length);
+  }
+  function endSpeech(run) {
+    if (activeSpeech !== run || run.ended) return;
+    run.ended = true;
+    run.stopWaiting?.();
+    activeSpeech = null;
+    state.speaking = false;
+    panel.classList.remove('is-talking');
+    setStatus('Готов к вашему вопросу');
+    speechEvent(run, 'end', run.lastIndex || 0);
+  }
+  function cancelSpeech() {
+    if (activeSpeech) endSpeech(activeSpeech);
+    try { window.speechSynthesis?.cancel(); } catch (_) {}
+    try { window.MAESTRO_GENIE_VOICE?.stop?.(); } catch (_) {}
+    panel.classList.remove('is-talking');
+    state.speaking = false;
+  }
+  async function say(text) {
+    if (!state.voice) return;
+    cancelSpeech();
+    const run = { text: String(text), started: false, ended: false, lastIndex: 0 };
+    activeSpeech = run;
+    const custom = window.MAESTRO_GENIE_VOICE;
+    if (!custom || typeof custom.speak !== 'function') {
+      endSpeech(run);
+      setStatus('Ответ доступен текстом. Озвучивание сейчас недоступно.');
+      return;
+    }
+    try {
+      const result = await custom.speak(run.text, {
+        onStart: detail => {
+          if (activeSpeech !== run || run.ended) return;
+          if (detail && typeof detail.text === 'string') run.text = detail.text;
+          beginSpeech(run);
+        },
+        onBoundary: (charIndex, charLength) => boundarySpeech(run, charIndex, charLength),
+        onEnd: () => endSpeech(run)
+      });
+      if (activeSpeech !== run) return;
+      endSpeech(run);
+      if (result?.reason === 'text-only') setStatus('Ответ доступен текстом. Голосом озвучены направления услуг.');
+    } catch (_) {
+      if (activeSpeech !== run) return;
+      endSpeech(run);
+      setStatus('Не удалось воспроизвести запись. Описание доступно текстом.');
+    }
+  }
+  function setVoiceEnabled(enabled) {
+    const next = Boolean(enabled), changed = state.voice !== next;
+    state.voice = next;
+    voiceButton.setAttribute('aria-pressed', String(state.voice));
+    voiceButton.title = state.voice ? 'Отключить озвучивание направлений' : 'Включить озвучивание направлений';
+    voiceButton.setAttribute('aria-label', voiceButton.title);
+    if (!state.voice) cancelSpeech();
+    setStatus(state.voice ? 'Озвучивание включено' : 'Озвучивание выключено');
+    if (changed) {
+      try { window.dispatchEvent(new CustomEvent('maestro:voice', { detail: { enabled: state.voice } })); }
+      catch (_) { /* The scene must not break the consultant's voice control. */ }
+    }
+  }
+  const wizardPrompts = [
+    'Какую услугу или систему хотите получить? Например: бот для сайта, CRM или автоматизация обработки заявок.',
+    'Чем занимается компания? Укажи сферу бизнеса, без персональных данных.',
+    'Какую проблему необходимо решить и каким должен быть результат?',
+    'Как этот процесс организован сейчас? Какие операции выполняют люди?',
+    'К каким сервисам нужно подключиться: сайт, MAX, Telegram, CRM, почта или другое?'
+  ];
+  function startWizard() {
+    cancelSpeech();
+    state.wizard = { step: 0, answers: [] };
+    root.querySelector('[data-mg="brief-go"]').hidden = true;
+    const first = 'Создадим предварительное ТЗ за пять коротких вопросов. Если захотите остановиться, напишите «отмена». ' + wizardPrompts[0];
+    addMessage('assistant', first);
+    setStatus('Конструктор ТЗ: вопрос 1 из 5');
+    void say(first);
+    input.focus();
+  }
+  function answerWizard(answer) {
+    if (/^отмена$/i.test(answer.trim())) {
+      state.wizard = null;
+      const message = 'Сбор ТЗ отменён. Можем продолжить обсуждение любой услуги.';
+      addMessage('assistant', message);
+      setStatus('Режим консультанта');
+      void say(message);
+      return;
+    }
+    state.wizard.answers.push(answer);
+    state.wizard.step++;
+    if (state.wizard.step < wizardPrompts.length) {
+      const number = state.wizard.step + 1;
+      const prompt = 'Вопрос ' + number + ' из 5. ' + wizardPrompts[state.wizard.step];
+      addMessage('assistant', prompt);
+      setStatus('Конструктор ТЗ: вопрос ' + number + ' из 5');
+      void say(prompt);
+    } else {
+      const complete = 'Черновик готов! Нажмите «Открыть готовый черновик ТЗ», проверьте требования и при желании сохраните документ или подготовьте заявку.';
+      addMessage('assistant', complete);
+      try {
+        sessionStorage.setItem('maestro_genie_brief_v1', JSON.stringify({
+          answers: state.wizard.answers, created: Date.now()
+        }));
+        root.querySelector('[data-mg="brief-go"]').hidden = false;
+        setStatus('Черновик ТЗ готов');
+      } catch (_) {
+        addMessage('assistant', 'Передать заполненные поля не удалось из-за настроек браузера. Можно заполнить конструктор вручную.');
+        setStatus('Хранение в браузере недоступно');
+      }
+      state.wizard = null;
+      void say(complete);
+    }
+  }
+  function ask(text) {
+    const question = String(text || '').trim().slice(0, 400);
+    if (!question) return;
+    cancelSpeech();
+    state.lastQuestion = question;
+    addMessage('user', question);
+    if (state.wizard) { answerWizard(question); return; }
+    const topic = chooseTopic(question);
+    if (topic !== 'general') state.topic = topic;
+    const answer = knowledge[topic] || knowledge.general;
+    addMessage('assistant', answer);
+    setStatus('Ответ по базе услуг');
+    void say(answer);
+  }
+  function open() {
+    if (!panel.hidden) return;
+    panel.hidden = false;
+    launcher.setAttribute('aria-expanded', 'true');
+    launcher.hidden = true;
+    if (!chat.children.length) addMessage('assistant', knowledge.general);
+    input.focus();
+  }
+  function close() {
+    cancelSpeech();
+    panel.hidden = true;
+    launcher.hidden = false;
+    launcher.setAttribute('aria-expanded', 'false');
+    state.leadInterest = null;
+    launcher.focus();
+    window.dispatchEvent(new CustomEvent('maestro:consultant-closed'));
+  }
+  function setLeadInterest(value) {
+    const select = document.getElementById('interest');
+    state.leadInterest = select && [...select.options].some(option => option.value === value) ? value : null;
+  }
+  function fillLead() {
+    const select = document.getElementById('interest');
+    const details = document.getElementById('business');
+    const form = document.getElementById('lead');
+    const values = { ai: 'ИИ-оператор', web: 'Сайт', crm: 'CRM', marketing: 'Другое', hr: 'HR', audit: 'Аудит', price: 'Другое', general: 'Другое', lead: 'Другое' };
+    if (select) select.value = state.leadInterest || values[state.topic] || 'Другое';
+    if (details && !details.value.trim() && state.lastQuestion) details.value = 'Обсуждали с консультантом: ' + state.lastQuestion;
+    window.dispatchEvent(new CustomEvent('maestro:lead-request'));
+    close();
+    if (form) form.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    setTimeout(() => document.getElementById('name')?.focus({ preventScroll: true }), 400);
+  }
+
+  function summonOrOpen() {
+    if (document.body.classList.contains('next-mode-live')) { open(); return; }
+    const request = new CustomEvent('maestro:summon', { cancelable: true });
+    if (window.dispatchEvent(request)) window.location.href = 'index.html?mode=live';
+  }
+  function updateLauncher() {
+    const live = document.body.classList.contains('next-mode-live');
+    launcher.querySelector('span').textContent = live ? 'Задать вопрос' : 'Позвать Маэстро';
+    launcher.setAttribute('aria-label', live ? 'Задать вопрос Маэстро' : 'Позвать Маэстро');
+    if (live) launcher.setAttribute('aria-controls', 'maestro-genie-panel');
+    else if (document.getElementById('next-live')) launcher.setAttribute('aria-controls', 'next-live');
+    else launcher.removeAttribute('aria-controls');
+  }
+  updateLauncher();
+  window.addEventListener('maestro:mode', updateLauncher);
+  launcher.addEventListener('click', summonOrOpen);
+  root.querySelector('[data-mg="close"]').addEventListener('click', close);
+  root.querySelector('[data-mg="lead"]').addEventListener('click', fillLead);
+  root.querySelector('[data-mg="brief-start"]').addEventListener('click', startWizard);
+  root.querySelector('[data-mg="brief-go"]').addEventListener('click', () => { window.location.href = 'brief-builder.html'; });
+  voiceButton.addEventListener('click', () => setVoiceEnabled(!state.voice));
+  root.querySelectorAll('[data-mg-question]').forEach(button => button.addEventListener('click', () => ask(button.getAttribute('data-mg-question'))));
+  root.querySelector('.maestro-genie-form').addEventListener('submit', event => {
+    event.preventDefault();
+    ask(input.value);
+    input.value = '';
+    input.focus();
+  });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && !panel.hidden) close(); });
+  const nav = document.getElementById('links');
+  if (nav && !document.getElementById('next-header-toggle')) {
+    const navButton = document.createElement('button');
+    navButton.type = 'button';
+    navButton.className = 'maestro-genie-nav';
+    navButton.textContent = 'Позвать Маэстро';
+    navButton.addEventListener('click', () => {
+      summonOrOpen();
+      nav.classList.remove('open');
+      document.getElementById('menu')?.setAttribute('aria-expanded', 'false');
+    });
+    nav.append(navButton);
+  }
+  window.MAESTRO_GENIE = Object.freeze({ open, close, ask, speak: say, setVoiceEnabled,
+    get voiceEnabled() { return state.voice; }, setLeadInterest, stopVoice: cancelSpeech });
+})();
