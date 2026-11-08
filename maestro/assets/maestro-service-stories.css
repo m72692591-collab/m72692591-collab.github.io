@@ -2,8 +2,8 @@
 .maestro-service-story{--service-ink:#e8f4ff;--service-muted:#c3d8e7;--service-line:#9edcff35;--service-surface:#659dc510;--service-accent:#99dbff;color:var(--service-ink);font-family:Arial,sans-serif;text-align:left}
 .maestro-service-story *{box-sizing:border-box}
 .service-intro{display:grid;gap:22px;margin:0 0 32px}
-.service-visual{margin:0;overflow:hidden;border:1px solid var(--service-line);border-radius:8px;background:#122c41}
-.service-image{display:block;width:100%;height:auto;max-height:380px;object-fit:contain;margin:0 auto}
+.service-visual{width:fit-content;max-width:100%;margin:0;overflow:hidden;border:1px solid var(--service-line);border-radius:8px;background:#122c41}
+.service-image{display:block;width:auto;max-width:100%;height:auto;max-height:380px;object-fit:contain;object-position:left center;margin:0}
 .maestro-service-story .service-lead,.next-live .next-detail .service-lead{font-size:16px;line-height:1.75;color:var(--service-ink);margin:0}
 .maestro-service-story .service-section-title{font:400 24px/1.22 Georgia,serif;color:var(--service-ink);margin:0 0 20px;max-width:30ch}
 .service-choices,.service-process,.service-result,.service-start{margin:0 0 32px}
