@@ -1,0 +1,112 @@
+/* Readability changes are scoped to the observed static fallback.
+   The working 3D layout stays intact; keyboard focus is improved in both modes. */
+body.next-mode-live .next-live:has(.next-static) .next-detail .next-kicker,
+body.next-mode-live .next-live:has(.next-static) .next-detail small,
+body.next-mode-live .next-live:has(.next-static) .architect-slide-number,
+body.next-mode-live .next-live:has(.next-static) .architect-card-label,
+body.next-mode-live .next-live:has(.next-static) .architect-glass em {
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: .02em;
+}
+body.next-mode-live .next-live:has(.next-static) .next-detail p,
+body.next-mode-live .next-live:has(.next-static) .architect-slide-text { font-size: 14px; line-height: 1.5; }
+body.next-mode-live .next-live:has(.next-static) .next-detail .btn,
+body.next-mode-live .next-live:has(.next-static) .architect-carousel-controls button,
+body.next-mode-live .next-live:has(.next-static) .architect-carousel-controls select {
+  min-height: 44px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+body.next-mode-live .next-live:has(.next-static) .next-detail textarea { font-size: 16px; }
+body.next-mode-live .next-live:has(.next-static) .architect-question summary {
+  min-height: 44px;
+  padding-block: 12px;
+  font-size: 13px;
+}
+body.next-mode-live :is(a, button, select, textarea, summary):focus-visible {
+  outline: 2px solid #d4edff;
+  outline-offset: 4px;
+}
+body.next-mode-live .next-orbit.next-static {
+  height: 184px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 12px;
+  padding: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #8ab2cb #0b1c2a;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 12px;
+}
+body.next-mode-live .next-orbit.next-static button {
+  flex: 0 0 280px;
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  min-height: 144px;
+  scroll-snap-align: start;
+  box-shadow: none;
+}
+/* The accessible fallback must not cover the detail panel or its controls. */
+@media (min-width: 1101px) {
+  body.next-mode-live .next-live:has(.next-static) .next-orbit.next-static {
+    left: calc(5% + 304px);
+    right: 3%;
+    top: 408px;
+  }
+  body.next-mode-live .next-live:has(.next-static) .architect-carousel-controls {
+    left: calc(5% + 304px);
+    right: 3%;
+    bottom: 188px;
+    transform: none;
+    width: auto;
+    max-width: none;
+  }
+  body.next-mode-live .next-live:has(.next-static) .architect-bottom {
+    left: calc(5% + 304px);
+    right: 3%;
+    max-width: none;
+  }
+  body.next-mode-live .next-live:has(.next-static) .next-fallback {
+    top: 148px;
+    bottom: auto;
+  }
+}
+@media (max-width: 700px) {
+  body.next-mode-live .next-live:has(.next-static) .architect-about { font-size: 12px; line-height: 1.5; }
+  body.next-mode-live .next-live:has(.next-static) .architect-view span { font-size: 10px; line-height: 1.4; }
+  body.next-mode-live .next-live:has(.next-static) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    padding: 744px 0 24px;
+  }
+  body.next-mode-live .next-live:has(.next-static) .next-detail,
+  body.next-mode-live .next-live:has(.next-static) .architect-carousel-controls,
+  body.next-mode-live .next-live:has(.next-static) .architect-bottom {
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: calc(100% - 32px);
+    max-width: none;
+    margin: 0 16px;
+  }
+  body.next-mode-live .next-live:has(.next-static) .next-detail { padding: 20px; }
+  body.next-mode-live .next-live:has(.next-static) .architect-bottom { grid-template-columns: 1fr; }
+  body.next-mode-live .next-live:has(.next-static) .next-fallback {
+    top: 676px;
+    bottom: auto;
+    left: 16px;
+    right: 16px;
+    max-width: none;
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.next-mode-live .next-orbit.next-static { scroll-behavior: auto; }
+}
